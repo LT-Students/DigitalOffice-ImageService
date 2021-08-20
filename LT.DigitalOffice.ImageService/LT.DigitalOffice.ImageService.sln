@@ -7,7 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageService", "LT.DigitalO
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solutions Items", "Solutions Items", "{718A61F9-5A63-468E-BB14-EDD7C3CFF557}"
 	ProjectSection(SolutionItems) = preProject
+		..\.dockerignore = ..\.dockerignore
 		..\.gitignore = ..\.gitignore
+		..\Common.Configurations.targets = ..\Common.Configurations.targets
+		..\Dockerfile = ..\Dockerfile
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
