@@ -1,52 +1,182 @@
+using HealthChecks.UI.Client;
+using LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef;
+using LT.DigitalOffice.ImageService.Models.Dto.Configuration;
+using LT.DigitalOffice.Kernel.Configurations;
+using LT.DigitalOffice.Kernel.Extensions;
+using LT.DigitalOffice.Kernel.Middlewares.ApiInformation;
+using LT.DigitalOffice.Kernel.Middlewares.Token;
+using MassTransit;
+using MassTransit.RabbitMqTransport;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace LT.DigitalOffice.ImageService
 {
-    public class Startup
+    public class Startup : BaseApiInfo
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        public const string CorsPolicyName = "LtDoCorsPolicy";
+
+        private readonly RabbitMqConfig _rabbitMqConfig;
+        private readonly BaseServiceInfoConfig _serviceInfoConfig;
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
+        #region public methods
 
-            services.AddControllers();
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+
+            _serviceInfoConfig = Configuration
+                .GetSection(BaseServiceInfoConfig.SectionName)
+                .Get<BaseServiceInfoConfig>();
+
+            _rabbitMqConfig = Configuration
+                .GetSection(BaseRabbitMqConfig.SectionName)
+                .Get<RabbitMqConfig>();
+
+            Version = "???";
+            Description = "ImageService is an API that intended to work with images.";
+            StartTime = DateTime.UtcNow;
+            ApiName = $"LT Digital Office - {_serviceInfoConfig.Name}";
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void ConfigureServices(IServiceCollection services)
         {
-            if (env.IsDevelopment())
+            services.AddCors(options =>
             {
-                app.UseDeveloperExceptionPage();
+                options.AddPolicy(
+                    CorsPolicyName,
+                    builder =>
+                    {
+                        builder
+                            .AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+
+            services.Configure<BaseRabbitMqConfig>(Configuration.GetSection(BaseRabbitMqConfig.SectionName));
+            services.Configure<BaseServiceInfoConfig>(Configuration.GetSection(BaseServiceInfoConfig.SectionName));
+
+            services.AddHttpContextAccessor();
+
+            services
+                .AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                })
+                .AddNewtonsoftJson();
+
+            string connStr = Environment.GetEnvironmentVariable("ConnectionString");
+            if (string.IsNullOrEmpty(connStr))
+            {
+                connStr = Configuration.GetConnectionString("SQLConnectionString");
             }
 
-            app.UseHttpsRedirection();
+            services.AddDbContext<ImageServiceDbContext>(options =>
+            {
+                options.UseSqlServer(connStr);
+            });
+
+            services.AddHealthChecks()
+                .AddRabbitMqCheck()
+                .AddSqlServer(connStr);
+
+            ConfigureMassTransit(services);
+        }
+
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
+        {
+            UpdateDatabase(app);
+
+            app.UseForwardedHeaders();
+
+            app.UseExceptionsHandler(loggerFactory);
+
+            app.UseApiInformation();
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseMiddleware<TokenMiddleware>();
+
+            app.UseCors(CorsPolicyName);
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers().RequireCors(CorsPolicyName);
+
+                endpoints.MapHealthChecks($"/{_serviceInfoConfig.Id}/hc", new HealthCheckOptions
+                {
+                    ResultStatusCodes = new Dictionary<HealthStatus, int>
+                    {
+                        { HealthStatus.Unhealthy, 200 },
+                        { HealthStatus.Healthy, 200 },
+                        { HealthStatus.Degraded, 200 },
+                    },
+                    Predicate = check => check.Name != "masstransit-bus",
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
             });
         }
+
+        #endregion
+
+        #region private methods
+
+        private void ConfigureMassTransit(IServiceCollection services)
+        {
+            services.AddMassTransit(x =>
+            {
+                //x.AddConsumer<NameConsumer>();
+
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(_rabbitMqConfig.Host, "/", host =>
+                    {
+                        host.Username($"{_serviceInfoConfig.Name}_{_serviceInfoConfig.Id}");
+                        host.Password(_serviceInfoConfig.Id);
+                    });
+
+                    ConfigureEndpoints(context, cfg);
+                });
+
+                x.AddRequestClients(_rabbitMqConfig);
+            });
+
+            services.AddMassTransitHostedService();
+        }
+
+        private void ConfigureEndpoints(
+            IBusRegistrationContext context,
+            IRabbitMqBusFactoryConfigurator cfg)
+        {
+            /*cfg.ReceiveEndpoint(_rabbitMqConfig.NameEndPoint, ep =>
+            {
+                ep.ConfigureConsumer<NameCunsumer>(context);
+            });*/
+        }
+
+        private void UpdateDatabase(IApplicationBuilder app)
+        {
+            using var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope();
+
+            using var context = serviceScope.ServiceProvider.GetService<ImageServiceDbContext>();
+
+            context.Database.Migrate();
+        }
+
+        #endregion
     }
 }

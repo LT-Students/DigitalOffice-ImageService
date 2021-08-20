@@ -11,4 +11,8 @@
     <ProjectReference Include="..\ImageService.Models.Db\ImageService.Models.Db.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
