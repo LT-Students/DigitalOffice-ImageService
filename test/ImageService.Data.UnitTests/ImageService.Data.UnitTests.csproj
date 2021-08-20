@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ImageService.Data.Provider.MsSql.Ef\ImageService.Data.Provider.MsSql.Ef.csproj" />
-    <ProjectReference Include="..\ImageService.Data\ImageService.Data.csproj" />
+    <ProjectReference Include="..\..\src\ImageService.Data.Provider.MsSql.Ef\ImageService.Data.Provider.MsSql.Ef.csproj" />
+    <ProjectReference Include="..\..\src\ImageService.Data\ImageService.Data.csproj" />
   </ItemGroup>
 
 </Project>

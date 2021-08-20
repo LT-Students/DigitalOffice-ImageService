@@ -16,12 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ImageService.Business\ImageService.Business.csproj" />
-    <ProjectReference Include="..\ImageService.Data\ImageService.Data.csproj" />
-    <ProjectReference Include="..\ImageService.Mappers\ImageService.Mappers.csproj" />
-    <ProjectReference Include="..\ImageService.Models.Db\ImageService.Models.Db.csproj" />
-    <ProjectReference Include="..\ImageService.Models.Dto\ImageService.Models.Dto.csproj" />
-    <ProjectReference Include="..\ImageService.Validation\ImageService.Validation.csproj" />
+    <ProjectReference Include="..\..\src\ImageService.Business\ImageService.Business.csproj" />
+    <ProjectReference Include="..\..\src\ImageService.Data\ImageService.Data.csproj" />
+    <ProjectReference Include="..\..\src\ImageService.Mappers\ImageService.Mappers.csproj" />
+    <ProjectReference Include="..\..\src\ImageService.Models.Db\ImageService.Models.Db.csproj" />
+    <ProjectReference Include="..\..\src\ImageService.Models.Dto\ImageService.Models.Dto.csproj" />
   </ItemGroup>
 
 </Project>

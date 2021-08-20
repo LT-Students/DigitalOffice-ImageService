@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ImageService.Mappers\ImageService.Mappers.csproj" />
-    <ProjectReference Include="..\ImageService.Models.Dto\ImageService.Models.Dto.csproj" />
+    <ProjectReference Include="..\..\src\ImageService.Mappers\ImageService.Mappers.csproj" />
+    <ProjectReference Include="..\..\src\ImageService.Models.Dto\ImageService.Models.Dto.csproj" />
   </ItemGroup>
 
 </Project>

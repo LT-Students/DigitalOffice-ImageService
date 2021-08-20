@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ImageService.Broker\ImageService.Broker.csproj" />
-    <ProjectReference Include="..\ImageService.Data\ImageService.Data.csproj" />
+    <ProjectReference Include="..\..\src\ImageService.Broker\ImageService.Broker.csproj" />
+    <ProjectReference Include="..\..\src\ImageService.Data\ImageService.Data.csproj" />
   </ItemGroup>
 
 </Project>

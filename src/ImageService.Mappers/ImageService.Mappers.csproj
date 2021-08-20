@@ -11,4 +11,9 @@
     <ProjectReference Include="..\ImageService.Models.Dto\ImageService.Models.Dto.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Db\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>
