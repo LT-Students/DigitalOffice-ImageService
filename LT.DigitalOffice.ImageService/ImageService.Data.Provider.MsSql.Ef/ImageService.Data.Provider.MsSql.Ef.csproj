@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ImageService.Data.Provider\ImageService.Data.Provider.csproj" />
+    <ProjectReference Include="..\ImageService.Models.Db\ImageService.Models.Db.csproj" />
+  </ItemGroup>
+
+</Project>
