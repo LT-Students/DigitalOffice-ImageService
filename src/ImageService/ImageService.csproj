@@ -27,7 +27,10 @@
     <ProjectReference Include="..\ImageService.Mappers\ImageService.Mappers.csproj" />
     <ProjectReference Include="..\ImageService.Models.Db\ImageService.Models.Db.csproj" />
     <ProjectReference Include="..\ImageService.Models.Dto\ImageService.Models.Dto.csproj" />
-    <ProjectReference Include="..\ImageService.Validation\ImageService.Validation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>
