@@ -43,7 +43,7 @@ namespace LT.DigitalOffice.ImageService
                 .GetSection(BaseRabbitMqConfig.SectionName)
                 .Get<RabbitMqConfig>();
 
-            Version = "???";
+            Version = "1.0.0.0";
             Description = "ImageService is an API that intended to work with images.";
             StartTime = DateTime.UtcNow;
             ApiName = $"LT Digital Office - {_serviceInfoConfig.Name}";
@@ -137,8 +137,6 @@ namespace LT.DigitalOffice.ImageService
         {
             services.AddMassTransit(x =>
             {
-                //x.AddConsumer<NameConsumer>();
-
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(_rabbitMqConfig.Host, "/", host =>
@@ -160,10 +158,6 @@ namespace LT.DigitalOffice.ImageService
             IBusRegistrationContext context,
             IRabbitMqBusFactoryConfigurator cfg)
         {
-            /*cfg.ReceiveEndpoint(_rabbitMqConfig.NameEndPoint, ep =>
-            {
-                ep.ConfigureConsumer<NameCunsumer>(context);
-            });*/
         }
 
         private void UpdateDatabase(IApplicationBuilder app)

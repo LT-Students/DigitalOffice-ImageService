@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-
 namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
 {
     [DbContext(typeof(ImageServiceDbContext))]
@@ -18,15 +17,15 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ParentId = table.Column<Guid>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     Content = table.Column<Guid>(nullable: true),
-                    Extentions = table.Column<bool>(nullable: false),
+                    Extension = table.Column<string>(nullable: false),
                     CreatedBy = table.Column<Guid>(nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ImagesUser", x => x.Id);
+                    table.PrimaryKey("PK_ImagesUsers", x => x.Id);
                 });
 
             builder.CreateTable(
@@ -35,9 +34,9 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ParentId = table.Column<Guid>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     Content = table.Column<Guid>(nullable: true),
-                    Extentions = table.Column<bool>(nullable: false),
+                    Extension = table.Column<string>(nullable: false),
                     CreatedBy = table.Column<Guid>(nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
                 },
@@ -52,15 +51,15 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ParentId = table.Column<Guid>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     Content = table.Column<Guid>(nullable: true),
-                    Extentions = table.Column<bool>(nullable: false),
+                    Extension = table.Column<string>(nullable: false),
                     CreatedBy = table.Column<Guid>(nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ImagesMessage", x => x.Id);
+                    table.PrimaryKey("PK_ImagesMessages", x => x.Id);
                 });
 
             builder.CreateTable(
@@ -69,15 +68,15 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ParentId = table.Column<Guid>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     Content = table.Column<Guid>(nullable: true),
-                    Extentions = table.Column<bool>(nullable: false),
+                    Extension = table.Column<string>(nullable: false),
                     CreatedBy = table.Column<Guid>(nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ImagesProject", x => x.Id);
+                    table.PrimaryKey("PK_ImagesProjects", x => x.Id);
                 });
         }
     }

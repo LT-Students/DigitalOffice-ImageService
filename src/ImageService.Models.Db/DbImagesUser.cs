@@ -6,14 +6,14 @@ namespace LT.DigitalOffice.ImageService.Models.Db
 {
     public class DbImagesUser
     {
-        public const string TableName = "ImagesUser";
+        public const string TableName = "ImagesUsers";
 
         public Guid Id { get; set; }
 		public Guid? ParentId { get; set; }
 		public string Name { get; set; }
 		public string Content { get; set; }
-		public string Extentions { get; set; }
-		public DateTime CreatedAtUTC { get; set; }
+		public string Extension { get; set; }
+		public DateTime CreatedAtUtc { get; set; }
 		public Guid CreatedBy { get; set; }
 	}
 
@@ -32,7 +32,7 @@ namespace LT.DigitalOffice.ImageService.Models.Db
                 .IsRequired();
 
             builder
-                .Property(a => a.Extentions)
+                .Property(a => a.Extension)
                 .IsRequired();
         }
     }
