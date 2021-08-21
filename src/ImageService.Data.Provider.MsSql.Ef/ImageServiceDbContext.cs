@@ -11,10 +11,10 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef
 {
     public class ImageServiceDbContext : DbContext, IDataProvider
     {
-        public DbSet<DbImagesUser> ImagesUser { get; set; }
-        public DbSet<DbImagesProject> ImagesProject { get; set; }
+        public DbSet<DbImagesUser> ImagesUsers { get; set; }
+        public DbSet<DbImagesProject> ImagesProjects { get; set; }
         public DbSet<DbImagesNews> ImagesNews { get; set; }
-        public DbSet<DbImagesMessage> ImagesMessage { get; set; }
+        public DbSet<DbImagesMessage> ImagesMessages { get; set; }
 
         public ImageServiceDbContext(DbContextOptions<ImageServiceDbContext> options)
             : base(options)
