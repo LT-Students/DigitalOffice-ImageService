@@ -14,7 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\" />
+    <Folder Include="Commands\ImageMessage\Interfaces\" />
+    <Folder Include="Commands\ImageNews\Interfaces\" />
+    <Folder Include="Commands\ImageProject\Interfaces\" />
+    <Folder Include="Commands\ImageUser\Interfaces\" />
   </ItemGroup>
 
 </Project>
