@@ -17,8 +17,8 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ParentId = table.Column<Guid>(nullable: true),
-                    Name = table.Column<string>(nullable: false),
-                    Content = table.Column<Guid>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Content = table.Column<string>(nullable: false),
                     Extension = table.Column<string>(nullable: false),
                     CreatedBy = table.Column<Guid>(nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
@@ -34,8 +34,8 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ParentId = table.Column<Guid>(nullable: true),
-                    Name = table.Column<string>(nullable: false),
-                    Content = table.Column<Guid>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Content = table.Column<string>(nullable: false),
                     Extension = table.Column<string>(nullable: false),
                     CreatedBy = table.Column<Guid>(nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
@@ -51,8 +51,8 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ParentId = table.Column<Guid>(nullable: true),
-                    Name = table.Column<string>(nullable: false),
-                    Content = table.Column<Guid>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Content = table.Column<string>(nullable: false),
                     Extension = table.Column<string>(nullable: false),
                     CreatedBy = table.Column<Guid>(nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
@@ -68,8 +68,8 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     ParentId = table.Column<Guid>(nullable: true),
-                    Name = table.Column<string>(nullable: false),
-                    Content = table.Column<Guid>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Content = table.Column<string>(nullable: false),
                     Extension = table.Column<string>(nullable: false),
                     CreatedBy = table.Column<Guid>(nullable: false),
                     CreatedAtUtc = table.Column<DateTime>(nullable: false),
