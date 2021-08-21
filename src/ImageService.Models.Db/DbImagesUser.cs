@@ -28,10 +28,6 @@ namespace LT.DigitalOffice.ImageService.Models.Db
                 .HasKey(a => a.Id);
 
             builder
-                .Property(a => a.Name)
-                .IsRequired();
-
-            builder
                 .Property(a => a.Content)
                 .IsRequired();
 
