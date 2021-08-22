@@ -4,11 +4,11 @@ using LT.DigitalOffice.ImageService.Models.Dto.Responses.User;
 
 namespace LT.DigitalOffice.ImageService.Mappers.Responses
 {
-    public class ImageUserResponseMapper : IImageUserResponseMapper
+    public class ImageDataResponseMapper : IImageDataResponseMapper
     {
-        public ImageUserResponse Map(DbImagesUser dbImagesUser)
+        public ImageDataResponse Map(DbImagesUser dbImagesUser)
         {
-            return new ImageUserResponse
+            return new ImageDataResponse
             {
                 Id = dbImagesUser.Id,
                 Content = dbImagesUser.Content,

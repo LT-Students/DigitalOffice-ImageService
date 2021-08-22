@@ -86,7 +86,7 @@ namespace LT.DigitalOffice.ImageService
 
             services.AddTransient<IGetImageUserCommand, GetImageUserCommand>();
             services.AddTransient<IImageUserRepository, ImageUserRepository>();
-            services.AddTransient<IImageUserResponseMapper, ImageUserResponseMapper>();
+            services.AddTransient<IImageDataResponseMapper, ImageDataResponseMapper>();
             services.AddTransient<IDataProvider, ImageServiceDbContext>();
 
             string connStr = Environment.GetEnvironmentVariable("ConnectionString");

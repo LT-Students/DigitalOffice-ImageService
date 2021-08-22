@@ -17,24 +17,25 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageUser
     public class GetImageUserCommand : IGetImageUserCommand
     {
         private readonly IImageUserRepository _imageUserRepository;
-        private readonly IImageUserResponseMapper _imageUserResponseMapper;
+        private readonly IImageDataResponseMapper _imageUserResponseMapper;
         public GetImageUserCommand(
             IImageUserRepository imageUserRepository,
-            IImageUserResponseMapper imageUserResponseMapper)
+            IImageDataResponseMapper imageUserResponseMapper)
         {
             _imageUserRepository = imageUserRepository;
             _imageUserResponseMapper = imageUserResponseMapper;
         }
 
-        public OperationResultResponse<ImageUserResponse> Execute(Guid parentId)
+        public OperationResultResponse<ImageDataResponse> Execute(Guid parentId)
         {
-            OperationResultResponse<ImageUserResponse> response = new();
+            OperationResultResponse<ImageDataResponse> response = new();
 
             DbImagesUser dbImageUser = _imageUserRepository.Get(parentId);
 
             if (dbImageUser == null)
             {
                 response.Body = null;
+                response.Status = OperationResultStatusType.Failed;
                 response.Errors.Add("Image was not found.");
                 return response;
             }

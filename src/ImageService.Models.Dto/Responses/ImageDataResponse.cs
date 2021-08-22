@@ -2,7 +2,7 @@
 
 namespace LT.DigitalOffice.ImageService.Models.Dto.Responses.User
 {
-    public class ImageUserResponse
+    public class ImageDataResponse
     {
         public Guid Id { get; set; }
         public string Content { get; set; }

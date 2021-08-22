@@ -11,7 +11,7 @@ namespace LT.DigitalOffice.ImageService.Controllers
     public class ImageUserController : ControllerBase
     {
         [HttpGet("get")]
-        public OperationResultResponse<ImageUserResponse> Get(
+        public OperationResultResponse<ImageDataResponse> Get(
             [FromServices] IGetImageUserCommand command,
             [FromQuery] Guid imageId)
         {
