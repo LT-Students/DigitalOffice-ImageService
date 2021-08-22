@@ -5,8 +5,8 @@ using LT.DigitalOffice.Kernel.Attributes;
 namespace LT.DigitalOffice.ImageService.Mappers.Models.Interfaces
 {
     [AutoInject]
-    public interface IImageNewsResponseMapper
+    public interface IImageDataResponseMapper
     {
-        ImageNewsResponse Map(DbImagesNews dbImagesNews);
+        ImageDataResponse Map(DbImagesNews dbImagesNews);
     }
 }

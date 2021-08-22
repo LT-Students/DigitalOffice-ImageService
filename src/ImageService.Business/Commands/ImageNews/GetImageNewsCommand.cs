@@ -12,18 +12,18 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
     public class GetImageNewsCommand : IGetImageNewsCommand
     {
         private readonly IImageNewsRepository _imageNewsRepository;
-        private readonly IImageNewsResponseMapper _imageNewsResponseMapper;
+        private readonly IImageDataResponseMapper _imageNewsResponseMapper;
         public GetImageNewsCommand(
             IImageNewsRepository imageNewsRepository,
-            IImageNewsResponseMapper imageNewsResponseMapper)
+            IImageDataResponseMapper imageNewsResponseMapper)
         {
             _imageNewsRepository = imageNewsRepository;
             _imageNewsResponseMapper = imageNewsResponseMapper;
         }
 
-        public OperationResultResponse<ImageNewsResponse> Execute(Guid parentId)
+        public OperationResultResponse<ImageDataResponse> Execute(Guid parentId)
         {
-            OperationResultResponse<ImageNewsResponse> response = new();
+            OperationResultResponse<ImageDataResponse> response = new();
 
             DbImagesNews dbImageNews = _imageNewsRepository.Get(parentId);
 

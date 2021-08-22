@@ -8,6 +8,7 @@ using LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef;
 using LT.DigitalOffice.ImageService.Mappers.Models;
 using LT.DigitalOffice.ImageService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Dto.Configuration;
+using LT.DigitalOffice.Kernel.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Configurations;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.Middlewares.ApiInformation;
@@ -71,6 +72,7 @@ namespace LT.DigitalOffice.ImageService
                     });
             });
 
+            services.Configure<TokenConfiguration>(Configuration.GetSection("CheckTokenMiddleware"));
             services.Configure<BaseRabbitMqConfig>(Configuration.GetSection(BaseRabbitMqConfig.SectionName));
             services.Configure<BaseServiceInfoConfig>(Configuration.GetSection(BaseServiceInfoConfig.SectionName));
 
@@ -86,7 +88,7 @@ namespace LT.DigitalOffice.ImageService
 
             services.AddTransient<IGetImageNewsCommand, GetImageNewsCommand>();
             services.AddTransient<IImageNewsRepository, ImageNewsRepository>();
-            services.AddTransient<IImageNewsResponseMapper, ImageNewsResponseMapper>();
+            services.AddTransient<IImageDataResponseMapper, ImageDataResponseMapper>();
             services.AddTransient<IDataProvider, ImageServiceDbContext>();
 
             string connStr = Environment.GetEnvironmentVariable("ConnectionString");

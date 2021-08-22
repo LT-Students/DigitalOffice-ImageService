@@ -8,6 +8,6 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces
     [AutoInject]
     public interface IGetImageNewsCommand
     {
-        OperationResultResponse<ImageNewsResponse> Execute(Guid parentId);
+        OperationResultResponse<ImageDataResponse> Execute(Guid parentId);
     }
 }
