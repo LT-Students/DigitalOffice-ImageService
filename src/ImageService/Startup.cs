@@ -1,5 +1,12 @@
 using HealthChecks.UI.Client;
+using LT.DigitalOffice.ImageService.Business.Commands.ImageMessage;
+using LT.DigitalOffice.ImageService.Business.Commands.ImageMessage.Interfaces;
+using LT.DigitalOffice.ImageService.Data;
+using LT.DigitalOffice.ImageService.Data.Interfaces;
+using LT.DigitalOffice.ImageService.Data.Provider;
 using LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef;
+using LT.DigitalOffice.ImageService.Mappers.Responses;
+using LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Dto.Configuration;
 using LT.DigitalOffice.Kernel.Configurations;
 using LT.DigitalOffice.Kernel.Extensions;
@@ -68,6 +75,11 @@ namespace LT.DigitalOffice.ImageService
             services.Configure<BaseServiceInfoConfig>(Configuration.GetSection(BaseServiceInfoConfig.SectionName));
 
             services.AddHttpContextAccessor();
+
+            services.AddTransient<IGetImageMessageCommand, GetImageMessageCommand>();
+            services.AddTransient<IImageMessageRepository, ImageMessageRepository>();
+            services.AddTransient<IImageMessageResponseMapper, ImageMessageResponseMapper>();
+            services.AddTransient<IDataProvider, ImageServiceDbContext>();
 
             services
                 .AddControllers()
