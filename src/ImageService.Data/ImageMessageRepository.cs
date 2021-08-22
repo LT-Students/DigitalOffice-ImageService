@@ -17,24 +17,15 @@ namespace LT.DigitalOffice.ImageService.Data
 
         public List<Guid> Create(List<DbImageMessage> imagesMessages)
         {
-            List<Guid> result = new();
-
-            foreach(DbImageMessage imageMessage in imagesMessages)
+            if (imagesMessages.Contains(null))
             {
-                if (imageMessage == null)
-                {
-                    throw new ArgumentNullException(nameof(imagesMessages));
-                }
-                else
-                {
-                    result.Add(imageMessage.Id);
-                }
+                throw new ArgumentNullException(nameof(imagesMessages));
             }
 
             _provider.ImagesMessages.AddRange(imagesMessages);
             _provider.Save();
 
-            return result;
+            return imagesMessages.Select(x => x.Id).ToList();
         }
 
         public List<DbImageMessage> Get(List<Guid> imageIds)

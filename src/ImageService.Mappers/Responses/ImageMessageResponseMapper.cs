@@ -11,7 +11,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses
         {
             return new ImageMessageResponse
             {
-                ImageId = dbImageMessage.Id,
+                Id = dbImageMessage.Id,
                 Content = dbImageMessage.Content,
                 Name = dbImageMessage.Name,
                 Extention = dbImageMessage.Extension

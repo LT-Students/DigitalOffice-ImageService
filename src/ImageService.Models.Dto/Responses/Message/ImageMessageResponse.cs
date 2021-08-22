@@ -2,9 +2,9 @@
 
 namespace LT.DigitalOffice.ImageService.Models.Dto.Responses.Message
 {
-    public class ImageMessageResponse
+    public record ImageMessageResponse
     {
-        public Guid ImageId { get; set; }
+        public Guid Id { get; set; }
         public string Content { get; set; }
         public string Name { get; set; }
         public string Extention { get; set; }

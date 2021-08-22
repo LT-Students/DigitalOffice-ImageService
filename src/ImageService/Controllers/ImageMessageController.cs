@@ -13,9 +13,9 @@ namespace LT.DigitalOffice.ImageService.Controllers
         [HttpGet("get")]
         public OperationResultResponse<ImageMessageResponse> Get(
             [FromServices] IGetImageMessageCommand command,
-            [FromQuery] Guid parentId)
+            [FromQuery] Guid imageId)
         {
-            return command.Execute(parentId);
+            return command.Execute(imageId);
         }
     }
 }
