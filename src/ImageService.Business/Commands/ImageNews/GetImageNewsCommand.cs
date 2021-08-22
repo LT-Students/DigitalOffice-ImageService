@@ -30,6 +30,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
             if (dbImageNews == null)
             {
                 response.Body = null;
+                response.Status = OperationResultStatusType.Failed;
                 response.Errors.Add("Image was not found.");
                 return response;
             }
