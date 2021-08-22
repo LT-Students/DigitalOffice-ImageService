@@ -7,14 +7,14 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses
 {
     public class ImageMessageResponseMapper : IImageMessageResponseMapper
     {
-        public ImageMessageResponse Map(DbImageMessage dbImageMessage)
+        public ImageMessageResponse Map(DbImagesMessage dbImageMessage)
         {
             return new ImageMessageResponse
             {
                 Id = dbImageMessage.Id,
                 Content = dbImageMessage.Content,
                 Name = dbImageMessage.Name,
-                Extention = dbImageMessage.Extension
+                Extension = dbImageMessage.Extension
             };
         }
     }

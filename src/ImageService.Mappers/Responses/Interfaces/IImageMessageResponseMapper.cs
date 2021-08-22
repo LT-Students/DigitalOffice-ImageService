@@ -8,6 +8,6 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces
     [AutoInject]
     public interface IImageMessageResponseMapper
     {
-        ImageMessageResponse Map(DbImageMessage dbImageMessage);
+        ImageMessageResponse Map(DbImagesMessage dbImageMessage);
     }
 }

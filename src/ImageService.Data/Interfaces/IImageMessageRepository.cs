@@ -8,9 +8,9 @@ namespace LT.DigitalOffice.ImageService.Data.Interfaces
     [AutoInject]
     public interface IImageMessageRepository
     {
-        List<Guid> Create(List<DbImageMessage> imagesMessages);
-        List<DbImageMessage> Get(List<Guid> imageIds);
-        DbImageMessage Get(Guid imageId);
-        List<bool> Delete(List<DbImageMessage> imagesMessages);
+        List<Guid> Create(List<DbImagesMessage> imagesMessages);
+        List<DbImagesMessage> Get(List<Guid> imageIds);
+        DbImagesMessage Get(Guid imageId);
+        bool Delete(List<DbImagesMessage> imagesMessages);
     }
 }

@@ -7,6 +7,6 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db.Interfaces
     [AutoInject]
     public interface IDbImageMessageMapper
     {
-        DbImageMessage Map(Guid parentId, string name, string content, string extention, Guid createdBy);
+        DbImagesMessage Map(Guid parentId, string name, string content, string extension, Guid createdBy);
     }
 }

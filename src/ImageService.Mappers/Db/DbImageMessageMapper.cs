@@ -6,15 +6,15 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
 {
     public class DbImageMessageMapper : IDbImageMessageMapper
     {
-        public DbImageMessage Map(Guid parentId, string name, string content, string extention, Guid createdBy)
+        public DbImagesMessage Map(Guid parentId, string name, string content, string extension, Guid createdBy)
         {
-            return new DbImageMessage()
+            return new DbImagesMessage()
             {
                 Id = Guid.NewGuid(),
                 ParentId = parentId,
                 Name = name,
                 Content = content,
-                Extension = extention,
+                Extension = extension,
                 CreatedAtUtc = DateTime.UtcNow,
                 CreatedBy = createdBy
             };

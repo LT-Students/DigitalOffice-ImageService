@@ -4,7 +4,6 @@ using LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses.Message;
 using LT.DigitalOffice.Kernel.Enums;
-using LT.DigitalOffice.Kernel.Exceptions.Models;
 using LT.DigitalOffice.Kernel.Responses;
 using System;
 
@@ -26,14 +25,18 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageMessage
         {
             OperationResultResponse<ImageMessageResponse> response = new();
 
-            DbImageMessage dbImageMessage = _imageMessageRepository.Get(parentId);
+            DbImagesMessage dbImageMessage = _imageMessageRepository.Get(parentId);
             if (dbImageMessage == null)
             {
-                throw new NotFoundException($"Image was not found.");
+                response.Body = null;
+                response.Errors.Add("Image was not found.");
+                response.Status = OperationResultStatusType.Failed;
             }
-
-            response.Body = _imageMessageResponseMapper.Map(dbImageMessage);
-            response.Status = OperationResultStatusType.FullSuccess;
+            else
+            {
+                response.Body = _imageMessageResponseMapper.Map(dbImageMessage);
+                response.Status = OperationResultStatusType.FullSuccess;
+            }
 
             return response;
         }

@@ -9,9 +9,9 @@ namespace LT.DigitalOffice.ImageService.Data.Provider
     [AutoInject(InjectType.Scoped)]
     public interface IDataProvider : IBaseDataProvider
     {
-        DbSet<DbImageUser> ImagesUsers { get; set; }
-        DbSet<DbImageProject> ImagesProjects { get; set; }
-        DbSet<DbImageNews> ImagesNews { get; set; }
-        DbSet<DbImageMessage> ImagesMessages { get; set; }
+        DbSet<DbImagesUser> ImagesUsers { get; set; }
+        DbSet<DbImagesProject> ImagesProjects { get; set; }
+        DbSet<DbImagesNews> ImagesNews { get; set; }
+        DbSet<DbImagesMessage> ImagesMessages { get; set; }
     }
 }

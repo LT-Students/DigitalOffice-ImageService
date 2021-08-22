@@ -4,7 +4,7 @@ using System;
 
 namespace LT.DigitalOffice.ImageService.Models.Db
 {
-    public class DbImageUser
+    public class DbImagesUser
     {
         public const string TableName = "ImagesUsers";
 
@@ -17,12 +17,12 @@ namespace LT.DigitalOffice.ImageService.Models.Db
 		public Guid CreatedBy { get; set; }
 	}
 
-    public class DbImageUserConfiguration : IEntityTypeConfiguration<DbImageUser>
+    public class DbImagesConfigurationUser : IEntityTypeConfiguration<DbImagesUser>
     {
-        public void Configure(EntityTypeBuilder<DbImageUser> builder)
+        public void Configure(EntityTypeBuilder<DbImagesUser> builder)
         {
             builder
-                .ToTable(DbImageUser.TableName);
+                .ToTable(DbImagesUser.TableName);
 
             builder
                 .HasKey(a => a.Id);
