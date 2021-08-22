@@ -1,5 +1,12 @@
 using HealthChecks.UI.Client;
+using LT.DigitalOffice.ImageService.Business.Commands.ImageNews;
+using LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces;
+using LT.DigitalOffice.ImageService.Data;
+using LT.DigitalOffice.ImageService.Data.Interfaces;
+using LT.DigitalOffice.ImageService.Data.Provider;
 using LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef;
+using LT.DigitalOffice.ImageService.Mappers.Models;
+using LT.DigitalOffice.ImageService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Dto.Configuration;
 using LT.DigitalOffice.Kernel.Configurations;
 using LT.DigitalOffice.Kernel.Extensions;
@@ -76,6 +83,11 @@ namespace LT.DigitalOffice.ImageService
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 })
                 .AddNewtonsoftJson();
+
+            services.AddTransient<IGetImageNewsCommand, GetImageNewsCommand>();
+            services.AddTransient<IImageNewsRepository, ImageNewsRepository>();
+            services.AddTransient<IImageNewsResponseMapper, ImageNewsResponseMapper>();
+            services.AddTransient<IDataProvider, ImageServiceDbContext>();
 
             string connStr = Environment.GetEnvironmentVariable("ConnectionString");
             if (string.IsNullOrEmpty(connStr))
