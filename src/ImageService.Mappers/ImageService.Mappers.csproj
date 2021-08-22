@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Db\Interfaces\" />
     <Folder Include="Models\Interfaces\" />
   </ItemGroup>
 
