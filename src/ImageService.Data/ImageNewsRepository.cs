@@ -29,14 +29,14 @@ namespace LT.DigitalOffice.ImageService.Data
             return imagesNews.Select(x => x.Id).ToList();
         }
 
-        public bool Delete(DbImagesNews imagesNews)
+        public bool Delete(List<DbImagesNews> imagesNews)
         {
             if (imagesNews == null)
             {
                 throw new ArgumentNullException(nameof(imagesNews));
             }
 
-            _provider.ImagesNews.Remove(imagesNews);
+            _provider.ImagesNews.RemoveRange(imagesNews);
             _provider.Save();
 
             return true;

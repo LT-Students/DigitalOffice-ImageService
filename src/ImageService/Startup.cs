@@ -73,7 +73,6 @@ namespace LT.DigitalOffice.ImageService
                     });
             });
 
-            services.Configure<TokenConfiguration>(Configuration.GetSection("CheckTokenMiddleware"));
             services.Configure<BaseRabbitMqConfig>(Configuration.GetSection(BaseRabbitMqConfig.SectionName));
             services.Configure<BaseServiceInfoConfig>(Configuration.GetSection(BaseServiceInfoConfig.SectionName));
 
@@ -86,11 +85,6 @@ namespace LT.DigitalOffice.ImageService
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 })
                 .AddNewtonsoftJson();
-
-            services.AddTransient<IGetImageNewsCommand, GetImageNewsCommand>();
-            services.AddTransient<IImageNewsRepository, ImageNewsRepository>();
-            services.AddTransient<IImageDataResponseMapper, ImageDataResponseMapper>();
-            services.AddTransient<IDataProvider, ImageServiceDbContext>();
 
             string connStr = Environment.GetEnvironmentVariable("ConnectionString");
             if (string.IsNullOrEmpty(connStr))
@@ -106,6 +100,8 @@ namespace LT.DigitalOffice.ImageService
             services.AddHealthChecks()
                 .AddRabbitMqCheck()
                 .AddSqlServer(connStr);
+
+            services.AddBusinessObjects();
 
             ConfigureMassTransit(services);
         }

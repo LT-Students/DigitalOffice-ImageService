@@ -7,11 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageService", "src\ImageSe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solutions Items", "Solutions Items", "{718A61F9-5A63-468E-BB14-EDD7C3CFF557}"
 	ProjectSection(SolutionItems) = preProject
-		..\.dockerignore = ..\.dockerignore
-		..\.gitignore = ..\.gitignore
-		..\Common.Configurations.targets = ..\Common.Configurations.targets
-		..\Dockerfile = ..\Dockerfile
-		..\README.md = ..\README.md
+		.dockerignore = .dockerignore
+		.gitignore = .gitignore
+		Common.Configurations.targets = Common.Configurations.targets
+		Dockerfile = Dockerfile
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D19FC4BB-5660-4C14-97E9-B2C03E04495C}"
