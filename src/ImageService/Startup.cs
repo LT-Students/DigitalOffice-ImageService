@@ -1,5 +1,12 @@
 using HealthChecks.UI.Client;
+using LT.DigitalOffice.ImageService.Business.Commands.ImageProject;
+using LT.DigitalOffice.ImageService.Business.Commands.ImageProject.Interfaces;
+using LT.DigitalOffice.ImageService.Data;
+using LT.DigitalOffice.ImageService.Data.Interfaces;
+using LT.DigitalOffice.ImageService.Data.Provider;
 using LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef;
+using LT.DigitalOffice.ImageService.Mappers.Models;
+using LT.DigitalOffice.ImageService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Dto.Configuration;
 using LT.DigitalOffice.Kernel.Configurations;
 using LT.DigitalOffice.Kernel.Extensions;
@@ -78,6 +85,11 @@ namespace LT.DigitalOffice.ImageService
                 })
                 .AddNewtonsoftJson();
 
+            services.AddTransient<IGetImageProjectCommand, GetImageProjectCommand>();
+            services.AddTransient<IImageProjectRepository, ImageProjectRepository>();
+            services.AddTransient<IImageResponseMapper, ImageResponseMapper>();
+            services.AddTransient<IDataProvider, ImageServiceDbContext>();
+
             string connStr = Environment.GetEnvironmentVariable("ConnectionString");
             if (string.IsNullOrEmpty(connStr))
             {
@@ -108,7 +120,7 @@ namespace LT.DigitalOffice.ImageService
 
             app.UseRouting();
 
-            app.UseMiddleware<TokenMiddleware>();
+      //      app.UseMiddleware<TokenMiddleware>();
 
             app.UseCors(CorsPolicyName);
 
