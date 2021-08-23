@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 namespace LT.DigitalOffice.ImageService.Mappers.Models.Interfaces
 {
     [AutoInject]
-    public interface IImageResponseMapper
+    public interface IImagesResponseMapper
     {
-        ImageDataResponse  Map(DbImagesProject dbImagesProject);
+        ImagesDataResponse  Map(DbImagesProject dbImagesProject);
     }
 }

@@ -13,25 +13,24 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageProject
     public class GetImageProjectCommand : IGetImageProjectCommand
     {
         private readonly IImageProjectRepository _imageProjectRepository;
-        private readonly IImageResponseMapper _imageResponseMapper;
+        private readonly IImagesResponseMapper _imageResponseMapper;
 
         public GetImageProjectCommand(
             IImageProjectRepository imageProjectRepository,
-            IImageResponseMapper imageResponseMapper)
+            IImagesResponseMapper imageResponseMapper)
         {
             _imageProjectRepository = imageProjectRepository;
             _imageResponseMapper = imageResponseMapper;
         }
 
-        public OperationResultResponse<ImageDataResponse> Execute(Guid parentId)
+        public OperationResultResponse<ImagesDataResponse> Execute(Guid parentId)
         {
-            OperationResultResponse<ImageDataResponse> response = new();
+            OperationResultResponse<ImagesDataResponse> response = new();
 
             DbImagesProject dbImageProject = _imageProjectRepository.Get(parentId);
 
             if (dbImageProject == null)
             {
-                response.Body = null;
                 response.Status = OperationResultStatusType.Failed;
                 response.Errors.Add("Image was not found.");
                 return response;

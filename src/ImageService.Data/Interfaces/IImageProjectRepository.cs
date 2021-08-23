@@ -13,7 +13,7 @@ namespace LT.DigitalOffice.ImageService.Data.Interfaces
     {
         List<DbImagesProject> Get(List<Guid> Id);
 
-        bool Delete(Guid imageId);
+        bool Delete(DbImagesProject imagesProject);
 
         List<Guid> Create(List<DbImagesProject> imagesProject);
 

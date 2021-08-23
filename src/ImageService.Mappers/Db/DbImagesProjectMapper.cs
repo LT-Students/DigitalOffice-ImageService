@@ -23,6 +23,5 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
                 CreatedBy = createdBy
             };
         }
-
     }
 }

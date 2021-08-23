@@ -8,6 +8,6 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageProject.Interface
     [AutoInject]
     public interface IGetImageProjectCommand
     {
-        OperationResultResponse<ImageDataResponse> Execute(Guid parentId);
+        OperationResultResponse<ImagesDataResponse> Execute(Guid parentId);
     }
 }

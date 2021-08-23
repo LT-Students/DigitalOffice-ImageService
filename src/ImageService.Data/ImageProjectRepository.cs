@@ -15,7 +15,7 @@ namespace LT.DigitalOffice.ImageService.Data
 
         public ImageProjectRepository(IDataProvider provider)
         {
-            this._provider = provider;
+            _provider = provider;
         }
 
         public List<Guid> Create(List<DbImagesProject> imagesProjects)
@@ -31,9 +31,17 @@ namespace LT.DigitalOffice.ImageService.Data
             return imagesProjects.Select(x => x.Id).ToList();
         }
 
-        public bool Delete(Guid imageId)
+        public bool Delete(DbImagesProject imagesProject)
         {
-            throw new NotImplementedException();
+            if (imagesProject == null)
+            {
+                throw new ArgumentNullException(nameof(imagesProject));
+            }
+
+            _provider.ImagesProjects.Remove(imagesProject);
+            _provider.Save();
+
+            return true;
         }
 
         public List<DbImagesProject> Get(List<Guid> imageIds)
@@ -43,7 +51,7 @@ namespace LT.DigitalOffice.ImageService.Data
 
         public DbImagesProject Get(Guid imageId)
         {
-            return _provider.ImagesProjects.Where(x => x.Id == imageId).FirstOrDefault();
+            return _provider.ImagesProjects.Find(imageId);
         }
     }
 }
