@@ -1,5 +1,6 @@
 using HealthChecks.UI.Client;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageUser;
+using LT.DigitalOffice.ImageService.Broker.Consumers.ImageUser;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageUser.Interfaces;
 using LT.DigitalOffice.ImageService.Data;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
@@ -149,6 +150,10 @@ namespace LT.DigitalOffice.ImageService
         {
             services.AddMassTransit(x =>
             {
+                x.AddConsumer<CreateImagesUserConsumer>();
+                x.AddConsumer<DeleteImagesUserConsumer>();
+                x.AddConsumer<GetImagesUserConsumer>();
+
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(_rabbitMqConfig.Host, "/", host =>
@@ -170,6 +175,21 @@ namespace LT.DigitalOffice.ImageService
             IBusRegistrationContext context,
             IRabbitMqBusFactoryConfigurator cfg)
         {
+            cfg.ReceiveEndpoint(_rabbitMqConfig.CreateImagesUserEndpoint, ep =>
+            {
+                // TODO Rename
+                ep.ConfigureConsumer<CreateImagesUserConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.DeleteImagesUserEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<DeleteImagesUserConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.GetImagesUserEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<GetImagesUserConsumer>(context);
+            });
         }
 
         private void UpdateDatabase(IApplicationBuilder app)
