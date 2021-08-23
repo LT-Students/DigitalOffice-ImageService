@@ -11,7 +11,7 @@ namespace LT.DigitalOffice.ImageService.Controllers
     public class ImageProjectController : ControllerBase
     {
         [HttpGet("get")]
-        public OperationResultResponse<ImagesDataResponse> Get(
+        public OperationResultResponse<ImageDataResponse> Get(
             [FromServices] IGetImageProjectCommand command,
             [FromQuery] Guid imageId)
         {

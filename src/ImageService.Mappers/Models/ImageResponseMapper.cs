@@ -6,9 +6,9 @@ namespace LT.DigitalOffice.ImageService.Mappers.Models
 {
     public class ImagesResponseMapper : IImagesResponseMapper
     {
-        public ImagesDataResponse  Map(DbImagesProject dbImagesProject)
+        public ImageDataResponse  Map(DbImagesProject dbImagesProject)
         {
-            return new ImagesDataResponse
+            return new ImageDataResponse
             {
                 Id = dbImagesProject.Id,
                 Content = dbImagesProject.Content,

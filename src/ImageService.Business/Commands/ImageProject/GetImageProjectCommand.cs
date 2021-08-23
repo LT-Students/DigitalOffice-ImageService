@@ -23,9 +23,9 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageProject
             _imageResponseMapper = imageResponseMapper;
         }
 
-        public OperationResultResponse<ImagesDataResponse> Execute(Guid parentId)
+        public OperationResultResponse<ImageDataResponse> Execute(Guid parentId)
         {
-            OperationResultResponse<ImagesDataResponse> response = new();
+            OperationResultResponse<ImageDataResponse> response = new();
 
             DbImagesProject dbImageProject = _imageProjectRepository.Get(parentId);
 
