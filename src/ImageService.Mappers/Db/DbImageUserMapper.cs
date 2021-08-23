@@ -1,22 +1,23 @@
 ﻿using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
+using LT.DigitalOffice.Models.Broker.Models;
 using System;
 
 namespace LT.DigitalOffice.ImageService.Mappers.Db
 {
     public class DbImageUserMapper : IDbImageUserMapper
     {
-        public DbImagesUser Map(Guid parentId, string name, string content, string extension, Guid createdBy)
+        public DbImagesUser Map(CreateImageData createImageData, Guid? parentId = null)
         {
-            return new DbImagesUser
+            return new DbImagesUser()
             {
                 Id = Guid.NewGuid(),
                 ParentId = parentId,
-                Name = name,
-                Content = content,
-                Extension = extension,
+                Name = createImageData.Name,
+                Content = createImageData.Content,
+                Extension = createImageData.Extension,
                 CreatedAtUtc = DateTime.UtcNow,
-                CreatedBy = createdBy
+                CreatedBy = createImageData.CreatedBy
             };
         }
     }
