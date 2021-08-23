@@ -1,4 +1,5 @@
 using HealthChecks.UI.Client;
+using LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageNews;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces;
 using LT.DigitalOffice.ImageService.Data;
@@ -151,6 +152,10 @@ namespace LT.DigitalOffice.ImageService
         {
             services.AddMassTransit(x =>
             {
+                x.AddConsumer<GetImagesNewsConsumer>();
+                x.AddConsumer<CreateImagesNewsConsumer>();
+                x.AddConsumer<DeleteImagesNewsConsumer>();
+
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(_rabbitMqConfig.Host, "/", host =>
@@ -172,6 +177,20 @@ namespace LT.DigitalOffice.ImageService
             IBusRegistrationContext context,
             IRabbitMqBusFactoryConfigurator cfg)
         {
+            cfg.ReceiveEndpoint(_rabbitMqConfig.GetImagesNewsEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<GetImagesNewsConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.CreateImagesNewsEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<CreateImagesNewsConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.DeleteImagesNewsEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<DeleteImagesNewsConsumer>(context);
+            });
         }
 
         private void UpdateDatabase(IApplicationBuilder app)
