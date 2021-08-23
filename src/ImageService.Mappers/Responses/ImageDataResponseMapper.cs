@@ -1,7 +1,6 @@
 ﻿using LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses.User;
-using System;
 
 namespace LT.DigitalOffice.ImageService.Mappers.Responses
 {
@@ -19,7 +18,10 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses
                     Extension = dbImagesUser.Extension
                 };
             }
-            throw new ArgumentNullException(nameof(dbImagesUser));
+            else
+            {
+                return null;
+            }
         }
     }
 }

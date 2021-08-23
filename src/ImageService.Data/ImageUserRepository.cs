@@ -20,7 +20,7 @@ namespace LT.DigitalOffice.ImageService.Data
         {
             if (imagesUsers.Contains(null))
             {
-                throw new ArgumentNullException(nameof(imagesUsers));
+                return null;
             }
 
             _provider.ImagesUsers.AddRange(imagesUsers);
@@ -33,7 +33,7 @@ namespace LT.DigitalOffice.ImageService.Data
         {
             if (imagesUsers.Contains(null))
             {
-                throw new ArgumentNullException(nameof(imagesUsers));
+                return false;
             }
 
             _provider.ImagesUsers.RemoveRange(imagesUsers);
