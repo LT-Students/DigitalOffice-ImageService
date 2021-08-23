@@ -85,10 +85,10 @@ namespace LT.DigitalOffice.ImageService
                 })
                 .AddNewtonsoftJson();
 
-            services.AddTransient<IGetImageProjectCommand, GetImageProjectCommand>();
+           /* services.AddTransient<IGetImageProjectCommand, GetImageProjectCommand>();
             services.AddTransient<IImageProjectRepository, ImageProjectRepository>();
             services.AddTransient<IImageResponseMapper, ImageResponseMapper>();
-            services.AddTransient<IDataProvider, ImageServiceDbContext>();
+            services.AddTransient<IDataProvider, ImageServiceDbContext>();*/
 
             string connStr = Environment.GetEnvironmentVariable("ConnectionString");
             if (string.IsNullOrEmpty(connStr))
@@ -105,6 +105,8 @@ namespace LT.DigitalOffice.ImageService
                 .AddRabbitMqCheck()
                 .AddSqlServer(connStr);
 
+            services.AddBusinessObjects();
+
             ConfigureMassTransit(services);
         }
 
@@ -120,7 +122,7 @@ namespace LT.DigitalOffice.ImageService
 
             app.UseRouting();
 
-      //      app.UseMiddleware<TokenMiddleware>();
+            app.UseMiddleware<TokenMiddleware>();
 
             app.UseCors(CorsPolicyName);
 
