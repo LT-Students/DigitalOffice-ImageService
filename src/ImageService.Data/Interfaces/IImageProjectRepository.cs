@@ -2,9 +2,6 @@
 using LT.DigitalOffice.Kernel.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.ImageService.Data.Interfaces
 {
@@ -13,7 +10,7 @@ namespace LT.DigitalOffice.ImageService.Data.Interfaces
     {
         List<DbImagesProject> Get(List<Guid> Id);
 
-        bool Delete(DbImagesProject imagesProject);
+        bool Delete(DbImagesProject imageProject);
 
         List<Guid> Create(List<DbImagesProject> imagesProject);
 

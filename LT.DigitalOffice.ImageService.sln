@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solutions Items", "Solution
 	ProjectSection(SolutionItems) = preProject
 		..\.dockerignore = ..\.dockerignore
 		..\.gitignore = ..\.gitignore
-		Common.Configurations.targets = Common.Configurations.targets
+		..\Common.Configurations.targets = ..\Common.Configurations.targets
 		..\Dockerfile = ..\Dockerfile
 		..\README.md = ..\README.md
 	EndProjectSection

@@ -5,7 +5,6 @@ using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Responses;
-using LT.DigitalOffice.Models.Broker.Responses.File;
 using System;
 
 namespace LT.DigitalOffice.ImageService.Business.Commands.ImageProject

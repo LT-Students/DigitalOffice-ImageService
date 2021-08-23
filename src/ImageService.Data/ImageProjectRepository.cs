@@ -4,8 +4,6 @@ using LT.DigitalOffice.ImageService.Models.Db;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.ImageService.Data
 {
@@ -31,14 +29,14 @@ namespace LT.DigitalOffice.ImageService.Data
             return imagesProjects.Select(x => x.Id).ToList();
         }
 
-        public bool Delete(DbImagesProject imagesProject)
+        public bool Delete(DbImagesProject imageProject)
         {
-            if (imagesProject == null)
+            if (imageProject == null)
             {
-                throw new ArgumentNullException(nameof(imagesProject));
+                throw new ArgumentNullException(nameof(imageProject));
             }
 
-            _provider.ImagesProjects.Remove(imagesProject);
+            _provider.ImagesProjects.Remove(imageProject);
             _provider.Save();
 
             return true;
