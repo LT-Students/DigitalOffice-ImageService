@@ -1,18 +1,35 @@
-﻿using LT.DigitalOffice.Models.Broker.Requests.Image;
+﻿using LT.DigitalOffice.ImageService.Data.Interfaces;
+using LT.DigitalOffice.ImageService.Models.Db;
+using LT.DigitalOffice.Kernel.Broker;
+using LT.DigitalOffice.Models.Broker.Requests.Image;
 using MassTransit;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageUser
 {
     public class DeleteImagesUserConsumer : IConsumer<IDeleteImagesUserRequest>
     {
+        private readonly IImageUserRepository _repository;
+
+        public DeleteImagesUserConsumer (IImageUserRepository repository)
+        {
+            _repository = repository;
+        }
+
         public async Task Consume(ConsumeContext<IDeleteImagesUserRequest> context)
         {
-            throw new NotImplementedException();
+            var response = OperationResultWrapper.CreateResponse(DeleteImages, context.Message);
+
+            await context.RespondAsync<IOperationResult<bool>>(response);
+        }
+
+        private object DeleteImages(IDeleteImagesUserRequest request)
+        {
+            List<DbImagesUser> dbImages = _repository.Get(request.ImageIds);
+            _repository.Delete(dbImages);
+
+            return true;
         }
     }
 }

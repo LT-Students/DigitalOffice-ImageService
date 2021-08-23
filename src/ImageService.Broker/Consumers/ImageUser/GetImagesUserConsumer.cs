@@ -13,6 +13,11 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageUser
     {
         private readonly IImageUserRepository _repository;
 
+        public GetImagesUserConsumer (IImageUserRepository repository)
+        {
+            _repository = repository;
+        }
+
         public async Task Consume(ConsumeContext<IGetImagesUserRequest> context)
         {
             var response = OperationResultWrapper.CreateResponse(GetImages, context.Message);

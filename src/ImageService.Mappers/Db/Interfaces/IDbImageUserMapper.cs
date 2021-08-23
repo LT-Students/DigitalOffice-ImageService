@@ -8,6 +8,6 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db.Interfaces
     [AutoInject]
     public interface IDbImageUserMapper
     {
-        public DbImagesUser Map(CreateImageData createImageData, Guid? parentId = null);
+        DbImagesUser Map(CreateImageData createImageData, Guid? parentId = null);
     }
 }

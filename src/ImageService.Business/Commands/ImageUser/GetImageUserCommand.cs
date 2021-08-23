@@ -4,13 +4,8 @@ using LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses.User;
 using LT.DigitalOffice.Kernel.Enums;
-using LT.DigitalOffice.Kernel.Exceptions.Models;
 using LT.DigitalOffice.Kernel.Responses;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.ImageService.Business.Commands.ImageUser
 {
@@ -18,6 +13,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageUser
     {
         private readonly IImageUserRepository _imageUserRepository;
         private readonly IImageDataResponseMapper _imageUserResponseMapper;
+
         public GetImageUserCommand(
             IImageUserRepository imageUserRepository,
             IImageDataResponseMapper imageUserResponseMapper)
@@ -26,11 +22,11 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageUser
             _imageUserResponseMapper = imageUserResponseMapper;
         }
 
-        public OperationResultResponse<ImageDataResponse> Execute(Guid parentId)
+        public OperationResultResponse<ImageDataResponse> Execute(Guid imageId)
         {
             OperationResultResponse<ImageDataResponse> response = new();
 
-            DbImagesUser dbImageUser = _imageUserRepository.Get(parentId);
+            DbImagesUser dbImageUser = _imageUserRepository.Get(imageId);
 
             if (dbImageUser == null)
             {

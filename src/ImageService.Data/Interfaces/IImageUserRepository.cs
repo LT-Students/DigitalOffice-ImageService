@@ -11,6 +11,6 @@ namespace LT.DigitalOffice.ImageService.Data.Interfaces
         List<Guid> Create(List<DbImagesUser> imagesUsers);
         List<DbImagesUser> Get(List<Guid> imageIds);
         DbImagesUser Get(Guid imageId);
-        bool Delete(DbImagesUser imagesUsers);
+        bool Delete(List<DbImagesUser> imagesUsers);
     }
 }
