@@ -20,7 +20,7 @@ namespace LT.DigitalOffice.ImageService.Data
         {
             if (imagesNews.Contains(null))
             {
-                throw new ArgumentNullException(nameof(imagesNews));
+                return null;
             }
 
             _provider.ImagesNews.AddRange(imagesNews);
@@ -33,7 +33,7 @@ namespace LT.DigitalOffice.ImageService.Data
         {
             if (imagesNews == null)
             {
-                throw new ArgumentNullException(nameof(imagesNews));
+                return false;
             }
 
             _provider.ImagesNews.RemoveRange(imagesNews);
