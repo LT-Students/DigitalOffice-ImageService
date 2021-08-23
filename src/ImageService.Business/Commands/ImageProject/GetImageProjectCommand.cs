@@ -31,6 +31,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageProject
             if (dbImageProject == null)
             {
                 response.Body = null;
+                response.Status = OperationResultStatusType.Failed;
                 response.Errors.Add("Image was not found.");
                 return response;
             }
