@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.ImageService.Mappers.Db
 {
-    public class DbImagesProjectMapper : IDbImagesProjectMapper
+    public class DbImageProjectMapper : IDbImageProjectMapper
     {
         public DbImagesProject Map(Guid parentId, string name, string content, string extension, Guid createdBy)
         {

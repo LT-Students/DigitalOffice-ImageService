@@ -13,11 +13,11 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageProject
     public class GetImageProjectCommand : IGetImageProjectCommand
     {
         private readonly IImageProjectRepository _imageProjectRepository;
-        private readonly IImagesResponseMapper _imageResponseMapper;
+        private readonly IImageResponseMapper _imageResponseMapper;
 
         public GetImageProjectCommand(
             IImageProjectRepository imageProjectRepository,
-            IImagesResponseMapper imageResponseMapper)
+            IImageResponseMapper imageResponseMapper)
         {
             _imageProjectRepository = imageProjectRepository;
             _imageResponseMapper = imageResponseMapper;

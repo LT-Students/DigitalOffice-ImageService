@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace LT.DigitalOffice.ImageService.Mappers.Db.Interfaces
 {
     [AutoInject]
-    public interface IDbImagesProjectMapper
+    public interface IDbImageProjectMapper
     {
         DbImagesProject Map(Guid parentId, string name, string content, string extension, Guid createdBy);
     }
