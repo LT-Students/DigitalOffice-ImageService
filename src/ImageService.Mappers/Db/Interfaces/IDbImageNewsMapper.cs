@@ -2,12 +2,14 @@
 using LT.DigitalOffice.Kernel.Attributes;
 using LT.DigitalOffice.Models.Broker.Models;
 using System;
+using System.Collections.Generic;
 
 namespace LT.DigitalOffice.ImageService.Mappers.Db.Interfaces
 {
     [AutoInject]
     public interface IDbImageNewsMapper
     {
-        DbImagesNews Map(CreateImageData createImageData, Guid? parentId = null);
+        DbImagesNews Map(CreateImageData createImageData, out Guid prewiewId);
+        List<DbImagesNews> Map(CreateImageData createImageData, string resizedContent, out Guid prewiewId);
     }
 }

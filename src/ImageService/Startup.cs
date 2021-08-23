@@ -1,15 +1,7 @@
 using HealthChecks.UI.Client;
 using LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews;
-using LT.DigitalOffice.ImageService.Business.Commands.ImageNews;
-using LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces;
-using LT.DigitalOffice.ImageService.Data;
-using LT.DigitalOffice.ImageService.Data.Interfaces;
-using LT.DigitalOffice.ImageService.Data.Provider;
 using LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef;
-using LT.DigitalOffice.ImageService.Mappers.Models;
-using LT.DigitalOffice.ImageService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Dto.Configuration;
-using LT.DigitalOffice.Kernel.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Configurations;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.Middlewares.ApiInformation;
@@ -73,6 +65,7 @@ namespace LT.DigitalOffice.ImageService
                     });
             });
 
+            services.Configure<TokenConfiguration>(Configuration.GetSection("CheckTokenMiddleware"));
             services.Configure<BaseRabbitMqConfig>(Configuration.GetSection(BaseRabbitMqConfig.SectionName));
             services.Configure<BaseServiceInfoConfig>(Configuration.GetSection(BaseServiceInfoConfig.SectionName));
 

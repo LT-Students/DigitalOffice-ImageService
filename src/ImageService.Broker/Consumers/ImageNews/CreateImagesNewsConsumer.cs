@@ -1,11 +1,13 @@
 ﻿using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
+using LT.DigitalOffice.ImageService.Mappers.Helpers.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.Kernel.Broker;
 using LT.DigitalOffice.Models.Broker.Models;
 using LT.DigitalOffice.Models.Broker.Requests.Image;
 using LT.DigitalOffice.Models.Broker.Responses.Image;
 using MassTransit;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,12 +16,17 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews
     public class CreateImagesNewsConsumer : IConsumer<ICreateImagesNewsRequest>
     {
         private readonly IImageNewsRepository _repository;
+        private readonly IResizeImageHelper _helper;
         private readonly IDbImageNewsMapper _mapper;
 
-        public CreateImagesNewsConsumer(IImageNewsRepository repository, IDbImageNewsMapper mapper)
+        public CreateImagesNewsConsumer(
+            IImageNewsRepository repository,
+            IDbImageNewsMapper mapper,
+            IResizeImageHelper helper)
         {
             _repository = repository;
             _mapper = mapper;
+            _helper = helper;
         }
         public async Task Consume(ConsumeContext<ICreateImagesNewsRequest> context)
         {
@@ -30,27 +37,39 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews
 
         private object CreateImages(ICreateImagesNewsRequest request)
         {
-            List<CreateImageData> createImage = request.CreateImagesData;
-            List<DbImagesNews> images = new();
-
-            foreach (CreateImageData x in createImage)
+            if (request.CreateImagesData == null)
             {
-                images.AddRange(CreateHQ(x));
+                return null;
             }
 
-            return ICreateImagesResponse.CreateObj(_repository.Create(images));
-        }
+            List<CreateImageData> createImages = request.CreateImagesData;
+            List<DbImagesNews> dbImages = new();
+            Guid previewId;
+            List<Guid> previewIds = new();
+            string resizedContent;
 
-        public List<DbImagesNews> CreateHQ(CreateImageData createImageData)
-        {
-            List<DbImagesNews> db = new();
-            var highQ = _mapper.Map(createImageData);
-            db.Add(highQ);
-            var createImageData1 = new CreateImageData(createImageData.Name, "преобразованная картинка", createImageData.Extension, createImageData.CreatedBy);
-            var lowQ = _mapper.Map(createImageData1, highQ.Id);
-            db.Add(lowQ);
+            foreach (CreateImageData createImage in createImages)
+            {
+                resizedContent = _helper.Resize(createImage.Content, createImage.Extension);
 
-            return db;
+                if (string.IsNullOrEmpty(resizedContent))
+                {
+                    dbImages.Add(_mapper.Map(createImage, out previewId));
+                    previewIds.Add(previewId);
+                }
+                else
+                {
+                    dbImages.AddRange(_mapper.Map(createImage, resizedContent, out previewId));
+                    previewIds.Add(previewId);
+                }
+            }
+
+            if (_repository.Create(dbImages) == null)
+            {
+                return ICreateImagesResponse.CreateObj(null);
+            }
+
+            return ICreateImagesResponse.CreateObj(previewIds);
         }
     }
 }
