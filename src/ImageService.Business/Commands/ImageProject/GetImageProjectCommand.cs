@@ -14,6 +14,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageProject
     {
         private readonly IImageProjectRepository _imageProjectRepository;
         private readonly IImageResponseMapper _imageResponseMapper;
+
         public GetImageProjectCommand(
             IImageProjectRepository imageProjectRepository,
             IImageResponseMapper imageResponseMapper)
