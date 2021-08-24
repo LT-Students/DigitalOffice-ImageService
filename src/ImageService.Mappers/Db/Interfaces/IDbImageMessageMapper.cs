@@ -9,7 +9,6 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db.Interfaces
     [AutoInject]
     public interface IDbImageMessageMapper
     {
-        DbImagesMessage Map(CreateImageData createImageData, out Guid prewiewId);
-        IEnumerable<DbImagesMessage> Map(CreateImageData createImageData, string resizedContent, out Guid prewiewId);
+        DbImagesMessage Map(CreateImageData createImageData, Guid? parentId = null, string content = null);
     }
 }
