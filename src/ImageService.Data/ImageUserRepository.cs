@@ -37,10 +37,10 @@ namespace LT.DigitalOffice.ImageService.Data
             }
 
             List<DbImagesUser> imagesUsers = _provider.ImagesUsers
-                .Where(x => imageIds.Contains(x.Id))
+                .Where(x => imageIds.Contains(x.Id) || (x.ParentId != null && imageIds.Contains((Guid)x.ParentId)))
                 .ToList();
 
-            if (imagesUsers == null || imagesUsers.Contains(null))
+            if (imagesUsers == null)
             {
                 return false;
             }
@@ -50,13 +50,10 @@ namespace LT.DigitalOffice.ImageService.Data
             foreach (DbImagesUser imageUser in imagesUsers)
             {
                 if (imageUser.ParentId != null
-                    && imageUser.Id != imageUser.ParentId)
+                    && imageUser.Id != imageUser.ParentId
+                    && !imageIds.Contains((Guid)imageUser.ParentId))
                 {
                     parentIds.Add((Guid)imageUser.ParentId);
-                }
-                else if (imageUser.ParentId == null)
-                {
-                    return false;
                 }
             }
 
