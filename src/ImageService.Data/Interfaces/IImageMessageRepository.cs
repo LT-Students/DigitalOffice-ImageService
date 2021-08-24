@@ -9,8 +9,11 @@ namespace LT.DigitalOffice.ImageService.Data.Interfaces
     public interface IImageMessageRepository
     {
         List<Guid> Create(List<DbImagesMessage> imagesMessages);
+
         List<DbImagesMessage> Get(List<Guid> imageIds);
+
         DbImagesMessage Get(Guid imageId);
+
         bool Delete(List<Guid> imageIds);
     }
 }
