@@ -28,6 +28,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
             List<DbImagesNews> result = new();
             Guid hqId = Guid.NewGuid();
             prewiewId = Guid.NewGuid();
+
             result.Add(
                 new DbImagesNews()
                 {
@@ -54,6 +55,5 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
 
             return result;
         }
-
     }
 }

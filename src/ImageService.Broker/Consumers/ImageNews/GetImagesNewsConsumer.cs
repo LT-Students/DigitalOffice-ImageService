@@ -1,9 +1,11 @@
 ﻿using LT.DigitalOffice.ImageService.Data.Interfaces;
+using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.Kernel.Broker;
 using LT.DigitalOffice.Models.Broker.Models;
 using LT.DigitalOffice.Models.Broker.Requests.Image;
 using LT.DigitalOffice.Models.Broker.Responses.Image;
 using MassTransit;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,7 +24,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews
 
         private object GetImages(IGetImagesNewsRequest request)
         {
-            var dbImages = _repository.Get(request.ImageIds);
+            List<DbImagesNews> dbImages = _repository.Get(request.ImageIds);
 
             return IGetImagesResponse.CreateObj(
                 dbImages

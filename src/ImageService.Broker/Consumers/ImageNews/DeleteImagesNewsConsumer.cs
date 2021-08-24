@@ -19,7 +19,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews
 
         public async Task Consume(ConsumeContext<IDeleteImagesNewsRequest> context)
         {
-            var response = OperationResultWrapper.CreateResponse(DeleteImages, context.Message);
+            object response = OperationResultWrapper.CreateResponse(DeleteImages, context.Message);
 
             await context.RespondAsync<IOperationResult<bool>>(response);
         }

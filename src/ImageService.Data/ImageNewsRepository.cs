@@ -49,7 +49,7 @@ namespace LT.DigitalOffice.ImageService.Data
 
         public DbImagesNews Get(Guid imageId)
         {
-            return _provider.ImagesNews.Where(x => x.Id == imageId).FirstOrDefault();
+            return _provider.ImagesNews.FirstOrDefault(x => x.Id == imageId);
         }
     }
 }

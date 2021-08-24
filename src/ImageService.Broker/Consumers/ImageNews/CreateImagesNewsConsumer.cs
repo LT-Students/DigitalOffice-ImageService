@@ -28,9 +28,10 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews
             _mapper = mapper;
             _helper = helper;
         }
+
         public async Task Consume(ConsumeContext<ICreateImagesNewsRequest> context)
         {
-            var response = OperationResultWrapper.CreateResponse(CreateImages, context.Message);
+            object response = OperationResultWrapper.CreateResponse(CreateImages, context.Message);
 
             await context.RespondAsync<IOperationResult<ICreateImagesResponse>>(response);
         }
@@ -42,13 +43,12 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews
                 return null;
             }
 
-            List<CreateImageData> createImages = request.CreateImagesData;
             List<DbImagesNews> dbImages = new();
             Guid previewId;
             List<Guid> previewIds = new();
             string resizedContent;
 
-            foreach (CreateImageData createImage in createImages)
+            foreach (CreateImageData createImage in request.CreateImagesData)
             {
                 resizedContent = _helper.Resize(createImage.Content, createImage.Extension);
 

@@ -10,6 +10,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db.Interfaces
     public interface IDbImageNewsMapper
     {
         DbImagesNews Map(CreateImageData createImageData, out Guid prewiewId);
+
         List<DbImagesNews> Map(CreateImageData createImageData, string resizedContent, out Guid prewiewId);
     }
 }
