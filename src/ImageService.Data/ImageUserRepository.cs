@@ -29,12 +29,38 @@ namespace LT.DigitalOffice.ImageService.Data
             return imagesUsers.Select(x => x.Id).ToList();
         }
 
-        public bool Delete(List<DbImagesUser> imagesUsers)
+        public bool Delete(List<Guid> imageIds)
         {
-            if (imagesUsers.Contains(null))
+            if (imageIds == null)
             {
                 return false;
             }
+
+            List<DbImagesUser> imagesUsers = _provider.ImagesUsers
+                .Where(x => imageIds.Contains(x.Id))
+                .ToList();
+
+            if (imagesUsers == null || imagesUsers.Contains(null))
+            {
+                return false;
+            }
+
+            List<Guid> parentIds = new();
+
+            foreach (DbImagesUser imageUser in imagesUsers)
+            {
+                if (imageUser.ParentId != null
+                    && imageUser.Id != imageUser.ParentId)
+                {
+                    parentIds.Add((Guid)imageUser.ParentId);
+                }
+                else if (imageUser.ParentId == null)
+                {
+                    return false;
+                }
+            }
+
+            imagesUsers.AddRange(_provider.ImagesUsers.Where(x => parentIds.Contains(x.Id)));
 
             _provider.ImagesUsers.RemoveRange(imagesUsers);
             _provider.Save();

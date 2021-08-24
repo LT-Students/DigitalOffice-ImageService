@@ -26,8 +26,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageUser
 
         private object DeleteImages(IDeleteImagesUserRequest request)
         {
-            List<DbImagesUser> dbImages = _repository.Get(request.ImageIds);
-            _repository.Delete(dbImages);
+            _repository.Delete(request.ImageIds);
 
             return true;
         }
