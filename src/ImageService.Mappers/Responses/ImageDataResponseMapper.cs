@@ -8,6 +8,11 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses
     {
         public ImageDataResponse Map(DbImagesMessage dbImageMessage)
         {
+            if (dbImageMessage == null)
+            {
+                return null;
+            }
+
             return new ImageDataResponse
             {
                 Id = dbImageMessage.Id,

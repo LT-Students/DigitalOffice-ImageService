@@ -12,6 +12,11 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
         {
             prewiewId = Guid.NewGuid();
 
+            if (createImageData == null)
+            {
+                return null;
+            }
+
             return new DbImagesMessage()
             {
                 Id = prewiewId,
@@ -26,13 +31,20 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
 
         public IEnumerable<DbImagesMessage> Map(CreateImageData createImageData, string resizedContent, out Guid prewiewId)
         {
-            List<DbImagesMessage> result = new();
-            Guid hqId = Guid.NewGuid();
             prewiewId = Guid.NewGuid();
+
+            if (createImageData == null)
+            {
+                return null;
+            }
+
+            List<DbImagesMessage> result = new();
+            Guid parentId = Guid.NewGuid();
+
             result.Add(
                 new DbImagesMessage()
                 {
-                    Id = hqId,
+                    Id = parentId,
                     ParentId = null,
                     Name = createImageData.Name,
                     Content = createImageData.Content,
@@ -45,7 +57,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
                 new DbImagesMessage()
                 {
                     Id = prewiewId,
-                    ParentId = hqId,
+                    ParentId = parentId,
                     Name = createImageData.Name,
                     Content = resizedContent,
                     Extension = createImageData.Extension,
