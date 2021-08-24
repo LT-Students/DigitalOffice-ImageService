@@ -10,6 +10,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db.Interfaces
     public interface IDbImageUserMapper
     {
         DbImagesUser Map(CreateImageData createImageData, out Guid prewiewId);
+
         List<DbImagesUser> Map(CreateImageData createImageData, string resizedContent, out Guid prewiewId);
     }
 }

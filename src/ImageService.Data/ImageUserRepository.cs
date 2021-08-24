@@ -49,8 +49,7 @@ namespace LT.DigitalOffice.ImageService.Data
 
         public DbImagesUser Get(Guid imageId)
         {
-            return _provider.ImagesUsers.Where(x => x.Id == imageId).FirstOrDefault();
+            return _provider.ImagesUsers.FirstOrDefault(x => x.Id == imageId);
         }
-
     }
 }

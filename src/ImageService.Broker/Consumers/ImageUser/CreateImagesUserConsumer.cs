@@ -19,15 +19,19 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageUser
         private readonly IResizeImageHelper _helper;
         private readonly IDbImageUserMapper _mapper;
 
-        public CreateImagesUserConsumer(IImageUserRepository repository, IDbImageUserMapper mapper)
+        public CreateImagesUserConsumer(
+            IImageUserRepository repository,
+            IDbImageUserMapper mapper,
+            IResizeImageHelper helper)
         {
             _repository = repository;
+            _helper = helper;
             _mapper = mapper;
         }
 
         public async Task Consume(ConsumeContext<ICreateImagesUserRequest> context)
         {
-            var response = OperationResultWrapper.CreateResponse(CreateImages, context.Message);
+            object response = OperationResultWrapper.CreateResponse(CreateImages, context.Message);
 
             await context.RespondAsync<IOperationResult<ICreateImagesResponse>>(response);
         }
@@ -39,13 +43,12 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageUser
                 return null;
             }
 
-            List<CreateImageData> createImages = request.CreateImagesData;
             List<DbImagesUser> dbImages = new();
             Guid previewId;
             List<Guid> previewIds = new();
             string resizedContent;
 
-            foreach (CreateImageData createImage in createImages)
+            foreach (CreateImageData createImage in request.CreateImagesData)
             {
                 resizedContent = _helper.Resize(createImage.Content, createImage.Extension);
 

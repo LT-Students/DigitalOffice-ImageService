@@ -27,12 +27,13 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
         public List<DbImagesUser> Map(CreateImageData createImageData, string resizedContent, out Guid prewiewId)
         {
             List<DbImagesUser> result = new();
-            Guid hqId = Guid.NewGuid();
+            Guid higqQualityId = Guid.NewGuid();
             prewiewId = Guid.NewGuid();
+
             result.Add(
                 new DbImagesUser()
                 {
-                    Id = hqId,
+                    Id = higqQualityId,
                     ParentId = null,
                     Name = createImageData.Name,
                     Content = createImageData.Content,
@@ -45,7 +46,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
                 new DbImagesUser()
                 {
                     Id = prewiewId,
-                    ParentId = hqId,
+                    ParentId = higqQualityId,
                     Name = createImageData.Name,
                     Content = resizedContent,
                     Extension = createImageData.Extension,
