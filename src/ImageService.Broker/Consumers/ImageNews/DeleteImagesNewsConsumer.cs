@@ -26,8 +26,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews
 
         private object DeleteImages(IDeleteImagesNewsRequest request)
         {
-            List<DbImagesNews> dbImages = _repository.Get(request.ImageIds);
-            _repository.Delete(dbImages);
+            _repository.Delete(request.ImageIds);
 
             return true;
         }
