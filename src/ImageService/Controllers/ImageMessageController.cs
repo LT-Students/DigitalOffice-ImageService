@@ -1,5 +1,5 @@
 ﻿using LT.DigitalOffice.ImageService.Business.Commands.ImageMessage.Interfaces;
-using LT.DigitalOffice.ImageService.Models.Dto.Responses.Message;
+using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Responses;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,7 +11,7 @@ namespace LT.DigitalOffice.ImageService.Controllers
     public class ImageMessageController : ControllerBase
     {
         [HttpGet("get")]
-        public OperationResultResponse<ImageMessageResponse> Get(
+        public OperationResultResponse<ImageDataResponse> Get(
             [FromServices] IGetImageMessageCommand command,
             [FromQuery] Guid imageId)
         {

@@ -2,7 +2,7 @@
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
-using LT.DigitalOffice.ImageService.Models.Dto.Responses.Message;
+using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Responses;
 using System;
@@ -12,18 +12,19 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageMessage
     public class GetImageMessageCommand : IGetImageMessageCommand
     {
         private readonly IImageMessageRepository _imageMessageRepository;
-        private readonly IImageMessageResponseMapper _imageMessageResponseMapper;
+        private readonly IImageDataResponseMapper _imageMessageResponseMapper;
+
         public GetImageMessageCommand(
             IImageMessageRepository imageMessageRepository,
-            IImageMessageResponseMapper imageMessageResponseMapper)
+            IImageDataResponseMapper imageMessageResponseMapper)
         {
             _imageMessageRepository = imageMessageRepository;
             _imageMessageResponseMapper = imageMessageResponseMapper;
         }
 
-        public OperationResultResponse<ImageMessageResponse> Execute(Guid parentId)
+        public OperationResultResponse<ImageDataResponse> Execute(Guid parentId)
         {
-            OperationResultResponse<ImageMessageResponse> response = new();
+            OperationResultResponse<ImageDataResponse> response = new();
 
             DbImagesMessage dbImageMessage = _imageMessageRepository.Get(parentId);
             if (dbImageMessage == null)

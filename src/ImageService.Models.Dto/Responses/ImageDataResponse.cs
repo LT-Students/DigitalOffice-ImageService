@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace LT.DigitalOffice.ImageService.Models.Dto.Responses.Message
+namespace LT.DigitalOffice.ImageService.Models.Dto.Responses
 {
-    public record ImageMessageResponse
+    public record ImageDataResponse
     {
         public Guid Id { get; set; }
         public string Content { get; set; }

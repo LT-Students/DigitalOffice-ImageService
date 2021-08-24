@@ -19,7 +19,7 @@ namespace LT.DigitalOffice.ImageService.Data
         {
             if (imagesMessages.Contains(null))
             {
-                throw new ArgumentNullException(nameof(imagesMessages));
+                return null;
             }
 
             _provider.ImagesMessages.AddRange(imagesMessages);
@@ -38,15 +38,38 @@ namespace LT.DigitalOffice.ImageService.Data
             return _provider.ImagesMessages.Where(x => x.Id == imageId).FirstOrDefault();
         }
 
-        public bool Delete(List<DbImagesMessage> imagesMessages)
+        public bool Delete(List<Guid> imageIds)
         {
+            if (imageIds == null)
+            {
+                return false;
+            }
+
+            List<DbImagesMessage> imagesMessages = _provider.ImagesMessages
+                .Where(x => imageIds.Contains(x.Id))
+                .ToList();
+
+            if (imagesMessages == null || imagesMessages.Contains(null))
+            {
+                return false;
+            }
+
+            List<Guid> parentIds = new();
+
             foreach (DbImagesMessage imageMessage in imagesMessages)
             {
-                if (imageMessage == null)
+                if (imageMessage.ParentId != null
+                    && imageMessage.Id != imageMessage.ParentId)
                 {
-                    throw new ArgumentNullException(nameof(imagesMessages));
+                    parentIds.Add((Guid)imageMessage.ParentId);
+                }
+                else if (imageMessage.ParentId == null)
+                {
+                    return false;
                 }
             }
+
+            imagesMessages.AddRange(_provider.ImagesMessages.Where(x => parentIds.Contains(x.Id)));
 
             _provider.ImagesMessages.RemoveRange(imagesMessages);
             _provider.Save();

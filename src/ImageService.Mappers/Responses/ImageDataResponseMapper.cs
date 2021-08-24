@@ -1,15 +1,14 @@
 ﻿using LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
-using LT.DigitalOffice.ImageService.Models.Dto.Responses.Message;
-using System.Collections.Generic;
+using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 
 namespace LT.DigitalOffice.ImageService.Mappers.Responses
 {
-    public class ImageMessageResponseMapper : IImageMessageResponseMapper
+    public class ImageDataResponseMapper : IImageDataResponseMapper
     {
-        public ImageMessageResponse Map(DbImagesMessage dbImageMessage)
+        public ImageDataResponse Map(DbImagesMessage dbImageMessage)
         {
-            return new ImageMessageResponse
+            return new ImageDataResponse
             {
                 Id = dbImageMessage.Id,
                 Content = dbImageMessage.Content,
