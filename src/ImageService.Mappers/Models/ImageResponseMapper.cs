@@ -20,7 +20,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Models
                 };
             }
 
-            throw new ArgumentNullException(nameof(dbImageProject));
+            return null;
         }
     }
 }
