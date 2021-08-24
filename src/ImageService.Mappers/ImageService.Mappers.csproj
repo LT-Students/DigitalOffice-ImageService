@@ -7,6 +7,7 @@
   <Import Project="$(ProjectDir)..\..\Common.Configurations.targets" />
 
   <ItemGroup>
+    <ProjectReference Include="..\ImageService.Data\ImageService.Data.csproj" />
     <ProjectReference Include="..\ImageService.Models.Db\ImageService.Models.Db.csproj" />
     <ProjectReference Include="..\ImageService.Models.Dto\ImageService.Models.Dto.csproj" />
   </ItemGroup>
@@ -14,6 +15,10 @@
   <ItemGroup>
     <Folder Include="Db\Interfaces\" />
     <Folder Include="Models\Interfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
   </ItemGroup>
 
 </Project>

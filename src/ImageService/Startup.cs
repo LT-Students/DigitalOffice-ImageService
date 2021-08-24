@@ -1,4 +1,5 @@
 using HealthChecks.UI.Client;
+using LT.DigitalOffice.ImageService.Broker.Consumers;
 using LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef;
 using LT.DigitalOffice.ImageService.Models.Dto.Configuration;
 using LT.DigitalOffice.Kernel.Configurations;
@@ -66,6 +67,8 @@ namespace LT.DigitalOffice.ImageService
 
             services.Configure<BaseRabbitMqConfig>(Configuration.GetSection(BaseRabbitMqConfig.SectionName));
             services.Configure<BaseServiceInfoConfig>(Configuration.GetSection(BaseServiceInfoConfig.SectionName));
+
+            services.AddBusinessObjects();
 
             services.AddHttpContextAccessor();
 
@@ -137,6 +140,10 @@ namespace LT.DigitalOffice.ImageService
         {
             services.AddMassTransit(x =>
             {
+                x.AddConsumer<CreateImagesMessageConsumer>();
+                x.AddConsumer<GetImagesMessageConsumer>();
+                x.AddConsumer<DeleteImagesMessageConsumer>();
+
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(_rabbitMqConfig.Host, "/", host =>
@@ -158,6 +165,20 @@ namespace LT.DigitalOffice.ImageService
             IBusRegistrationContext context,
             IRabbitMqBusFactoryConfigurator cfg)
         {
+            cfg.ReceiveEndpoint(_rabbitMqConfig.CreateImagesMessageEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<CreateImagesMessageConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.GetImagesMessageEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<GetImagesMessageConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.DeleteImagesMessageEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<DeleteImagesMessageConsumer>(context);
+            });
         }
 
         private void UpdateDatabase(IApplicationBuilder app)
