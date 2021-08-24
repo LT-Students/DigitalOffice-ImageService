@@ -8,53 +8,23 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
 {
     public class DbImageUserMapper : IDbImageUserMapper
     {
-        public DbImagesUser Map(CreateImageData createImageData, out Guid prewiewId)
+        public DbImagesUser Map(CreateImageData createImageData, Guid? parentId = null, string content = null)
         {
-            prewiewId = Guid.NewGuid();
+            if(createImageData == null)
+            {
+                return null;
+            }
 
             return new DbImagesUser()
             {
-                Id = prewiewId,
-                ParentId = prewiewId,
+                Id = Guid.NewGuid(),
+                ParentId = parentId,
                 Name = createImageData.Name,
                 Content = createImageData.Content,
                 Extension = createImageData.Extension,
                 CreatedAtUtc = DateTime.UtcNow,
                 CreatedBy = createImageData.CreatedBy
             };
-        }
-
-        public List<DbImagesUser> Map(CreateImageData createImageData, string resizedContent, out Guid prewiewId)
-        {
-            List<DbImagesUser> result = new();
-            Guid higqQualityId = Guid.NewGuid();
-            prewiewId = Guid.NewGuid();
-
-            result.Add(
-                new DbImagesUser()
-                {
-                    Id = higqQualityId,
-                    ParentId = null,
-                    Name = createImageData.Name,
-                    Content = createImageData.Content,
-                    Extension = createImageData.Extension,
-                    CreatedAtUtc = DateTime.UtcNow,
-                    CreatedBy = createImageData.CreatedBy
-                });
-
-            result.Add(
-                new DbImagesUser()
-                {
-                    Id = prewiewId,
-                    ParentId = higqQualityId,
-                    Name = createImageData.Name,
-                    Content = resizedContent,
-                    Extension = createImageData.Extension,
-                    CreatedAtUtc = DateTime.UtcNow,
-                    CreatedBy = createImageData.CreatedBy
-                });
-
-            return result;
         }
     }
 }

@@ -44,24 +44,29 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageUser
             }
 
             List<DbImagesUser> dbImages = new();
-            Guid previewId;
             List<Guid> previewIds = new();
+            DbImagesUser dbImageUser;
+            DbImagesUser dbPrewiewImageUser;
             string resizedContent;
 
             foreach (CreateImageData createImage in request.CreateImagesData)
             {
+                dbImageUser = _mapper.Map(createImage);
                 resizedContent = _helper.Resize(createImage.Content, createImage.Extension);
 
                 if (string.IsNullOrEmpty(resizedContent))
                 {
-                    dbImages.Add(_mapper.Map(createImage, out previewId));
-                    previewIds.Add(previewId);
+                    dbImageUser.ParentId = dbImageUser.Id;
+                    previewIds.Add(dbImageUser.Id);
                 }
                 else
                 {
-                    dbImages.AddRange(_mapper.Map(createImage, resizedContent, out previewId));
-                    previewIds.Add(previewId);
+                    dbPrewiewImageUser = _mapper.Map(createImage, dbImageUser.ParentId, resizedContent);
+                    dbImages.Add(dbPrewiewImageUser);
+                    previewIds.Add(dbPrewiewImageUser.Id);
                 }
+
+                dbImages.Add(dbImageUser);
             }
 
             if (_repository.Create(dbImages) == null)
