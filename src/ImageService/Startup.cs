@@ -1,4 +1,5 @@
 using HealthChecks.UI.Client;
+using LT.DigitalOffice.ImageService.Broker.Consumers;
 using LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews;
 using LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef;
 using LT.DigitalOffice.ImageService.Models.Dto.Configuration;
@@ -144,7 +145,6 @@ namespace LT.DigitalOffice.ImageService
                 x.AddConsumer<GetImagesNewsConsumer>();
                 x.AddConsumer<CreateImagesNewsConsumer>();
                 x.AddConsumer<DeleteImagesNewsConsumer>();
-
                 x.AddConsumer<CreateImagesMessageConsumer>();
                 x.AddConsumer<GetImagesMessageConsumer>();
                 x.AddConsumer<DeleteImagesMessageConsumer>();
@@ -184,6 +184,7 @@ namespace LT.DigitalOffice.ImageService
             {
                 ep.ConfigureConsumer<DeleteImagesNewsConsumer>(context);
             });
+
             cfg.ReceiveEndpoint(_rabbitMqConfig.CreateImagesMessageEndpoint, ep =>
             {
                 ep.ConfigureConsumer<CreateImagesMessageConsumer>(context);
