@@ -17,7 +17,7 @@ namespace LT.DigitalOffice.ImageService.Models.Db
 		public Guid CreatedBy { get; set; }
 	}
 
-    public class DbImagesConfigurationProject : IEntityTypeConfiguration<DbImagesProject>
+    public class DbImageConfigurationProject : IEntityTypeConfiguration<DbImagesProject>
     {
         public void Configure(EntityTypeBuilder<DbImagesProject> builder)
         {
