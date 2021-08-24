@@ -46,10 +46,10 @@ namespace LT.DigitalOffice.ImageService.Data
             }
 
             List<DbImagesMessage> imagesMessages = _provider.ImagesMessages
-                .Where(x => imageIds.Contains(x.Id))
+                .Where(x => imageIds.Contains(x.Id) || (x.ParentId != null && imageIds.Contains((Guid)x.ParentId)))
                 .ToList();
 
-            if (imagesMessages == null || imagesMessages.Contains(null))
+            if (imagesMessages == null)
             {
                 return false;
             }
@@ -59,13 +59,10 @@ namespace LT.DigitalOffice.ImageService.Data
             foreach (DbImagesMessage imageMessage in imagesMessages)
             {
                 if (imageMessage.ParentId != null
-                    && imageMessage.Id != imageMessage.ParentId)
+                    && imageMessage.Id != imageMessage.ParentId
+                    && !imageIds.Contains((Guid)imageMessage.ParentId))
                 {
                     parentIds.Add((Guid)imageMessage.ParentId);
-                }
-                else if (imageMessage.ParentId == null)
-                {
-                    return false;
                 }
             }
 
