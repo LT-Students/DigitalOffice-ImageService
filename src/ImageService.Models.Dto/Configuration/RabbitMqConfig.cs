@@ -10,5 +10,8 @@ namespace LT.DigitalOffice.ImageService.Models.Dto.Configuration
         public string CreateImagesNewsEndpoint { get; set; }
         public string GetImagesNewsEndpoint { get; set; }
         public string DeleteImagesNewsEndpoint { get; set; }
+        public string CreateImagesUserEndpoint { get; set; }
+        public string GetImagesUserEndpoint { get; set; }
+        public string DeleteImagesUserEndpoint { get; set; }
     }
 }

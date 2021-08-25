@@ -1,6 +1,7 @@
 using HealthChecks.UI.Client;
 using LT.DigitalOffice.ImageService.Broker.Consumers;
 using LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews;
+using LT.DigitalOffice.ImageService.Broker.Consumers.ImageUser;
 using LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef;
 using LT.DigitalOffice.ImageService.Models.Dto.Configuration;
 using LT.DigitalOffice.Kernel.Configurations;
@@ -70,8 +71,6 @@ namespace LT.DigitalOffice.ImageService
             services.Configure<BaseRabbitMqConfig>(Configuration.GetSection(BaseRabbitMqConfig.SectionName));
             services.Configure<BaseServiceInfoConfig>(Configuration.GetSection(BaseServiceInfoConfig.SectionName));
 
-            services.AddBusinessObjects();
-
             services.AddHttpContextAccessor();
 
             services
@@ -96,6 +95,8 @@ namespace LT.DigitalOffice.ImageService
             services.AddHealthChecks()
                 .AddRabbitMqCheck()
                 .AddSqlServer(connStr);
+
+            services.AddBusinessObjects();
 
             ConfigureMassTransit(services);
         }
@@ -148,6 +149,9 @@ namespace LT.DigitalOffice.ImageService
                 x.AddConsumer<CreateImagesMessageConsumer>();
                 x.AddConsumer<GetImagesMessageConsumer>();
                 x.AddConsumer<DeleteImagesMessageConsumer>();
+                x.AddConsumer<CreateImagesUserConsumer>();
+                x.AddConsumer<DeleteImagesUserConsumer>();
+                x.AddConsumer<GetImagesUserConsumer>();
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
@@ -198,6 +202,21 @@ namespace LT.DigitalOffice.ImageService
             cfg.ReceiveEndpoint(_rabbitMqConfig.DeleteImagesMessageEndpoint, ep =>
             {
                 ep.ConfigureConsumer<DeleteImagesMessageConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.CreateImagesUserEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<CreateImagesUserConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.DeleteImagesUserEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<DeleteImagesUserConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.GetImagesUserEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<GetImagesUserConsumer>(context);
             });
         }
 
