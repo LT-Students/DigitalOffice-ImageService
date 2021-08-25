@@ -18,8 +18,13 @@ namespace LT.DigitalOffice.ImageService.Mappers.Models
                 return null;
             }
 
-            return new ImageData(imageProject.Id, imageProject.ParentId, null, imageProject.Content,
-                    imageProject.Extension, imageProject.Name);
+            return new ImageData(
+                imageProject.Id,
+                imageProject.ParentId,
+                null,
+                imageProject.Content,
+                imageProject.Extension,
+                imageProject.Name);
         }
     }
 }

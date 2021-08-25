@@ -20,7 +20,7 @@ namespace LT.DigitalOffice.ImageService.Data
         {
             if (imagesProjects.Contains(null))
             {
-                throw new ArgumentNullException(nameof(imagesProjects));
+                return null;
             }
 
             _provider.ImagesProjects.AddRange(imagesProjects);
