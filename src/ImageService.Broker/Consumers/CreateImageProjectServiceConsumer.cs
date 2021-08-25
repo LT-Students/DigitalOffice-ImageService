@@ -1,6 +1,6 @@
 ﻿using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
-using LT.DigitalOffice.ImageService.Mappers.Helpers;
+using LT.DigitalOffice.ImageService.Mappers.Helpers.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.Kernel.Broker;
 using LT.DigitalOffice.Models.Broker.Models;
