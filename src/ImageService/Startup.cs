@@ -76,6 +76,8 @@ namespace LT.DigitalOffice.ImageService
             services.Configure<BaseRabbitMqConfig>(Configuration.GetSection(BaseRabbitMqConfig.SectionName));
             services.Configure<BaseServiceInfoConfig>(Configuration.GetSection(BaseServiceInfoConfig.SectionName));
 
+            services.AddBusinessObjects();
+
             services.AddHttpContextAccessor();
 
             services
@@ -152,6 +154,10 @@ namespace LT.DigitalOffice.ImageService
                 x.AddConsumer<CreateImageProjectServiceConsumer>();
                 x.AddConsumer<DeleteImageProjectServiceConsumer>();
 
+                x.AddConsumer<CreateImagesMessageConsumer>();
+                x.AddConsumer<GetImagesMessageConsumer>();
+                x.AddConsumer<DeleteImagesMessageConsumer>();
+
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(_rabbitMqConfig.Host, "/", host =>
@@ -186,6 +192,20 @@ namespace LT.DigitalOffice.ImageService
             cfg.ReceiveEndpoint(_rabbitMqConfig.DeleteImagesProjectEndpoint, ep =>
             {
                 ep.ConfigureConsumer<DeleteImageProjectServiceConsumer>(context);
+            });
+            cfg.ReceiveEndpoint(_rabbitMqConfig.CreateImagesMessageEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<CreateImagesMessageConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.GetImagesMessageEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<GetImagesMessageConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.DeleteImagesMessageEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<DeleteImagesMessageConsumer>(context);
             });
         }
 

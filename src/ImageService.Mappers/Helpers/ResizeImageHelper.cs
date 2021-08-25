@@ -1,4 +1,5 @@
-﻿using SixLabors.ImageSharp;
+﻿using LT.DigitalOffice.ImageService.Mappers.Helpers.Interfaces;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Bmp;
 using SixLabors.ImageSharp.Formats.Gif;

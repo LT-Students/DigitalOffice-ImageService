@@ -8,8 +8,10 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses
     public class ImageDataResponseMapper : IImageDataResponseMapper
     {
         public ImageDataResponse Map(DbImagesProject dbImageProject)
+        public ImageDataResponse Map(DbImagesMessage dbImageMessage)
         {
             if (dbImageProject == null)
+            if (dbImageMessage == null)
             {
                 return null;
             }
@@ -20,6 +22,10 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses
                 Content = dbImageProject.Content,
                 Name = dbImageProject.Name,
                 Extension = dbImageProject.Extension
+                Id = dbImageMessage.Id,
+                Content = dbImageMessage.Content,
+                Name = dbImageMessage.Name,
+                Extension = dbImageMessage.Extension
             };
         }
     }

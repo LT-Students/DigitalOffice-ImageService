@@ -8,5 +8,6 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces
     public interface IImageDataResponseMapper
     {
         ImageDataResponse  Map(DbImagesProject dbImageProject);
+        ImageDataResponse Map(DbImagesMessage dbImageMessage);
     }
 }
