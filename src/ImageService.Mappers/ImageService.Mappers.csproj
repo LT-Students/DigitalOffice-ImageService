@@ -7,12 +7,6 @@
   <Import Project="$(ProjectDir)..\..\Common.Configurations.targets" />
 
   <ItemGroup>
-    <Compile Remove="Models\**" />
-    <EmbeddedResource Remove="Models\**" />
-    <None Remove="Models\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ImageService.Data\ImageService.Data.csproj" />
     <ProjectReference Include="..\ImageService.Models.Db\ImageService.Models.Db.csproj" />
     <ProjectReference Include="..\ImageService.Models.Dto\ImageService.Models.Dto.csproj" />
