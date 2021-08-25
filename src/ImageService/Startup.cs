@@ -1,14 +1,8 @@
 using HealthChecks.UI.Client;
 using LT.DigitalOffice.ImageService.Broker.Consumers;
 using LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews;
-using LT.DigitalOffice.ImageService.Business.Commands.ImageProject;
-using LT.DigitalOffice.ImageService.Business.Commands.ImageProject.Interfaces;
-using LT.DigitalOffice.ImageService.Data;
-using LT.DigitalOffice.ImageService.Data.Interfaces;
-using LT.DigitalOffice.ImageService.Data.Provider;
+using LT.DigitalOffice.ImageService.Broker.Consumers.ImageUser;
 using LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef;
-using LT.DigitalOffice.ImageService.Mappers.Responses;
-using LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Dto.Configuration;
 using LT.DigitalOffice.Kernel.Configurations;
 using LT.DigitalOffice.Kernel.Extensions;
