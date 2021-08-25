@@ -1,12 +1,7 @@
 ﻿using LT.DigitalOffice.ImageService.Data.Interfaces;
-using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.Kernel.Broker;
 using LT.DigitalOffice.Models.Broker.Requests.Image;
 using MassTransit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.ImageService.Broker.Consumers
@@ -30,9 +25,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 
         private object DeleteImages(IDeleteImagesMessageRequest request)
         {
-            _imageMessageRepository.Delete(request.ImageIds);
-
-            return true;
+            return _imageMessageRepository.Delete(request.ImageIds);
         }
     }
 }

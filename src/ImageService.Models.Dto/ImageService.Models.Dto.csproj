@@ -5,9 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Enums\" />
-    <Folder Include="Request\" />
+    <Compile Remove="Enums\**" />
+    <Compile Remove="Models\**" />
+    <Compile Remove="Request\**" />
+    <EmbeddedResource Remove="Enums\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="Request\**" />
+    <None Remove="Enums\**" />
+    <None Remove="Models\**" />
+    <None Remove="Request\**" />
   </ItemGroup>
 
   <Import Project="$(ProjectDir)..\..\Common.Configurations.targets" />
