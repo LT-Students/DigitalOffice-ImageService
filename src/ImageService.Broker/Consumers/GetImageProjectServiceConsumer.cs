@@ -1,5 +1,5 @@
 ﻿using LT.DigitalOffice.ImageService.Data.Interfaces;
-using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
+using LT.DigitalOffice.ImageService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.Kernel.Broker;
 using LT.DigitalOffice.Models.Broker.Models;
@@ -14,10 +14,15 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
     public class GetImageProjectServiceConsumer : IConsumer<IGetImagesProjectRequest>
     {
         private readonly IImageProjectRepository _imageProjectRepository;
+        private readonly IImageDataMapper _imageDataMapper;
 
-        public GetImageProjectServiceConsumer(IImageProjectRepository imageProjectRepository)
+        public GetImageProjectServiceConsumer(
+            IImageProjectRepository imageProjectRepository,
+            IImageDataMapper imageDataMapper
+            )
         {
             _imageProjectRepository = imageProjectRepository;
+            _imageDataMapper = imageDataMapper;
         }
 
         public async Task Consume(ConsumeContext<IGetImagesProjectRequest> context)
@@ -34,8 +39,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 
             foreach (DbImagesProject imagesProject in imagesProjects)
             {
-                imageData.Add(new ImageData(imagesProject.Id, imagesProject.ParentId, null, imagesProject.Content,
-                    imagesProject.Extension, imagesProject.Name));
+                imageData.Add(_imageDataMapper.Map(imagesProject));
             }
 
             return IGetImagesResponse.CreateObj(imageData);

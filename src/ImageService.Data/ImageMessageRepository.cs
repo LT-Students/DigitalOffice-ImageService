@@ -35,7 +35,7 @@ namespace LT.DigitalOffice.ImageService.Data
 
         public DbImagesMessage Get(Guid imageId)
         {
-            return _provider.ImagesMessages.Where(x => x.Id == imageId).FirstOrDefault();
+            return _provider.ImagesMessages.FirstOrDefault(x => x.Id == imageId);
         }
 
         public bool Delete(List<Guid> imageIds)

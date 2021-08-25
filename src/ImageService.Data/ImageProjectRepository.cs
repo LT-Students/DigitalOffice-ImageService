@@ -72,7 +72,7 @@ namespace LT.DigitalOffice.ImageService.Data
 
         public DbImagesProject Get(Guid imageId)
         {
-            return _provider.ImagesProjects.Where(x => x.Id == imageId).FirstOrDefault();
+            return _provider.ImagesProjects.FirstOrDefault(x => x.Id == imageId);
         }
     }
 }
