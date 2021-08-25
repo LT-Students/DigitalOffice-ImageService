@@ -143,6 +143,10 @@ namespace LT.DigitalOffice.ImageService
         {
             services.AddMassTransit(x =>
             {
+                x.AddConsumer<GetImageProjectServiceConsumer>();
+                x.AddConsumer<CreateImageProjectServiceConsumer>();
+                x.AddConsumer<DeleteImageProjectServiceConsumer>();
+
                 x.AddConsumer<GetImagesNewsConsumer>();
                 x.AddConsumer<CreateImagesNewsConsumer>();
                 x.AddConsumer<DeleteImagesNewsConsumer>();
@@ -174,6 +178,20 @@ namespace LT.DigitalOffice.ImageService
             IBusRegistrationContext context,
             IRabbitMqBusFactoryConfigurator cfg)
         {
+            cfg.ReceiveEndpoint(_rabbitMqConfig.GetImagesProjectEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<GetImageProjectServiceConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.CreateImagesProjectEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<CreateImageProjectServiceConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.DeleteImagesProjectEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<DeleteImageProjectServiceConsumer>(context);
+            });
             cfg.ReceiveEndpoint(_rabbitMqConfig.GetImagesNewsEndpoint, ep =>
             {
                 ep.ConfigureConsumer<GetImagesNewsConsumer>(context);
