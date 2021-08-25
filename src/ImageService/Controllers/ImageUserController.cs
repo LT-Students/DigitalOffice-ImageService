@@ -1,5 +1,5 @@
 ﻿using LT.DigitalOffice.ImageService.Business.Commands.ImageUser.Interfaces;
-using LT.DigitalOffice.ImageService.Models.Dto.Responses.User;
+using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Responses;
 using Microsoft.AspNetCore.Mvc;
 using System;

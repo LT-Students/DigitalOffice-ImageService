@@ -26,9 +26,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageUser
 
         private object DeleteImages(IDeleteImagesUserRequest request)
         {
-            _repository.Delete(request.ImageIds);
-
-            return true;
+            return _repository.Delete(request.ImageIds);
         }
     }
 }

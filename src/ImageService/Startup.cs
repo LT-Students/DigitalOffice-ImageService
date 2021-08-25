@@ -149,7 +149,6 @@ namespace LT.DigitalOffice.ImageService
                 x.AddConsumer<CreateImagesMessageConsumer>();
                 x.AddConsumer<GetImagesMessageConsumer>();
                 x.AddConsumer<DeleteImagesMessageConsumer>();
-
                 x.AddConsumer<CreateImagesUserConsumer>();
                 x.AddConsumer<DeleteImagesUserConsumer>();
                 x.AddConsumer<GetImagesUserConsumer>();
@@ -204,6 +203,7 @@ namespace LT.DigitalOffice.ImageService
             {
                 ep.ConfigureConsumer<DeleteImagesMessageConsumer>(context);
             });
+
             cfg.ReceiveEndpoint(_rabbitMqConfig.CreateImagesUserEndpoint, ep =>
             {
                 ep.ConfigureConsumer<CreateImagesUserConsumer>(context);
