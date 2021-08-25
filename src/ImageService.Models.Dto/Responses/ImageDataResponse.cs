@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LT.DigitalOffice.ImageService.Models.Dto.Responses.User
+namespace LT.DigitalOffice.ImageService.Models.Dto.Responses
 {
     public record ImageDataResponse
     {

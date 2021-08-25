@@ -1,4 +1,6 @@
 using HealthChecks.UI.Client;
+using LT.DigitalOffice.ImageService.Broker.Consumers;
+using LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews;
 using LT.DigitalOffice.ImageService.Broker.Consumers.ImageUser;
 using LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef;
 using LT.DigitalOffice.ImageService.Models.Dto.Configuration;
@@ -65,6 +67,7 @@ namespace LT.DigitalOffice.ImageService
                     });
             });
 
+            services.Configure<TokenConfiguration>(Configuration.GetSection("CheckTokenMiddleware"));
             services.Configure<BaseRabbitMqConfig>(Configuration.GetSection(BaseRabbitMqConfig.SectionName));
             services.Configure<BaseServiceInfoConfig>(Configuration.GetSection(BaseServiceInfoConfig.SectionName));
 
@@ -140,6 +143,13 @@ namespace LT.DigitalOffice.ImageService
         {
             services.AddMassTransit(x =>
             {
+                x.AddConsumer<GetImagesNewsConsumer>();
+                x.AddConsumer<CreateImagesNewsConsumer>();
+                x.AddConsumer<DeleteImagesNewsConsumer>();
+                x.AddConsumer<CreateImagesMessageConsumer>();
+                x.AddConsumer<GetImagesMessageConsumer>();
+                x.AddConsumer<DeleteImagesMessageConsumer>();
+
                 x.AddConsumer<CreateImagesUserConsumer>();
                 x.AddConsumer<DeleteImagesUserConsumer>();
                 x.AddConsumer<GetImagesUserConsumer>();
@@ -165,6 +175,35 @@ namespace LT.DigitalOffice.ImageService
             IBusRegistrationContext context,
             IRabbitMqBusFactoryConfigurator cfg)
         {
+            cfg.ReceiveEndpoint(_rabbitMqConfig.GetImagesNewsEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<GetImagesNewsConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.CreateImagesNewsEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<CreateImagesNewsConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.DeleteImagesNewsEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<DeleteImagesNewsConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.CreateImagesMessageEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<CreateImagesMessageConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.GetImagesMessageEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<GetImagesMessageConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.DeleteImagesMessageEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<DeleteImagesMessageConsumer>(context);
+            });
             cfg.ReceiveEndpoint(_rabbitMqConfig.CreateImagesUserEndpoint, ep =>
             {
                 ep.ConfigureConsumer<CreateImagesUserConsumer>(context);
