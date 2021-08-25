@@ -54,5 +54,21 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses
                 Extension = dbImageProject.Extension
             };
         }
+
+        public ImageDataResponse Map(DbImagesUser dbImagesUser)
+        {
+            if (dbImagesUser == null)
+            {
+                return null;
+            }
+
+            return new ImageDataResponse
+            {
+                Id = dbImagesUser.Id,
+                Content = dbImagesUser.Content,
+                Name = dbImagesUser.Name,
+                Extension = dbImagesUser.Extension
+            };
+        }
     }
 }

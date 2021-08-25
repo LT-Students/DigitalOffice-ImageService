@@ -10,5 +10,6 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces
         ImageDataResponse Map(DbImagesProject dbImageProject);
         ImageDataResponse Map(DbImagesMessage dbImageMessage);
         ImageDataResponse Map(DbImagesNews dbImagesNews);
+        ImageDataResponse Map(DbImagesUser dbImagesUser);
     }
 }
