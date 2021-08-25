@@ -8,7 +8,7 @@ namespace LT.DigitalOffice.ImageService.Data.Interfaces
     [AutoInject]
     public interface IImageProjectRepository
     {
-        List<DbImagesProject> Get(List<Guid> Id);
+        List<DbImagesProject> Get(List<Guid> imageIds);
 
         bool Delete(List<Guid> imageIds);
 

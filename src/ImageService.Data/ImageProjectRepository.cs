@@ -36,7 +36,30 @@ namespace LT.DigitalOffice.ImageService.Data
                 return false;
             }
 
-            _provider.ImagesProjects.RemoveRange(Get(imageIds));
+            List<DbImagesProject> imagesProjects = _provider.ImagesProjects
+                .Where(x => imageIds.Contains(x.Id) || (x.ParentId != null && imageIds.Contains((Guid)x.ParentId)))
+                .ToList();
+
+            if (imagesProjects == null)
+            {
+                return false;
+            }
+
+            List<Guid> parentIds = new();
+
+            foreach (DbImagesProject imageProject in imagesProjects)
+            {
+                if (imageProject.ParentId != null
+                    && imageProject.Id != imageProject.ParentId
+                    && !imageIds.Contains((Guid)imageProject.ParentId))
+                {
+                    parentIds.Add((Guid)imageProject.ParentId);
+                }
+            }
+
+            imagesProjects.AddRange(_provider.ImagesProjects.Where(x => parentIds.Contains(x.Id)));
+
+            _provider.ImagesProjects.RemoveRange(imagesProjects);
             _provider.Save();
 
             return true;
@@ -49,7 +72,7 @@ namespace LT.DigitalOffice.ImageService.Data
 
         public DbImagesProject Get(Guid imageId)
         {
-            return _provider.ImagesProjects.Find(imageId);
+            return _provider.ImagesProjects.Where(x => x.Id == imageId).FirstOrDefault();
         }
     }
 }

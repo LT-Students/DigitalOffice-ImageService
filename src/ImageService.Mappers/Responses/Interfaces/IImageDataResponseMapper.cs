@@ -2,10 +2,10 @@
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Attributes;
 
-namespace LT.DigitalOffice.ImageService.Mappers.Models.Interfaces
+namespace LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces
 {
     [AutoInject]
-    public interface IImageResponseMapper
+    public interface IImageDataResponseMapper
     {
         ImageDataResponse  Map(DbImagesProject dbImageProject);
     }

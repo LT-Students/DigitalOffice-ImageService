@@ -11,4 +11,8 @@
     <ProjectReference Include="..\ImageService.Models.Dto\ImageService.Models.Dto.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
+  </ItemGroup>
+
 </Project>
