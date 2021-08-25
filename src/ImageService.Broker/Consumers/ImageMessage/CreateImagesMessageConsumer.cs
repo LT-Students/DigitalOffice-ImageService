@@ -61,7 +61,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
                 }
                 else
                 {
-                    dbPreviewImageMessage = _mapper.Map(createImage, dbImageMessage.ParentId, resizedContent);
+                    dbPreviewImageMessage = _mapper.Map(createImage, dbImageMessage.Id, resizedContent);
                     dbImages.Add(dbPreviewImageMessage);
                     previewIds.Add(dbPreviewImageMessage.Id);
                 }

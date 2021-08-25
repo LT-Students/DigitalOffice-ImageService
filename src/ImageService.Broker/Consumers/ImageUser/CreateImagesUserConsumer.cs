@@ -61,7 +61,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageUser
                 }
                 else
                 {
-                    dbPrewiewImageUser = _mapper.Map(createImage, dbImageUser.ParentId, resizedContent);
+                    dbPrewiewImageUser = _mapper.Map(createImage, dbImageUser.Id, resizedContent);
                     dbImages.Add(dbPrewiewImageUser);
                     previewIds.Add(dbPrewiewImageUser.Id);
                 }

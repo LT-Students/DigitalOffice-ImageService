@@ -61,7 +61,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
                 }
                 else
                 {
-                    dbPreviewImageProject = _mapper.Map(createImage, dbImageProject.ParentId, resizedContent);
+                    dbPreviewImageProject = _mapper.Map(createImage, dbImageProject.Id, resizedContent);
                     images.Add(dbPreviewImageProject);
                     previewIds.Add(dbPreviewImageProject.Id);
                 }
