@@ -7,6 +7,22 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses
 {
     public class ImageDataResponseMapper : IImageDataResponseMapper
     {
+        public ImageDataResponse Map(DbImagesNews dbImagesNews)
+        {
+            if (dbImagesNews == null)
+            {
+                return null;
+            }
+
+            return new ImageDataResponse
+            {
+                Id = dbImagesNews.Id,
+                Content = dbImagesNews.Content,
+                Name = dbImagesNews.Name,
+                Extension = dbImagesNews.Extension
+            };
+        }
+
         public ImageDataResponse Map(DbImagesMessage dbImageMessage)
         {
             if (dbImageMessage == null)

@@ -1,5 +1,6 @@
 using HealthChecks.UI.Client;
 using LT.DigitalOffice.ImageService.Broker.Consumers;
+using LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageProject;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageProject.Interfaces;
 using LT.DigitalOffice.ImageService.Data;
@@ -154,6 +155,9 @@ namespace LT.DigitalOffice.ImageService
                 x.AddConsumer<CreateImageProjectServiceConsumer>();
                 x.AddConsumer<DeleteImageProjectServiceConsumer>();
 
+                x.AddConsumer<GetImagesNewsConsumer>();
+                x.AddConsumer<CreateImagesNewsConsumer>();
+                x.AddConsumer<DeleteImagesNewsConsumer>();
                 x.AddConsumer<CreateImagesMessageConsumer>();
                 x.AddConsumer<GetImagesMessageConsumer>();
                 x.AddConsumer<DeleteImagesMessageConsumer>();
@@ -193,6 +197,21 @@ namespace LT.DigitalOffice.ImageService
             {
                 ep.ConfigureConsumer<DeleteImageProjectServiceConsumer>(context);
             });
+            cfg.ReceiveEndpoint(_rabbitMqConfig.GetImagesNewsEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<GetImagesNewsConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.CreateImagesNewsEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<CreateImagesNewsConsumer>(context);
+            });
+
+            cfg.ReceiveEndpoint(_rabbitMqConfig.DeleteImagesNewsEndpoint, ep =>
+            {
+                ep.ConfigureConsumer<DeleteImagesNewsConsumer>(context);
+            });
+
             cfg.ReceiveEndpoint(_rabbitMqConfig.CreateImagesMessageEndpoint, ep =>
             {
                 ep.ConfigureConsumer<CreateImagesMessageConsumer>(context);
