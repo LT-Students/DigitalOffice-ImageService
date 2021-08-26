@@ -44,9 +44,9 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
             }
 
             List<Guid> previewIds = new();
-            List<DbImagesProject> images = new();
-            DbImagesProject dbImageProject;
-            DbImagesProject dbPreviewImageProject;
+            List<DbImageProject> images = new();
+            DbImageProject dbImageProject;
+            DbImageProject dbPreviewImageProject;
             string resizedContent;
 
             foreach (CreateImageData createImage in request.CreateImagesData)

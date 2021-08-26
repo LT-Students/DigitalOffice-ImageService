@@ -7,9 +7,9 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces
     [AutoInject]
     public interface IImageDataResponseMapper
     {
-        ImageDataResponse Map(DbImagesProject dbImageProject);
-        ImageDataResponse Map(DbImagesMessage dbImageMessage);
-        ImageDataResponse Map(DbImagesNews dbImagesNews);
-        ImageDataResponse Map(DbImagesUser dbImagesUser);
+        ImageDataResponse Map(DbImageProject dbImageProject);
+        ImageDataResponse Map(DbImageMessage dbImageMessage);
+        ImageDataResponse Map(DbImageNews dbImagesNews);
+        ImageDataResponse Map(DbImageUser dbImagesUser);
     }
 }

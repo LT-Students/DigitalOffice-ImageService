@@ -7,14 +7,14 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
 {
     public class DbImageMessageMapper : IDbImageMessageMapper
     {
-        public DbImagesMessage Map(CreateImageData createImageData, Guid? parentId = null, string content = null)
+        public DbImageMessage Map(CreateImageData createImageData, Guid? parentId = null, string content = null)
         {
             if (createImageData == null)
             {
                 return null;
             }
 
-            return new DbImagesMessage()
+            return new DbImageMessage()
             {
                 Id = Guid.NewGuid(),
                 ParentId = parentId,

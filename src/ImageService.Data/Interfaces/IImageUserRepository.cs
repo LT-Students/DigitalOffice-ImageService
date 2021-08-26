@@ -8,11 +8,11 @@ namespace LT.DigitalOffice.ImageService.Data.Interfaces
     [AutoInject]
     public interface IImageUserRepository
     {
-        List<Guid> Create(List<DbImagesUser> imagesUsers);
+        List<Guid> Create(List<DbImageUser> imagesUsers);
 
-        List<DbImagesUser> Get(List<Guid> imageIds);
+        List<DbImageUser> Get(List<Guid> imageIds);
 
-        DbImagesUser Get(Guid imageId);
+        DbImageUser Get(Guid imageId);
 
         bool Delete(List<Guid> imageIds);
     }

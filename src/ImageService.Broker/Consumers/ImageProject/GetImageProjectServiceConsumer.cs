@@ -34,10 +34,10 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 
         private object GetImages(IGetImagesProjectRequest request)
         {
-            List<DbImagesProject> imagesProjects = _imageProjectRepository.Get(request.ImageIds);
+            List<DbImageProject> imagesProjects = _imageProjectRepository.Get(request.ImageIds);
             List<ImageData> imageData = new();
 
-            foreach (DbImagesProject imagesProject in imagesProjects)
+            foreach (DbImageProject imagesProject in imagesProjects)
             {
                 imageData.Add(_imageDataMapper.Map(imagesProject));
             }

@@ -43,10 +43,10 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageUser
                 return null;
             }
 
-            List<DbImagesUser> dbImages = new();
+            List<DbImageUser> dbImages = new();
             List<Guid> previewIds = new();
-            DbImagesUser dbImageUser;
-            DbImagesUser dbPrewiewImageUser;
+            DbImageUser dbImageUser;
+            DbImageUser dbPrewiewImageUser;
             string resizedContent;
 
             foreach (CreateImageData createImage in request.CreateImagesData)

@@ -7,7 +7,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses
 {
     public class ImageDataResponseMapper : IImageDataResponseMapper
     {
-        public ImageDataResponse Map(DbImagesNews dbImagesNews)
+        public ImageDataResponse Map(DbImageNews dbImagesNews)
         {
             if (dbImagesNews == null)
             {
@@ -23,7 +23,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses
             };
         }
 
-        public ImageDataResponse Map(DbImagesMessage dbImageMessage)
+        public ImageDataResponse Map(DbImageMessage dbImageMessage)
         {
             if (dbImageMessage == null)
             {
@@ -39,7 +39,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses
             };
         }
 
-        public ImageDataResponse Map(DbImagesProject dbImageProject)
+        public ImageDataResponse Map(DbImageProject dbImageProject)
         {
             if (dbImageProject == null)
             {
@@ -55,7 +55,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses
             };
         }
 
-        public ImageDataResponse Map(DbImagesUser dbImagesUser)
+        public ImageDataResponse Map(DbImageUser dbImagesUser)
         {
             if (dbImagesUser == null)
             {

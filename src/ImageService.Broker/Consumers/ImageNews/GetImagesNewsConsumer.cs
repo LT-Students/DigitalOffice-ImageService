@@ -24,7 +24,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews
 
         private object GetImages(IGetImagesNewsRequest request)
         {
-            List<DbImagesNews> dbImages = _repository.Get(request.ImageIds);
+            List<DbImageNews> dbImages = _repository.Get(request.ImageIds);
 
             return IGetImagesResponse.CreateObj(
                 dbImages

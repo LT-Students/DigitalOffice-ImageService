@@ -11,7 +11,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Models
 {
     public class ImageDataMapper : IImageDataMapper
     {
-        public ImageData Map(DbImagesProject imageProject)
+        public ImageData Map(DbImageProject imageProject)
         {
             if (imageProject == null)
             {

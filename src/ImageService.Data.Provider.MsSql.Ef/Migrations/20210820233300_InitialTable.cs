@@ -12,7 +12,7 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
         protected override void Up(MigrationBuilder builder)
         {
             builder.CreateTable(
-                name: DbImagesUser.TableName,
+                name: DbImageUser.TableName,
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -29,7 +29,7 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
                 });
 
             builder.CreateTable(
-                name: DbImagesNews.TableName,
+                name: DbImageNews.TableName,
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -46,7 +46,7 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
                 });
 
             builder.CreateTable(
-                name: DbImagesMessage.TableName,
+                name: DbImageMessage.TableName,
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -63,7 +63,7 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
                 });
 
             builder.CreateTable(
-                name: DbImagesProject.TableName,
+                name: DbImageProject.TableName,
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
