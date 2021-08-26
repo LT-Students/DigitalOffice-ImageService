@@ -61,7 +61,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews
                 }
                 else
                 {
-                    dbPrewiewImageNews = _mapper.Map(createImage, dbImageNews.ParentId, resizedContent);
+                    dbPrewiewImageNews = _mapper.Map(createImage, dbImageNews.Id, resizedContent);
                     dbImages.Add(dbPrewiewImageNews);
                     previewIds.Add(dbPrewiewImageNews.Id);
                 }
