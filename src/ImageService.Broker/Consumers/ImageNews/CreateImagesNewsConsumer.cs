@@ -43,10 +43,10 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageNews
                 return null;
             }
 
-            List<DbImagesNews> dbImages = new();
+            List<DbImageNews> dbImages = new();
             List<Guid> previewIds = new();
-            DbImagesNews dbImageNews;
-            DbImagesNews dbPrewiewImageNews;
+            DbImageNews dbImageNews;
+            DbImageNews dbPrewiewImageNews;
             string resizedContent;
 
             foreach (CreateImageData createImage in request.CreateImagesData)

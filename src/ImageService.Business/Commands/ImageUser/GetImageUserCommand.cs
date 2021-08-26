@@ -26,7 +26,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageUser
         {
             OperationResultResponse<ImageDataResponse> response = new();
 
-            DbImagesUser dbImageUser = _imageUserRepository.Get(imageId);
+            DbImageUser dbImageUser = _imageUserRepository.Get(imageId);
 
             if (dbImageUser == null)
             {

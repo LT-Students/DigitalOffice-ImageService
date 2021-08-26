@@ -30,7 +30,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 
         private object GetImages(IGetImagesMessageRequest request)
         {
-            List<DbImagesMessage> dbImages = _imageMessageRepository.Get(request.ImageIds);
+            List<DbImageMessage> dbImages = _imageMessageRepository.Get(request.ImageIds);
 
             return IGetImagesResponse.CreateObj(
                 dbImages

@@ -26,7 +26,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageProject
         {
             OperationResultResponse<ImageDataResponse> response = new();
 
-            DbImagesProject dbImageProject = _imageProjectRepository.Get(parentId);
+            DbImageProject dbImageProject = _imageProjectRepository.Get(parentId);
 
             if (dbImageProject == null)
             {

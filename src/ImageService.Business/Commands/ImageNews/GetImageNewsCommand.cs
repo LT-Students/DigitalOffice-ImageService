@@ -26,7 +26,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
         {
             OperationResultResponse<ImageDataResponse> response = new();
 
-            DbImagesNews dbImageNews = _imageNewsRepository.Get(imageId);
+            DbImageNews dbImageNews = _imageNewsRepository.Get(imageId);
 
             if (dbImageNews == null)
             {

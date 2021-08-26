@@ -8,14 +8,14 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
 {
     public class DbImageUserMapper : IDbImageUserMapper
     {
-        public DbImagesUser Map(CreateImageData createImageData, Guid? parentId = null, string content = null)
+        public DbImageUser Map(CreateImageData createImageData, Guid? parentId = null, string content = null)
         {
             if(createImageData == null)
             {
                 return null;
             }
 
-            return new DbImagesUser()
+            return new DbImageUser()
             {
                 Id = Guid.NewGuid(),
                 ParentId = parentId,

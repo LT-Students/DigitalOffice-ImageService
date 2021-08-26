@@ -8,11 +8,11 @@ namespace LT.DigitalOffice.ImageService.Data.Interfaces
     [AutoInject]
     public interface IImageNewsRepository
     {
-        List<Guid> Create(List<DbImagesNews> imagesNews);
+        List<Guid> Create(List<DbImageNews> imagesNews);
 
-        List<DbImagesNews> Get(List<Guid> imageIds);
+        List<DbImageNews> Get(List<Guid> imageIds);
 
-        DbImagesNews Get(Guid imageId);
+        DbImageNews Get(Guid imageId);
 
         bool Delete(List<Guid> imageIds);
     }

@@ -26,7 +26,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageMessage
         {
             OperationResultResponse<ImageDataResponse> response = new();
 
-            DbImagesMessage dbImageMessage = _imageMessageRepository.Get(parentId);
+            DbImageMessage dbImageMessage = _imageMessageRepository.Get(parentId);
             if (dbImageMessage == null)
             {
                 response.Body = null;

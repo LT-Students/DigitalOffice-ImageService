@@ -7,14 +7,14 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
 {
     public class DbImageProjectMapper : IDbImageProjectMapper
     {
-        public DbImagesProject Map(CreateImageData createImageData, Guid? parentId = null, string content = null)
+        public DbImageProject Map(CreateImageData createImageData, Guid? parentId = null, string content = null)
         {
             if (createImageData == null)
             {
                 return null;
             }
 
-            return new DbImagesProject
+            return new DbImageProject
             {
                 Id = Guid.NewGuid(),
                 ParentId = parentId,

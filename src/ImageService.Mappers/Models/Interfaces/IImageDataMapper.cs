@@ -7,6 +7,6 @@ namespace LT.DigitalOffice.ImageService.Mappers.Models.Interfaces
     [AutoInject]
     public interface IImageDataMapper
     {
-        ImageData Map(DbImagesProject imageProject);
+        ImageData Map(DbImageProject imageProject);
     }
 }

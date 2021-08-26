@@ -29,7 +29,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers.ImageUser
 
         private object GetImages(IGetImagesUserRequest request)
         {
-            List<DbImagesUser> dbImages = _repository.Get(request.ImageIds);
+            List<DbImageUser> dbImages = _repository.Get(request.ImageIds);
 
             return IGetImagesResponse.CreateObj(
                 dbImages
