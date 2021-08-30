@@ -141,7 +141,7 @@ namespace LT.DigitalOffice.ImageService
         {
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<DeleteImagesConsumer>();
+                x.AddConsumer<RemoveImagesConsumer>();
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
@@ -166,7 +166,7 @@ namespace LT.DigitalOffice.ImageService
         {
             cfg.ReceiveEndpoint(_rabbitMqConfig.DeleteImagesEndpoint, ep =>
             {
-                ep.ConfigureConsumer<DeleteImagesConsumer>(context);
+                ep.ConfigureConsumer<RemoveImagesConsumer>(context);
             });
         }
 

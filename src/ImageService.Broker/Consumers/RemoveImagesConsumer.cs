@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.ImageService.Broker.Consumers
 {
-    public class DeleteImagesConsumer : IConsumer<IRemoveImagesRequest>
+    public class RemoveImagesConsumer : IConsumer<IRemoveImagesRequest>
     {
         private readonly IImageMessageRepository _imageMessageRepository;
         private readonly IImageNewsRepository _imageNewsRepository;
         private readonly IImageProjectRepository _imageProjectRepository;
         private readonly IImageUserRepository _imageUserRepository;
 
-        public DeleteImagesConsumer(
+        public RemoveImagesConsumer(
             IImageMessageRepository imageMessageRepository,
             IImageNewsRepository imageNewsRepository,
             IImageProjectRepository imageProjectRepository,
@@ -28,23 +28,23 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 
         public async Task Consume(ConsumeContext<IRemoveImagesRequest> context)
         {
-            object response = OperationResultWrapper.CreateResponse(DeleteImages, context.Message);
+            object response = OperationResultWrapper.CreateResponse(RemoveImages, context.Message);
 
             await context.RespondAsync<IOperationResult<bool>>(response);
         }
 
-        private object DeleteImages(IRemoveImagesRequest request)
+        private object RemoveImages(IRemoveImagesRequest request)
         {
             switch (request.ImageSource)
             {
                 case ImageSource.Message:
-                    return _imageMessageRepository.Delete(request.ImagesIds);
+                    return _imageMessageRepository.Remove(request.ImagesIds);
                 case ImageSource.News:
-                    return _imageNewsRepository.Delete(request.ImagesIds);
+                    return _imageNewsRepository.Remove(request.ImagesIds);
                 case ImageSource.Project:
-                    return _imageProjectRepository.Delete(request.ImagesIds);
+                    return _imageProjectRepository.Remove(request.ImagesIds);
                 case ImageSource.User:
-                    return _imageUserRepository.Delete(request.ImagesIds);
+                    return _imageUserRepository.Remove(request.ImagesIds);
                 default:
                     return null;
             }
