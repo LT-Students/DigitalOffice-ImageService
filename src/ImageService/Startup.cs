@@ -164,7 +164,7 @@ namespace LT.DigitalOffice.ImageService
             IBusRegistrationContext context,
             IRabbitMqBusFactoryConfigurator cfg)
         {
-            cfg.ReceiveEndpoint(_rabbitMqConfig.DeleteImagesProjectEndpoint, ep =>
+            cfg.ReceiveEndpoint(_rabbitMqConfig.DeleteImagesEndpoint, ep =>
             {
                 ep.ConfigureConsumer<DeleteImagesConsumer>(context);
             });
