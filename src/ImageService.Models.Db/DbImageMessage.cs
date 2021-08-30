@@ -4,9 +4,9 @@ using System;
 
 namespace LT.DigitalOffice.ImageService.Models.Db
 {
-    public class DbImagesProject
-    {
-        public const string TableName = "ImagesProjects";
+    public class DbImageMessage
+	{
+        public const string TableName = "ImagesMessages";
 
         public Guid Id { get; set; }
 		public Guid? ParentId { get; set; }
@@ -17,12 +17,12 @@ namespace LT.DigitalOffice.ImageService.Models.Db
 		public Guid CreatedBy { get; set; }
 	}
 
-    public class DbImageConfigurationProject : IEntityTypeConfiguration<DbImagesProject>
+    public class DbImageMessageConfiguration : IEntityTypeConfiguration<DbImageMessage>
     {
-        public void Configure(EntityTypeBuilder<DbImagesProject> builder)
+        public void Configure(EntityTypeBuilder<DbImageMessage> builder)
         {
             builder
-                .ToTable(DbImagesProject.TableName);
+                .ToTable(DbImageMessage.TableName);
 
             builder
                 .HasKey(a => a.Id);

@@ -8,12 +8,12 @@ namespace LT.DigitalOffice.ImageService.Data.Interfaces
     [AutoInject]
     public interface IImageProjectRepository
     {
-        List<DbImagesProject> Get(List<Guid> imageIds);
+        List<DbImageProject> Get(List<Guid> imageIds);
 
         bool Delete(List<Guid> imageIds);
 
-        List<Guid> Create(List<DbImagesProject> imagesProject);
+        List<Guid> Create(List<DbImageProject> imagesProject);
 
-        DbImagesProject Get(Guid imageId);
+        DbImageProject Get(Guid imageId);
     }
 }

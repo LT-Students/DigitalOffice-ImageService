@@ -8,11 +8,11 @@ namespace LT.DigitalOffice.ImageService.Data.Interfaces
     [AutoInject]
     public interface IImageMessageRepository
     {
-        List<Guid> Create(List<DbImagesMessage> imagesMessages);
+        List<Guid> Create(List<DbImageMessage> imagesMessages);
 
-        List<DbImagesMessage> Get(List<Guid> imageIds);
+        List<DbImageMessage> Get(List<Guid> imageIds);
 
-        DbImagesMessage Get(Guid imageId);
+        DbImageMessage Get(Guid imageId);
 
         bool Delete(List<Guid> imageIds);
     }

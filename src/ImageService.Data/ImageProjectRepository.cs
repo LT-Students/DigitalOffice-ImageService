@@ -16,7 +16,7 @@ namespace LT.DigitalOffice.ImageService.Data
             _provider = provider;
         }
 
-        public List<Guid> Create(List<DbImagesProject> imagesProjects)
+        public List<Guid> Create(List<DbImageProject> imagesProjects)
         {
             if (imagesProjects.Contains(null))
             {
@@ -36,7 +36,7 @@ namespace LT.DigitalOffice.ImageService.Data
                 return false;
             }
 
-            List<DbImagesProject> imagesProjects = _provider.ImagesProjects
+            List<DbImageProject> imagesProjects = _provider.ImagesProjects
                 .Where(x => imageIds.Contains(x.Id) || (x.ParentId != null && imageIds.Contains((Guid)x.ParentId)))
                 .ToList();
 
@@ -47,7 +47,7 @@ namespace LT.DigitalOffice.ImageService.Data
 
             List<Guid> parentIds = new();
 
-            foreach (DbImagesProject imageProject in imagesProjects)
+            foreach (DbImageProject imageProject in imagesProjects)
             {
                 if (imageProject.ParentId != null
                     && imageProject.Id != imageProject.ParentId
@@ -65,12 +65,12 @@ namespace LT.DigitalOffice.ImageService.Data
             return true;
         }
 
-        public List<DbImagesProject> Get(List<Guid> imageIds)
+        public List<DbImageProject> Get(List<Guid> imageIds)
         {
             return _provider.ImagesProjects.Where(x => imageIds.Contains(x.Id)).ToList();
         }
 
-        public DbImagesProject Get(Guid imageId)
+        public DbImageProject Get(Guid imageId)
         {
             return _provider.ImagesProjects.FirstOrDefault(x => x.Id == imageId);
         }

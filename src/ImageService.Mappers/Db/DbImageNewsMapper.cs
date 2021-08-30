@@ -8,14 +8,14 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
 {
     public class DbImageNewsMapper : IDbImageNewsMapper
     {
-        public DbImagesNews Map(CreateImageData createImageData, Guid? parentId = null, string content = null)
+        public DbImageNews Map(CreateImageData createImageData, Guid? parentId = null, string content = null)
         {
             if(createImageData == null)
             {
                 return null;
             }
 
-            return new DbImagesNews
+            return new DbImageNews
             {
                 Id = Guid.NewGuid(),
                 ParentId = parentId,

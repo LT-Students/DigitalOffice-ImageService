@@ -16,7 +16,7 @@ namespace LT.DigitalOffice.ImageService.Data
             _provider = provider;
         }
 
-        public List<Guid> Create(List<DbImagesUser> imagesUsers)
+        public List<Guid> Create(List<DbImageUser> imagesUsers)
         {
             if (imagesUsers.Contains(null))
             {
@@ -36,7 +36,7 @@ namespace LT.DigitalOffice.ImageService.Data
                 return false;
             }
 
-            List<DbImagesUser> imagesUsers = _provider.ImagesUsers
+            List<DbImageUser> imagesUsers = _provider.ImagesUsers
                 .Where(x => imageIds.Contains(x.Id) || (x.ParentId != null && imageIds.Contains((Guid)x.ParentId)))
                 .ToList();
 
@@ -47,7 +47,7 @@ namespace LT.DigitalOffice.ImageService.Data
 
             List<Guid> parentIds = new();
 
-            foreach (DbImagesUser imageUser in imagesUsers)
+            foreach (DbImageUser imageUser in imagesUsers)
             {
                 if (imageUser.ParentId != null
                     && imageUser.Id != imageUser.ParentId
@@ -65,12 +65,12 @@ namespace LT.DigitalOffice.ImageService.Data
             return true;
         }
 
-        public List<DbImagesUser> Get(List<Guid> imageIds)
+        public List<DbImageUser> Get(List<Guid> imageIds)
         {
             return _provider.ImagesUsers.Where(x => imageIds.Contains(x.Id)).ToList();
         }
 
-        public DbImagesUser Get(Guid imageId)
+        public DbImageUser Get(Guid imageId)
         {
             return _provider.ImagesUsers.FirstOrDefault(x => x.Id == imageId);
         }
