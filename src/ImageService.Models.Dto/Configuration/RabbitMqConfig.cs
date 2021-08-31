@@ -6,6 +6,6 @@ namespace LT.DigitalOffice.ImageService.Models.Dto.Configuration
     {
         public string CreateImagesEndpoint { get; set; }
         public string GetImagesEndpoint { get; set; }
-        public string DeleteImagesEndpoint { get; set; }
+        public string RemoveImagesEndpoint { get; set; }
     }
 }
