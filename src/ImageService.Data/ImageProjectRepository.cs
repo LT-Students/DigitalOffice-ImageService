@@ -29,7 +29,7 @@ namespace LT.DigitalOffice.ImageService.Data
             return imagesProjects.Select(x => x.Id).ToList();
         }
 
-        public bool Delete(List<Guid> imageIds)
+        public bool Remove(List<Guid> imageIds)
         {
             if (imageIds == null)
             {
