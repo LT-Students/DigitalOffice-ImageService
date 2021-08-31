@@ -123,7 +123,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
         {
             if (request.Images == null)
             {
-                return ICreateImagesResponse.CreateObj(null); ;
+                return ICreateImagesResponse.CreateObj(null);
             }
 
             List<DbImageProject> dbImages = new();
