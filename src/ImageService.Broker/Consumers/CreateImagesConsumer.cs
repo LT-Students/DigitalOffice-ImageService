@@ -82,7 +82,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
         {
             if (request.Images == null)
             {
-                return ICreateImagesResponse.CreateObj(null); ;
+                return ICreateImagesResponse.CreateObj(null);
             }
 
             List<DbImageUser> dbImages = new();
@@ -164,7 +164,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
         {
             if (request.Images == null)
             {
-                return ICreateImagesResponse.CreateObj(null); ;
+                return ICreateImagesResponse.CreateObj(null);
             }
 
             List<DbImageNews> dbImages = new();
@@ -205,7 +205,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
         {
             if (request.Images == null)
             {
-                return ICreateImagesResponse.CreateObj(null); ;
+                return ICreateImagesResponse.CreateObj(null);
             }
 
             List<DbImageMessage> dbImages = new();
