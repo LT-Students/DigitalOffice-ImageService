@@ -4,6 +4,6 @@ namespace LT.DigitalOffice.ImageService.Models.Dto.Configuration
 {
     public class RabbitMqConfig : BaseRabbitMqConfig
     {
-        public string DeleteImagesEndpoint { get; set; }
+        public string RemoveImagesEndpoint { get; set; }
     }
 }
