@@ -11,25 +11,16 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
     {
         protected override void Up(MigrationBuilder builder)
         {
-            builder.CreateTable(
-                name: DbImageUser.TableName,
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    ParentId = table.Column<Guid>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Content = table.Column<string>(nullable: false),
-                    Extension = table.Column<string>(nullable: false),
-                    CreatedBy = table.Column<Guid>(nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(nullable: false),
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ImagesUsers", x => x.Id);
-                });
+            CreateTable(builder, DbImageMessage.TableName);
+            CreateTable(builder, DbImageNews.TableName);
+            CreateTable(builder, DbImageProject.TableName);
+            CreateTable(builder, DbImageUser.TableName);
+        }
 
+        private static void CreateTable(MigrationBuilder builder, string tableName)
+        {
             builder.CreateTable(
-                name: DbImageNews.TableName,
+                name: tableName,
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -42,41 +33,7 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ImagesNews", x => x.Id);
-                });
-
-            builder.CreateTable(
-                name: DbImageMessage.TableName,
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    ParentId = table.Column<Guid>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Content = table.Column<string>(nullable: false),
-                    Extension = table.Column<string>(nullable: false),
-                    CreatedBy = table.Column<Guid>(nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(nullable: false),
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ImagesMessages", x => x.Id);
-                });
-
-            builder.CreateTable(
-                name: DbImageProject.TableName,
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    ParentId = table.Column<Guid>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Content = table.Column<string>(nullable: false),
-                    Extension = table.Column<string>(nullable: false),
-                    CreatedBy = table.Column<Guid>(nullable: false),
-                    CreatedAtUtc = table.Column<DateTime>(nullable: false),
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ImagesProjects", x => x.Id);
+                    table.PrimaryKey($"PK_{tableName}", x => x.Id);
                 });
         }
     }
