@@ -1,4 +1,5 @@
 ﻿using LT.DigitalOffice.ImageService.Business.Commands.ImageProject.Interfaces;
+using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Responses;
 using Microsoft.AspNetCore.Mvc;

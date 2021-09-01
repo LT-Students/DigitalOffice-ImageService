@@ -13,5 +13,7 @@ namespace LT.DigitalOffice.ImageService.Data.Provider
         DbSet<DbImageProject> ImagesProjects { get; set; }
         DbSet<DbImageNews> ImagesNews { get; set; }
         DbSet<DbImageMessage> ImagesMessages { get; set; }
+
+        int ExecuteRawSql(string query);
     }
 }

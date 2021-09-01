@@ -1,6 +1,7 @@
 ﻿using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Provider;
 using LT.DigitalOffice.ImageService.Models.Db;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,31 +37,15 @@ namespace LT.DigitalOffice.ImageService.Data
                 return false;
             }
 
-            List<DbImageProject> imagesProjects = _provider.ImagesProjects
-                .Where(x => imageIds.Contains(x.Id) || (x.ParentId != null && imageIds.Contains((Guid)x.ParentId)))
-                .ToList();
+            SqlCommand command = new();
+            string tableName = "ImagesProjects";
 
-            if (imagesProjects == null)
-            {
-                return false;
+            foreach (Guid imageId in imageIds) {
+                command.CommandText = $@"Delete From {tableName} where Id = '{imageId}' or ParentId = '{imageId}' or
+            Id in (select ParentId from ImagesProjects where Id = '{imageId}' and ParentId is not null);";
+
+                _provider.ExecuteRawSql(command.CommandText);
             }
-
-            List<Guid> parentIds = new();
-
-            foreach (DbImageProject imageProject in imagesProjects)
-            {
-                if (imageProject.ParentId != null
-                    && imageProject.Id != imageProject.ParentId
-                    && !imageIds.Contains((Guid)imageProject.ParentId))
-                {
-                    parentIds.Add((Guid)imageProject.ParentId);
-                }
-            }
-
-            imagesProjects.AddRange(_provider.ImagesProjects.Where(x => parentIds.Contains(x.Id)));
-
-            _provider.ImagesProjects.RemoveRange(imagesProjects);
-            _provider.Save();
 
             return true;
         }

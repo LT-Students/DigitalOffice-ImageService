@@ -1,11 +1,6 @@
 ﻿using LT.DigitalOffice.ImageService.Models.Db;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef
 {
@@ -46,6 +41,11 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef
         public void Save()
         {
             SaveChanges();
+        }
+
+        public int ExecuteRawSql(string query)
+        {
+            return Database.ExecuteSqlRaw(query);
         }
     }
 }
