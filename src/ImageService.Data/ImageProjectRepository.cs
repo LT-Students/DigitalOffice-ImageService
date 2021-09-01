@@ -38,11 +38,10 @@ namespace LT.DigitalOffice.ImageService.Data
       }
 
       SqlCommand command = new();
-      string tableName = DbImageProject.TableName;
 
       foreach (Guid imageId in imageIds)
       {
-        command.CommandText = $@"DELETE FROM {tableName} WHERE Id = '{imageId}' OR ParentId = '{imageId}' OR
+        command.CommandText = $@"DELETE FROM {DbImageProject.TableName} WHERE Id = '{imageId}' OR ParentId = '{imageId}' OR
             Id IN (SELECT ParentId FROM ImagesProjects WHERE Id = '{imageId}' AND ParentId IS NOT NULL);";
 
         _provider.ExecuteRawSql(command.CommandText);
