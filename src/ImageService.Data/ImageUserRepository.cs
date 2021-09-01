@@ -38,7 +38,7 @@ namespace LT.DigitalOffice.ImageService.Data
             }
 
             SqlCommand command = new();
-            string tableName = "ImagesUsers";
+            string tableName = DbImageUser.TableName;
 
             foreach (Guid imageId in imageIds)
             {

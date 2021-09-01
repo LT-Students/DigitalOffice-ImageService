@@ -38,7 +38,7 @@ namespace LT.DigitalOffice.ImageService.Data
             }
 
             SqlCommand command = new();
-            string tableName = "ImagesProjects";
+            string tableName = DbImageProject.TableName;
 
             foreach (Guid imageId in imageIds) {
                 command.CommandText = $@"Delete From {tableName} where Id = '{imageId}' or ParentId = '{imageId}' or

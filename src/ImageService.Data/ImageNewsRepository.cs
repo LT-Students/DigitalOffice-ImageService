@@ -38,7 +38,7 @@ namespace LT.DigitalOffice.ImageService.Data
             }
 
             SqlCommand command = new();
-            string tableName = "ImagesNews";
+            string tableName = DbImageNews.TableName;
 
             foreach (Guid imageId in imageIds)
             {
