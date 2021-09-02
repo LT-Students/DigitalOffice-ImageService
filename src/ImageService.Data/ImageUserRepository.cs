@@ -4,7 +4,6 @@ using System.Linq;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Provider;
 using LT.DigitalOffice.ImageService.Models.Db;
-using Microsoft.Data.SqlClient;
 
 namespace LT.DigitalOffice.ImageService.Data
 {
@@ -19,7 +18,7 @@ namespace LT.DigitalOffice.ImageService.Data
 
     public List<Guid> Create(List<DbImageUser> imagesUsers)
     {
-      if (imagesUsers.Contains(null))
+      if (imagesUsers == null || !imagesUsers.Any())
       {
         return null;
       }
@@ -37,14 +36,12 @@ namespace LT.DigitalOffice.ImageService.Data
         return false;
       }
 
-      SqlCommand command = new();
-
       foreach (Guid imageId in imageIds)
       {
-        command.CommandText = $@"DELETE FROM {DbImageUser.TableName} WHERE Id = '{imageId}' OR ParentId = '{imageId}' OR
+        string query = $@"DELETE FROM {DbImageUser.TableName} WHERE Id = '{imageId}' OR ParentId = '{imageId}' OR
             Id IN (SELECT ParentId FROM ImagesProjects WHERE Id = '{imageId}' AND ParentId IS NOT NULL);";
 
-        _provider.ExecuteRawSql(command.CommandText);
+        _provider.ExecuteRawSql(query);
       }
 
       return true;
