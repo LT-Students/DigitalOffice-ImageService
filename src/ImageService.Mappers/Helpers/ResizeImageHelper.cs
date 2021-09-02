@@ -24,7 +24,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Helpers
             { ".tga", TgaFormat.Instance }
         };
 
-        public string Resize(string inputBase64, string extention)
+        public string Resize(string inputBase64, string extension)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Helpers
 
                     image.Mutate(x => x.Resize(150, 150));
 
-                    return image.ToBase64String(imageFormats[extention]).Split(',')[1];
+                    return image.ToBase64String(imageFormats[extension]).Split(',')[1];
                 }
                 else
                 {
