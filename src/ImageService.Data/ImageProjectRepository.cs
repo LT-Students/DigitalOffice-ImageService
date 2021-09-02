@@ -18,7 +18,7 @@ namespace LT.DigitalOffice.ImageService.Data
 
     public List<Guid> Create(List<DbImageProject> imagesProjects)
     {
-      if (imagesProjects == null || !imagesProjects.Any())
+      if (imagesProjects == null || !imagesProjects.Any() || imagesProjects.Contains(null))
       {
         return null;
       }

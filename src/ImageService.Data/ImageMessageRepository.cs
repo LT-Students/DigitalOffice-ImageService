@@ -17,7 +17,7 @@ namespace LT.DigitalOffice.ImageService.Data
 
     public List<Guid> Create(List<DbImageMessage> imagesMessages)
     {
-      if (imagesMessages == null || !imagesMessages.Any())
+      if (imagesMessages == null || !imagesMessages.Any() || imagesMessages.Contains(null))
       {
         return null;
       }

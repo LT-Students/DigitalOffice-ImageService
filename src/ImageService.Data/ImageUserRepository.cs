@@ -18,7 +18,7 @@ namespace LT.DigitalOffice.ImageService.Data
 
     public List<Guid> Create(List<DbImageUser> imagesUsers)
     {
-      if (imagesUsers == null || !imagesUsers.Any())
+      if (imagesUsers == null || !imagesUsers.Any() || imagesUsers.Contains(null))
       {
         return null;
       }
