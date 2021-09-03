@@ -18,7 +18,7 @@ namespace LT.DigitalOffice.ImageService.Data
 
     public List<Guid> Create(List<DbImageNews> imagesNews)
     {
-      if (imagesNews.Contains(null) && imagesNews == null && !imagesNews.Any())
+      if (imagesNews == null || !imagesNews.Any() || imagesNews.Contains(null))
       {
         return null;
       }
@@ -36,31 +36,11 @@ namespace LT.DigitalOffice.ImageService.Data
         return false;
       }
 
-      List<DbImageNews> imagesNews = _provider.ImagesNews
-          .Where(x => imageIds.Contains(x.Id) || (x.ParentId != null && imageIds.Contains((Guid)x.ParentId)))
-          .ToList();
-
-      if (imagesNews == null)
+      foreach (Guid imageId in imageIds)
       {
-        return false;
+        _provider.ExecuteRawSql($@"DELETE FROM {DbImageNews.TableName} WHERE Id = '{imageId}' OR ParentId = '{imageId}' OR
+            Id IN (SELECT ParentId FROM ImagesProjects WHERE Id = '{imageId}' AND ParentId IS NOT NULL);");
       }
-
-      List<Guid> parentIds = new();
-
-      foreach (DbImageNews imageNews in imagesNews)
-      {
-        if (imageNews.ParentId != null
-            && imageNews.Id != imageNews.ParentId
-            && !imageIds.Contains((Guid)imageNews.ParentId))
-        {
-          parentIds.Add((Guid)imageNews.ParentId);
-        }
-      }
-
-      imagesNews.AddRange(_provider.ImagesNews.Where(x => parentIds.Contains(x.Id)));
-
-      _provider.ImagesNews.RemoveRange(imagesNews);
-      _provider.Save();
 
       return true;
     }
