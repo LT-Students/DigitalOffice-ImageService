@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FluentValidation;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
-using LT.DigitalOffice.ImageService.Validation.Helpers;
 using LT.DigitalOffice.ImageService.Validation.ImageNews.Interfaces;
 
 namespace LT.DigitalOffice.ImageService.Validation.ImageNews
 {
   public class CreateImageRequestValidator : AbstractValidator<CreateImageRequest>, ICreateImageRequestValidator
   {
-    public readonly static List<string> AllowedExtensions = new()
+    private List<string> AllowedExtensions = new()
     { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tga" };
 
     public CreateImageRequestValidator()
@@ -19,9 +19,19 @@ namespace LT.DigitalOffice.ImageService.Validation.ImageNews
 
       RuleFor(image => image.Content)
           .NotNull()
-          .WithMessage("Image content is null or incorrect.")
-          .Must(EncodeHelper.IsBase64Coded)
-          .WithMessage("Inccorect content");
+          .WithMessage("Image content is null.")
+          .Must(x =>
+          {
+            try
+            {
+              var byteString = new Span<byte>(new byte[x.Length]);
+              return Convert.TryFromBase64String(x, byteString, out _);
+            }
+            catch
+            {
+              return false;
+            }
+          }).WithMessage("Wrong image content.");
 
       RuleFor(image => image.Extension)
           .Must(AllowedExtensions.Contains)

@@ -45,7 +45,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
     public OperationResultResponse<List<Guid>> Execute(CreateImageRequest request)
     {
       if (!(_accessValidator.IsAdmin() ||
-      _accessValidator.HasRights(Rights.AddEditRemoveNews)))
+        _accessValidator.HasRights(Rights.AddEditRemoveNews)))
       {
         _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
@@ -56,7 +56,16 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
         };
       }
 
-      _validator.ValidateAndThrowCustom(request);
+      if (!_validator.ValidateCustom(request, out List<string> errors))
+      {
+        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+
+        return new OperationResultResponse<List<Guid>>
+        {
+          Status = OperationResultStatusType.Failed,
+          Errors = errors
+        };
+      }
 
       OperationResultResponse<List<Guid>> response = new();
 
