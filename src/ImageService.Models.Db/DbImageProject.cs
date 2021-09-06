@@ -22,18 +22,18 @@ namespace LT.DigitalOffice.ImageService.Models.Db
     public void Configure(EntityTypeBuilder<DbImageProject> builder)
     {
       builder
-          .ToTable(DbImageProject.TableName);
+        .ToTable(DbImageProject.TableName);
 
       builder
-          .HasKey(a => a.Id);
+        .HasKey(a => a.Id);
 
       builder
-          .Property(a => a.Content)
-          .IsRequired();
+        .Property(a => a.Content)
+        .IsRequired();
 
       builder
-          .Property(a => a.Extension)
-          .IsRequired();
+        .Property(a => a.Extension)
+        .IsRequired();
     }
   }
 }

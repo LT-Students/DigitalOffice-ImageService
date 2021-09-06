@@ -13,7 +13,7 @@ namespace LT.DigitalOffice.ImageService.Controllers
   public class ImageNewsController : ControllerBase
   {
     [HttpGet("get")]
-    public OperationResultResponse<ImageDataResponse> Get(
+    public OperationResultResponse<ImageResponse> Get(
       [FromServices] IGetImageNewsCommand command,
       [FromQuery] Guid imageId)
     {

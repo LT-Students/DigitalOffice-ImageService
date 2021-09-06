@@ -3,7 +3,6 @@ using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.Kernel.Extensions;
-using LT.DigitalOffice.Models.Broker.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace LT.DigitalOffice.ImageService.Mappers.Db

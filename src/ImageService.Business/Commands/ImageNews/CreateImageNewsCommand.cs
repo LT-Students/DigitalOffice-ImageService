@@ -44,10 +44,9 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
     public OperationResultResponse<List<Guid>> Execute(CreateImageRequest request)
     {
-      if (!(_accessValidator.IsAdmin() ||
-        _accessValidator.HasRights(Rights.AddEditRemoveNews)))
+      if (!(_accessValidator.HasRights(Rights.AddEditRemoveNews)))
       {
-        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
 
         return new OperationResultResponse<List<Guid>>
         {

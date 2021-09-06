@@ -1,19 +1,19 @@
-﻿using LT.DigitalOffice.ImageService.Models.Db;
-using LT.DigitalOffice.Kernel.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using LT.DigitalOffice.ImageService.Models.Db;
+using LT.DigitalOffice.Kernel.Attributes;
 
 namespace LT.DigitalOffice.ImageService.Data.Interfaces
 {
-    [AutoInject]
-    public interface IImageNewsRepository
-    {
-        List<Guid> Create(List<DbImageNews> imagesNews);
+  [AutoInject]
+  public interface IImageNewsRepository
+  {
+    List<Guid> Create(List<DbImageNews> imagesNews);
 
-        List<DbImageNews> Get(List<Guid> imageIds);
+    List<DbImageNews> Get(List<Guid> imageIds);
 
-        DbImageNews Get(Guid imageId);
+    DbImageNews Get(Guid imageId);
 
-        bool Remove(List<Guid> imageIds);
-    }
+    bool Remove(List<Guid> imageIds);
+  }
 }

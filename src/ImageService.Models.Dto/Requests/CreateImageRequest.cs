@@ -1,6 +1,6 @@
 ﻿namespace LT.DigitalOffice.ImageService.Models.Dto.Requests
 {
-  public class CreateImageRequest
+  public record CreateImageRequest
   {
     public string Name { get; set; }
     public string Content { get; set; }

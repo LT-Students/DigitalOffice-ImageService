@@ -14,28 +14,28 @@ namespace LT.DigitalOffice.ImageService.Validation.ImageNews
     public CreateImageRequestValidator()
     {
       RuleFor(image => image.Name)
-          .MaximumLength(150)
-          .WithMessage("Image name is too long.");
+        .MaximumLength(150)
+        .WithMessage("Image name is too long.");
 
       RuleFor(image => image.Content)
-          .NotNull()
-          .WithMessage("Image content is null.")
-          .Must(x =>
+        .NotNull()
+        .WithMessage("Image content is null.")
+        .Must(x =>
+        {
+          try
           {
-            try
-            {
-              var byteString = new Span<byte>(new byte[x.Length]);
-              return Convert.TryFromBase64String(x, byteString, out _);
-            }
-            catch
-            {
-              return false;
-            }
-          }).WithMessage("Wrong image content.");
+            var byteString = new Span<byte>(new byte[x.Length]);
+            return Convert.TryFromBase64String(x, byteString, out _);
+          }
+          catch
+          {
+            return false;
+          }
+        }).WithMessage("Wrong image content.");
 
       RuleFor(image => image.Extension)
-          .Must(AllowedExtensions.Contains)
-          .WithMessage($"Image extension is not {string.Join('/', AllowedExtensions)}");
+        .Must(AllowedExtensions.Contains)
+        .WithMessage($"Image extension is not {string.Join('/', AllowedExtensions)}");
     }
   }
 }

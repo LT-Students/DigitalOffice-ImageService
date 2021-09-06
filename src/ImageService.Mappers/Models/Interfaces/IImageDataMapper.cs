@@ -4,9 +4,9 @@ using LT.DigitalOffice.Models.Broker.Models;
 
 namespace LT.DigitalOffice.ImageService.Mappers.Models.Interfaces
 {
-    [AutoInject]
-    public interface IImageDataMapper
-    {
-        ImageData Map(DbImageProject imageProject);
-    }
+  [AutoInject]
+  public interface IImageDataMapper
+  {
+    ImageData Map(DbImageProject imageProject);
+  }
 }

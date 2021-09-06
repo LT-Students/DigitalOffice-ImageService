@@ -18,31 +18,25 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
   {
     private readonly IImageUserRepository _imageUserRepository;
     private readonly IImageProjectRepository _imageProjectRepository;
-    private readonly IImageNewsRepository _imageNewsRepository;
     private readonly IImageMessageRepository _imageMessageRepository;
     private readonly IDbImageUserMapper _dbImageUserMapper;
-    private readonly IDbImageNewsMapper _dbImageNewsMapper;
     private readonly IDbImageProjectMapper _dbImageProjectMapper;
     private readonly IDbImageMessageMapper _dbImageMessageMapper;
     private readonly IResizeImageHelper _resizeHelper;
 
     public CreateImagesConsumer(
-        IImageUserRepository imageUserRepository,
-        IImageProjectRepository imageProjectRepository,
-        IImageNewsRepository imageNewsRepository,
-        IImageMessageRepository imageMessageRepository,
-        IDbImageUserMapper dbImageUserMapper,
-        IDbImageNewsMapper dbImageNewsMapper,
-        IDbImageProjectMapper dbImageProjectMapper,
-        IDbImageMessageMapper dbImageMessageMapper,
-        IResizeImageHelper resizeHelper)
+      IImageUserRepository imageUserRepository,
+      IImageProjectRepository imageProjectRepository,
+      IImageMessageRepository imageMessageRepository,
+      IDbImageUserMapper dbImageUserMapper,
+      IDbImageProjectMapper dbImageProjectMapper,
+      IDbImageMessageMapper dbImageMessageMapper,
+      IResizeImageHelper resizeHelper)
     {
       _imageUserRepository = imageUserRepository;
       _imageProjectRepository = imageProjectRepository;
-      _imageNewsRepository = imageNewsRepository;
       _imageMessageRepository = imageMessageRepository;
       _dbImageUserMapper = dbImageUserMapper;
-      _dbImageNewsMapper = dbImageNewsMapper;
       _dbImageProjectMapper = dbImageProjectMapper;
       _dbImageMessageMapper = dbImageMessageMapper;
       _resizeHelper = resizeHelper;
