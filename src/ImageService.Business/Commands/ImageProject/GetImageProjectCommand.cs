@@ -31,15 +31,14 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageProject
       OperationResultResponse<ImageResponse> response = new();
 
       response.Body = _imageResponseMapper.Map(_imageProjectRepository.Get(parentId));
+      response.Status = OperationResultStatusType.FullSuccess;
       if (response.Body == null)
       {
-        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
 
         response.Status = OperationResultStatusType.Failed;
         response.Errors.Add("Image was not found.");
-        return response;
       }
-      response.Status = OperationResultStatusType.FullSuccess;
 
       return response;
     }

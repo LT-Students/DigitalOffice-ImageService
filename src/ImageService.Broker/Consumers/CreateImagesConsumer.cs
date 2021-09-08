@@ -103,7 +103,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 
       if (_imageUserRepository.Create(dbImages) == null)
       {
-        return ICreateImagesResponse.CreateObj(null);
+        return null;
       }
 
       return ICreateImagesResponse.CreateObj(previewIds);
@@ -144,7 +144,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 
       if (_imageProjectRepository.Create(dbImages) == null)
       {
-        return ICreateImagesResponse.CreateObj(null);
+        return null;
       }
 
       return ICreateImagesResponse.CreateObj(previewIds);
@@ -185,7 +185,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 
       if (_imageMessageRepository.Create(dbImages) == null)
       {
-        return ICreateImagesResponse.CreateObj(null);
+        return null;
       }
 
       return ICreateImagesResponse.CreateObj(previewIds);

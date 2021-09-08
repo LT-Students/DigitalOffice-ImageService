@@ -39,7 +39,7 @@ namespace LT.DigitalOffice.ImageService.Data
       foreach (Guid imageId in imageIds)
       {
         _provider.ExecuteRawSql($@"DELETE FROM {DbImageNews.TableName} WHERE Id = '{imageId}' OR ParentId = '{imageId}' OR
-          Id IN (SELECT ParentId FROM ImagesProjects WHERE Id = '{imageId}' AND ParentId IS NOT NULL);");
+          Id IN (SELECT ParentId FROM {DbImageNews.TableName} WHERE Id = '{imageId}' AND ParentId IS NOT NULL);");
       }
 
       return true;

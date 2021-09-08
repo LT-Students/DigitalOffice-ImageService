@@ -19,7 +19,7 @@ namespace LT.DigitalOffice.ImageService.Validation.ImageNews
 
       RuleFor(image => image.Content)
         .NotNull()
-        .WithMessage("Image content is null.")
+        .WithMessage("Image content must not be null.")
         .Must(x =>
         {
           try

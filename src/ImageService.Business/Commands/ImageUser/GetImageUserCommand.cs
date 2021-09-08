@@ -32,15 +32,14 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageUser
       OperationResultResponse<ImageResponse> response = new();
 
       response.Body = _imageUserResponseMapper.Map(_imageUserRepository.Get(imageId));
+      response.Status = OperationResultStatusType.FullSuccess;
       if (response.Body == null)
       {
-        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
 
         response.Status = OperationResultStatusType.Failed;
         response.Errors.Add("Image was not found.");
-        return response;
       }
-      response.Status = OperationResultStatusType.FullSuccess;
 
       return response;
     }
