@@ -7,6 +7,7 @@ using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Helpers.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
+using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.ImageService.Validation.ImageNews.Interfaces;
 using LT.DigitalOffice.Kernel.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Constants;
@@ -42,13 +43,13 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       _validator = validator;
     }
 
-    public OperationResultResponse<List<Guid>> Execute(CreateImageRequest request)
+    public OperationResultResponse<CreateImageNewsResponse> Execute(CreateImageRequest request)
     {
-      if (!(_accessValidator.HasRights(Rights.AddEditRemoveNews)))
+      if (!_accessValidator.HasRights(Rights.AddEditRemoveNews))
       {
         _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
 
-        return new OperationResultResponse<List<Guid>>
+        return new OperationResultResponse<CreateImageNewsResponse>
         {
           Status = OperationResultStatusType.Failed,
           Errors = new() { "Not enough rights." }
@@ -59,16 +60,18 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       {
         _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-        return new OperationResultResponse<List<Guid>>
+        return new OperationResultResponse<CreateImageNewsResponse>
         {
           Status = OperationResultStatusType.Failed,
           Errors = errors
         };
       }
 
-      OperationResultResponse<List<Guid>> response = new();
+      OperationResultResponse<CreateImageNewsResponse> response = new();
 
-      List<DbImageNews> dbImagesNews = new() { _mapper.Map(request) };
+      DbImageNews dbImageNews = _mapper.Map(request);
+      DbImageNews dbPreviewNews = null;
+      List<DbImageNews> dbImagesNews = new() { dbImageNews } ;
 
       if (request.EnablePrewiew)
       {
@@ -76,7 +79,8 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
         if (resizedContent != null)
         {
-          dbImagesNews.Add(_mapper.Map(request, dbImagesNews[0].Id, resizedContent));
+          dbPreviewNews = _mapper.Map(request, dbImageNews.Id, resizedContent);
+          dbImagesNews.Add(dbPreviewNews);
         }
         else
         {
@@ -88,14 +92,15 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
         }
       }
 
-      response.Body = _repository.Create(dbImagesNews);
-      if (response.Body == null)
+      if (_repository.Create(dbImagesNews) == null)
       {
         _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
         response.Status = OperationResultStatusType.Failed;
         return response;
       }
+
+      response.Body = new CreateImageNewsResponse() { ImageId = dbImageNews.Id, PreviewId = dbPreviewNews?.Id };
 
       _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 

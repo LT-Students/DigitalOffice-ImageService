@@ -21,7 +21,7 @@ namespace LT.DigitalOffice.ImageService.Controllers
     }
 
     [HttpPost("create")]
-    public OperationResultResponse<List<Guid>> Create(
+    public OperationResultResponse<CreateImageNewsResponse> Create(
       [FromServices] ICreateImageNewsCommand command,
       [FromBody] CreateImageRequest request)
     {

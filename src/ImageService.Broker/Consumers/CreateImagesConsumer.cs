@@ -14,7 +14,7 @@ using MassTransit;
 
 namespace LT.DigitalOffice.ImageService.Broker.Consumers
 {
-  public class CreateImagesConsumer : IConsumer<ICreateImageRequest>
+  public class CreateImagesConsumer : IConsumer<ICreateImagesRequest>
   {
     private readonly IImageUserRepository _imageUserRepository;
     private readonly IImageProjectRepository _imageProjectRepository;
@@ -42,7 +42,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       _resizeHelper = resizeHelper;
     }
 
-    public async Task Consume(ConsumeContext<ICreateImageRequest> context)
+    public async Task Consume(ConsumeContext<ICreateImagesRequest> context)
     {
       object response;
 
@@ -68,7 +68,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       await context.RespondAsync<IOperationResult<ICreateImagesResponse>>(response);
     }
 
-    private object CreateUserImages(ICreateImageRequest request)
+    private object CreateUserImages(ICreateImagesRequest request)
     {
       if (request.Images == null)
       {
@@ -109,7 +109,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       return ICreateImagesResponse.CreateObj(previewIds);
     }
 
-    private object CreateProjectImages(ICreateImageRequest request)
+    private object CreateProjectImages(ICreateImagesRequest request)
     {
       if (request.Images == null)
       {
@@ -150,7 +150,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       return ICreateImagesResponse.CreateObj(previewIds);
     }
 
-    private object CreateMessageImages(ICreateImageRequest request)
+    private object CreateMessageImages(ICreateImagesRequest request)
     {
       if (request.Images == null)
       {
