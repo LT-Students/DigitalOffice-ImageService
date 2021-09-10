@@ -5,6 +5,6 @@
     public string Name { get; set; }
     public string Content { get; set; }
     public string Extension { get; set; }
-    public bool EnablePrewiew { get; set; }
+    public bool EnablePreview { get; set; }
   }
 }

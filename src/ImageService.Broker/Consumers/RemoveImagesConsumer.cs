@@ -10,18 +10,15 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
   public class RemoveImagesConsumer : IConsumer<IRemoveImagesRequest>
   {
     private readonly IImageMessageRepository _imageMessageRepository;
-    private readonly IImageNewsRepository _imageNewsRepository;
     private readonly IImageProjectRepository _imageProjectRepository;
     private readonly IImageUserRepository _imageUserRepository;
 
     public RemoveImagesConsumer(
       IImageMessageRepository imageMessageRepository,
-      IImageNewsRepository imageNewsRepository,
       IImageProjectRepository imageProjectRepository,
       IImageUserRepository imageUserRepository)
     {
       _imageMessageRepository = imageMessageRepository;
-      _imageNewsRepository = imageNewsRepository;
       _imageProjectRepository = imageProjectRepository;
       _imageUserRepository = imageUserRepository;
     }
@@ -39,8 +36,6 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       {
         case ImageSource.Message:
           return _imageMessageRepository.Remove(request.ImagesIds);
-        case ImageSource.News:
-          return _imageNewsRepository.Remove(request.ImagesIds);
         case ImageSource.Project:
           return _imageProjectRepository.Remove(request.ImagesIds);
         case ImageSource.User:

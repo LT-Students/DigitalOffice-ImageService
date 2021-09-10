@@ -14,18 +14,15 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 {
   public class GetImagesConsumer : IConsumer<IGetImagesRequest>
   {
-    private readonly IImageNewsRepository _imageNewsRepository;
     private readonly IImageMessageRepository _imageMessageRepository;
     private readonly IImageProjectRepository _imageProjectRepository;
     private readonly IImageUserRepository _imageUserRepository;
 
     public GetImagesConsumer(
-      IImageNewsRepository imageNewsRepository,
       IImageMessageRepository imageMessageRepository,
       IImageProjectRepository imageProjectRepository,
       IImageUserRepository imageUserRepository)
     {
-      _imageNewsRepository = imageNewsRepository;
       _imageMessageRepository = imageMessageRepository;
       _imageProjectRepository = imageProjectRepository;
       _imageUserRepository = imageUserRepository;
@@ -45,10 +42,6 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
           response = OperationResultWrapper.CreateResponse(GetProjectImages, context.Message);
           break;
 
-        case ImageSource.News:
-          response = OperationResultWrapper.CreateResponse(GetNewsImages, context.Message);
-          break;
-
         case ImageSource.Message:
           response = OperationResultWrapper.CreateResponse(GetMessageImages, context.Message);
           break;
@@ -59,22 +52,6 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       }
 
       await context.RespondAsync<IOperationResult<IGetImagesResponse>>(response);
-    }
-
-    private object GetNewsImages(IGetImagesRequest request)
-    {
-      List<DbImageNews> dbNewsImages = _imageNewsRepository.Get(request.ImagesIds);
-
-      return IGetImagesResponse.CreateObj(
-        dbNewsImages
-          .Select(dbImagesNews => new ImageData(
-            dbImagesNews.Id,
-            dbImagesNews.ParentId,
-            null,
-            dbImagesNews.Content,
-            dbImagesNews.Extension,
-            dbImagesNews.Name))
-          .ToList());
     }
 
     private object GetUserImages(IGetImagesRequest request)

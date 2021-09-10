@@ -14,12 +14,10 @@ namespace LT.DigitalOffice.ImageService.Validation.ImageNews
     public CreateImageRequestValidator()
     {
       RuleFor(image => image.Name)
-        .MaximumLength(150)
-        .WithMessage("Image name is too long.");
+        .MaximumLength(150).WithMessage("Image name is too long.");
 
       RuleFor(image => image.Content)
-        .NotNull()
-        .WithMessage("Image content must not be null.")
+        .NotNull().WithMessage("Image content must not be null.")
         .Must(x =>
         {
           try

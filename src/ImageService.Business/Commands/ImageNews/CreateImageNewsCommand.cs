@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
@@ -71,18 +70,13 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
       DbImageNews dbImageNews = _mapper.Map(request);
       DbImageNews dbPreviewNews = null;
-      List<DbImageNews> dbImagesNews = new() { dbImageNews } ;
+      List<DbImageNews> dbImagesNews = new() { dbImageNews };
 
-      if (request.EnablePrewiew)
+      if (request.EnablePreview)
       {
         string resizedContent = _resizeHelper.Resize(request.Content, request.Extension);
 
-        if (resizedContent != null)
-        {
-          dbPreviewNews = _mapper.Map(request, dbImageNews.Id, resizedContent);
-          dbImagesNews.Add(dbPreviewNews);
-        }
-        else
+        if (resizedContent == null)
         {
           _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
@@ -90,14 +84,10 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
           response.Errors = new() { "Image resize failed." };
           return response;
         }
-      }
 
-      if (_repository.Create(dbImagesNews) == null)
-      {
-        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+        dbPreviewNews = _mapper.Map(request, dbImageNews.Id, resizedContent);
+        dbImagesNews.Add(dbPreviewNews);
 
-        response.Status = OperationResultStatusType.Failed;
-        return response;
       }
 
       response.Body = new CreateImageNewsResponse() { ImageId = dbImageNews.Id, PreviewId = dbPreviewNews?.Id };
@@ -105,6 +95,14 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 
       response.Status = OperationResultStatusType.FullSuccess;
+
+      if (_repository.Create(dbImagesNews) == null)
+      {
+        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+
+        response.Status = OperationResultStatusType.Failed;
+      }
+
       return response;
     }
   }
