@@ -76,18 +76,8 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       {
         string resizedContent = _resizeHelper.Resize(request.Content, request.Extension);
 
-        if (resizedContent == null)
-        {
-          _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
-          response.Status = OperationResultStatusType.Failed;
-          response.Errors = new() { "Image resize failed." };
-          return response;
-        }
-
         dbPreviewNews = _mapper.Map(request, dbImageNews.Id, resizedContent);
         dbImagesNews.Add(dbPreviewNews);
-
       }
 
       response.Body = new CreateImageNewsResponse() { ImageId = dbImageNews.Id, PreviewId = dbPreviewNews?.Id };
