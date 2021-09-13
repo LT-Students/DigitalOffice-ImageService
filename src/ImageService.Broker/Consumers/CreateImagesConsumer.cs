@@ -18,31 +18,25 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
   {
     private readonly IImageUserRepository _imageUserRepository;
     private readonly IImageProjectRepository _imageProjectRepository;
-    private readonly IImageNewsRepository _imageNewsRepository;
     private readonly IImageMessageRepository _imageMessageRepository;
     private readonly IDbImageUserMapper _dbImageUserMapper;
-    private readonly IDbImageNewsMapper _dbImageNewsMapper;
     private readonly IDbImageProjectMapper _dbImageProjectMapper;
     private readonly IDbImageMessageMapper _dbImageMessageMapper;
     private readonly IResizeImageHelper _resizeHelper;
 
     public CreateImagesConsumer(
-        IImageUserRepository imageUserRepository,
-        IImageProjectRepository imageProjectRepository,
-        IImageNewsRepository imageNewsRepository,
-        IImageMessageRepository imageMessageRepository,
-        IDbImageUserMapper dbImageUserMapper,
-        IDbImageNewsMapper dbImageNewsMapper,
-        IDbImageProjectMapper dbImageProjectMapper,
-        IDbImageMessageMapper dbImageMessageMapper,
-        IResizeImageHelper resizeHelper)
+      IImageUserRepository imageUserRepository,
+      IImageProjectRepository imageProjectRepository,
+      IImageMessageRepository imageMessageRepository,
+      IDbImageUserMapper dbImageUserMapper,
+      IDbImageProjectMapper dbImageProjectMapper,
+      IDbImageMessageMapper dbImageMessageMapper,
+      IResizeImageHelper resizeHelper)
     {
       _imageUserRepository = imageUserRepository;
       _imageProjectRepository = imageProjectRepository;
-      _imageNewsRepository = imageNewsRepository;
       _imageMessageRepository = imageMessageRepository;
       _dbImageUserMapper = dbImageUserMapper;
-      _dbImageNewsMapper = dbImageNewsMapper;
       _dbImageProjectMapper = dbImageProjectMapper;
       _dbImageMessageMapper = dbImageMessageMapper;
       _resizeHelper = resizeHelper;
@@ -60,10 +54,6 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 
         case ImageSource.Project:
           response = OperationResultWrapper.CreateResponse(CreateProjectImages, context.Message);
-          break;
-
-        case ImageSource.News:
-          response = OperationResultWrapper.CreateResponse(CreateNewsImages, context.Message);
           break;
 
         case ImageSource.Message:
@@ -113,7 +103,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 
       if (_imageUserRepository.Create(dbImages) == null)
       {
-        return ICreateImagesResponse.CreateObj(null);
+        return null;
       }
 
       return ICreateImagesResponse.CreateObj(previewIds);
@@ -154,48 +144,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 
       if (_imageProjectRepository.Create(dbImages) == null)
       {
-        return ICreateImagesResponse.CreateObj(null);
-      }
-
-      return ICreateImagesResponse.CreateObj(previewIds);
-    }
-
-    private object CreateNewsImages(ICreateImagesRequest request)
-    {
-      if (request.Images == null)
-      {
-        return ICreateImagesResponse.CreateObj(null);
-      }
-
-      List<DbImageNews> dbImages = new();
-      List<Guid> previewIds = new();
-      DbImageNews dbImageNews;
-      DbImageNews dbPrewiewImageNews;
-      string resizedContent;
-
-      foreach (CreateImageData createImage in request.Images)
-      {
-        dbImageNews = _dbImageNewsMapper.Map(createImage);
-        resizedContent = _resizeHelper.Resize(createImage.Content, createImage.Extension);
-
-        if (string.IsNullOrEmpty(resizedContent))
-        {
-          dbImageNews.ParentId = dbImageNews.Id;
-          previewIds.Add(dbImageNews.Id);
-        }
-        else
-        {
-          dbPrewiewImageNews = _dbImageNewsMapper.Map(createImage, dbImageNews.Id, resizedContent);
-          dbImages.Add(dbPrewiewImageNews);
-          previewIds.Add(dbPrewiewImageNews.Id);
-        }
-
-        dbImages.Add(dbImageNews);
-      }
-
-      if (_imageNewsRepository.Create(dbImages) == null)
-      {
-        return ICreateImagesResponse.CreateObj(null);
+        return null;
       }
 
       return ICreateImagesResponse.CreateObj(previewIds);
@@ -236,7 +185,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 
       if (_imageMessageRepository.Create(dbImages) == null)
       {
-        return ICreateImagesResponse.CreateObj(null);
+        return null;
       }
 
       return ICreateImagesResponse.CreateObj(previewIds);

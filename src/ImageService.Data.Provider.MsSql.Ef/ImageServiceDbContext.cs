@@ -1,51 +1,51 @@
-﻿using LT.DigitalOffice.ImageService.Models.Db;
+﻿using System.Reflection;
+using LT.DigitalOffice.ImageService.Models.Db;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef
 {
-    public class ImageServiceDbContext : DbContext, IDataProvider
+  public class ImageServiceDbContext : DbContext, IDataProvider
+  {
+    public DbSet<DbImageUser> ImagesUsers { get; set; }
+    public DbSet<DbImageProject> ImagesProjects { get; set; }
+    public DbSet<DbImageNews> ImagesNews { get; set; }
+    public DbSet<DbImageMessage> ImagesMessages { get; set; }
+
+    public ImageServiceDbContext(DbContextOptions<ImageServiceDbContext> options)
+      : base(options)
     {
-        public DbSet<DbImageUser> ImagesUsers { get; set; }
-        public DbSet<DbImageProject> ImagesProjects { get; set; }
-        public DbSet<DbImageNews> ImagesNews { get; set; }
-        public DbSet<DbImageMessage> ImagesMessages { get; set; }
-
-        public ImageServiceDbContext(DbContextOptions<ImageServiceDbContext> options)
-            : base(options)
-        {
-        }
-
-        // Fluent API is written here.
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("LT.DigitalOffice.ImageService.Models.Db"));
-        }
-
-        public void EnsureDeleted()
-        {
-            Database.EnsureDeleted();
-        }
-
-        public bool IsInMemory()
-        {
-            return Database.IsInMemory();
-        }
-
-        public object MakeEntityDetached(object obj)
-        {
-            Entry(obj).State = EntityState.Detached;
-            return Entry(obj).State;
-        }
-
-        public void Save()
-        {
-            SaveChanges();
-        }
-
-        public int ExecuteRawSql(string query)
-        {
-            return Database.ExecuteSqlRaw(query);
-        }
     }
+
+    // Fluent API is written here.
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+      modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("LT.DigitalOffice.ImageService.Models.Db"));
+    }
+
+    public void EnsureDeleted()
+    {
+      Database.EnsureDeleted();
+    }
+
+    public bool IsInMemory()
+    {
+      return Database.IsInMemory();
+    }
+
+    public object MakeEntityDetached(object obj)
+    {
+      Entry(obj).State = EntityState.Detached;
+      return Entry(obj).State;
+    }
+
+    public void Save()
+    {
+      SaveChanges();
+    }
+
+    public int ExecuteRawSql(string query)
+    {
+      return Database.ExecuteSqlRaw(query);
+    }
+  }
 }

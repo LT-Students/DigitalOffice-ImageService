@@ -1,4 +1,6 @@
-﻿using LT.DigitalOffice.ImageService.Mappers.Helpers.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using LT.DigitalOffice.ImageService.Mappers.Helpers.Interfaces;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Bmp;
@@ -7,51 +9,49 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Tga;
 using SixLabors.ImageSharp.Processing;
-using System;
-using System.Collections.Generic;
 
 namespace LT.DigitalOffice.ImageService.Mappers.Helpers
 {
-    public class ResizeImageHelper : IResizeImageHelper
+  public class ResizeImageHelper : IResizeImageHelper
+  {
+    private readonly Dictionary<string, IImageFormat> imageFormats = new()
     {
-        private readonly Dictionary<string, IImageFormat> imageFormats = new()
+      { ".jpg", JpegFormat.Instance },
+      { ".jpeg", JpegFormat.Instance },
+      { ".png", PngFormat.Instance },
+      { ".bmp", BmpFormat.Instance },
+      { ".gif", GifFormat.Instance },
+      { ".tga", TgaFormat.Instance }
+    };
+
+    public string Resize(string inputBase64, string extension)
+    {
+      try
+      {
+        byte[] byteString = Convert.FromBase64String(inputBase64);
+        Image image = Image.Load(byteString);
+
+        if (image.Width > 150 && image.Height > 150)
         {
-            { ".jpg", JpegFormat.Instance },
-            { ".jpeg", JpegFormat.Instance },
-            { ".png", PngFormat.Instance },
-            { ".bmp", BmpFormat.Instance },
-            { ".gif", GifFormat.Instance },
-            { ".tga", TgaFormat.Instance }
-        };
+          var minSize = Math.Min(image.Width, image.Height);
+          var offsetX = (image.Width - minSize) / 2;
+          var offsetY = (image.Height - minSize) / 2;
 
-        public string Resize(string inputBase64, string extension)
-        {
-            try
-            {
-                byte[] byteString = Convert.FromBase64String(inputBase64);
-                Image image = Image.Load(byteString);
+          image.Mutate(x => x.Crop(new Rectangle(offsetX, offsetY, minSize, minSize)));
 
-                if (image.Width > 150 && image.Height > 150)
-                {
-                    var minSize = Math.Min(image.Width, image.Height);
-                    var offsetX = (image.Width - minSize) / 2;
-                    var offsetY = (image.Height - minSize) / 2;
+          image.Mutate(x => x.Resize(150, 150));
 
-                    image.Mutate(x => x.Crop(new Rectangle(offsetX, offsetY, minSize, minSize)));
-
-                    image.Mutate(x => x.Resize(150, 150));
-
-                    return image.ToBase64String(imageFormats[extension]).Split(',')[1];
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch
-            {
-                return null;
-            }
+          return image.ToBase64String(imageFormats[extension]).Split(',')[1];
         }
+        else
+        {
+          return null;
+        }
+      }
+      catch
+      {
+        return null;
+      }
     }
+  }
 }

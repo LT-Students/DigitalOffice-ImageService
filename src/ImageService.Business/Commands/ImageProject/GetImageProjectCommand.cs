@@ -1,44 +1,46 @@
-﻿using LT.DigitalOffice.ImageService.Business.Commands.ImageProject.Interfaces;
+﻿using System;
+using System.Net;
+using LT.DigitalOffice.ImageService.Business.Commands.ImageProject.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces;
-using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Responses;
-using System;
+using Microsoft.AspNetCore.Http;
 
 namespace LT.DigitalOffice.ImageService.Business.Commands.ImageProject
 {
-    public class GetImageProjectCommand : IGetImageProjectCommand
+  public class GetImageProjectCommand : IGetImageProjectCommand
+  {
+    private readonly IImageProjectRepository _imageProjectRepository;
+    private readonly IImageResponseMapper _imageResponseMapper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public GetImageProjectCommand(
+      IImageProjectRepository imageProjectRepository,
+      IImageResponseMapper imageResponseMapper,
+      IHttpContextAccessor httpContextAccessor)
     {
-        private readonly IImageProjectRepository _imageProjectRepository;
-        private readonly IImageDataResponseMapper _imageResponseMapper;
-
-        public GetImageProjectCommand(
-            IImageProjectRepository imageProjectRepository,
-            IImageDataResponseMapper imageResponseMapper)
-        {
-            _imageProjectRepository = imageProjectRepository;
-            _imageResponseMapper = imageResponseMapper;
-        }
-
-        public OperationResultResponse<ImageDataResponse> Execute(Guid parentId)
-        {
-            OperationResultResponse<ImageDataResponse> response = new();
-
-            DbImageProject dbImageProject = _imageProjectRepository.Get(parentId);
-
-            if (dbImageProject == null)
-            {
-                response.Status = OperationResultStatusType.Failed;
-                response.Errors.Add("Image was not found.");
-                return response;
-            }
-
-            response.Body = _imageResponseMapper.Map(dbImageProject);
-            response.Status = OperationResultStatusType.FullSuccess;
-
-            return response;
-        }
+      _imageProjectRepository = imageProjectRepository;
+      _imageResponseMapper = imageResponseMapper;
+      _httpContextAccessor = httpContextAccessor;
     }
+
+    public OperationResultResponse<ImageResponse> Execute(Guid parentId)
+    {
+      OperationResultResponse<ImageResponse> response = new();
+
+      response.Body = _imageResponseMapper.Map(_imageProjectRepository.Get(parentId));
+      response.Status = OperationResultStatusType.FullSuccess;
+      if (response.Body == null)
+      {
+        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+
+        response.Status = OperationResultStatusType.Failed;
+        response.Errors.Add("Image was not found.");
+      }
+
+      return response;
+    }
+  }
 }
