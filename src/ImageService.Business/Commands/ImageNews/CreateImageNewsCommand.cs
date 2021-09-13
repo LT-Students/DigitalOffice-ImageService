@@ -76,8 +76,11 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       {
         string resizedContent = _resizeHelper.Resize(request.Content, request.Extension);
 
-        dbPreviewNews = _mapper.Map(request, dbImageNews.Id, resizedContent);
-        dbImagesNews.Add(dbPreviewNews);
+        if (resizedContent != null)
+        {
+          dbPreviewNews = _mapper.Map(request, dbImageNews.Id, resizedContent);
+          dbImagesNews.Add(dbPreviewNews);
+        }
       }
 
       response.Body = new CreateImageNewsResponse() { ImageId = dbImageNews.Id, PreviewId = dbPreviewNews?.Id };
