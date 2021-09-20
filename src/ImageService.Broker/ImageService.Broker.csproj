@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <Import Project="$(ProjectDir)..\..\Common.Configurations.targets" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\ImageService.Data\ImageService.Data.csproj" />
+    <ProjectReference Include="..\ImageService.Mappers\ImageService.Mappers.csproj" />
+    <ProjectReference Include="..\ImageService.Validation\ImageService.Validation.csproj" />
+  </ItemGroup>
+
+</Project>
