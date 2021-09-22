@@ -8,7 +8,7 @@ namespace LT.DigitalOffice.ImageService.Controllers
 {
   [ApiController]
   [Route("[controller]")]
-  public class ImageProjectController : ControllerBase
+  public class ProjectController : ControllerBase
   {
     [HttpGet("get")]
     public OperationResultResponse<ImageResponse> Get(
