@@ -26,30 +26,30 @@ namespace LT.DigitalOffice.ImageService.Business.Commands
       _userRepository = userRepository;
     }
 
-    public (byte[], string) Execute(Guid imageId, ImageDirectory directory)
+    public (byte[] content, string extension) Execute(Guid imageId, ImageType directory)
     {
       string content = null;
       string extension = null;
 
-      if (directory == ImageDirectory.Message)
+      if (directory == ImageType.Message)
       {
         DbImageMessage dbImageMessage = _messageRepository.Get(imageId);
         content = dbImageMessage.Content;
         extension = dbImageMessage.Extension;
       }
-      else if (directory == ImageDirectory.News)
+      else if (directory == ImageType.News)
       {
         DbImageNews dbImageNews = _newsRepository.Get(imageId);
         content = dbImageNews.Content;
         extension = dbImageNews.Extension;
       }
-      else if (directory == ImageDirectory.Project)
+      else if (directory == ImageType.Project)
       {
         DbImageProject dbImageProject = _projectRepository.Get(imageId);
         content = dbImageProject.Content;
         extension = dbImageProject.Extension;
       }
-      else if (directory == ImageDirectory.User)
+      else if (directory == ImageType.User)
       {
         DbImageUser dbImageUser = _userRepository.Get(imageId);
         content = dbImageUser.Content;

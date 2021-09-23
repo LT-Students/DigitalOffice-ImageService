@@ -7,6 +7,6 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.Interfaces
   [AutoInject]
   public interface IGetFileImageCommand
   {
-    (byte[], string) Execute(Guid imageId, ImageDirectory directory);
+    (byte[] content, string extension) Execute(Guid imageId, ImageType directory);
   }
 }

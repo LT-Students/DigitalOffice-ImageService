@@ -1,6 +1,6 @@
 ﻿namespace LT.DigitalOffice.ImageService.Models.Dto.Enums
 {
-  public enum ImageDirectory
+  public enum ImageType
   {
     Message,
     News,
