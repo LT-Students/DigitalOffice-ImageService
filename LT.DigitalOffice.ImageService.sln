@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solutions Items", "Solution
 		.gitignore = .gitignore
 		Common.Configurations.targets = Common.Configurations.targets
 		Dockerfile = Dockerfile
-		main.yml = main.yml
+		.github\workflows\main.yml = .github\workflows\main.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -44,7 +44,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageService.Data.UnitTests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageService.Mappers.UnitTests", "test\ImageService.Mappers.UnitTests\ImageService.Mappers.UnitTests.csproj", "{9CC32198-43A7-4FF5-90BE-B0139DFA3414}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageService.Validation", "src\ImageService.Validation\ImageService.Validation.csproj", "{12B5A4AF-17B2-4A88-8FB2-869343E5FAB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageService.Validation", "src\ImageService.Validation\ImageService.Validation.csproj", "{12B5A4AF-17B2-4A88-8FB2-869343E5FAB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
