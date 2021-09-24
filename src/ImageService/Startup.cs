@@ -44,7 +44,7 @@ namespace LT.DigitalOffice.ImageService
         .GetSection(BaseRabbitMqConfig.SectionName)
         .Get<RabbitMqConfig>();
 
-      Version = "1.0.0.0";
+      Version = "1.0.0.1";
       Description = "ImageService is an API that intended to work with images.";
       StartTime = DateTime.UtcNow;
       ApiName = $"LT Digital Office - {_serviceInfoConfig.Name}";
