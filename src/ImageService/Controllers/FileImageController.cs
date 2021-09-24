@@ -13,9 +13,9 @@ namespace LT.DigitalOffice.ImageService.Controllers
     public FileResult Get(
       [FromServices] IGetFileImageCommand command,
       [FromQuery] Guid imageId,
-      [FromQuery] ImageType directory)
+      [FromQuery] ImageType type)
     {
-      (byte[] conrent, string extension) response = command.Execute(imageId, directory);
+      (byte[] conrent, string extension) response = command.Execute(imageId, type);
 
       return File(response.conrent, response.extension);
     }
