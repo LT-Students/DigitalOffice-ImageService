@@ -15,9 +15,9 @@ namespace LT.DigitalOffice.ImageService.Controllers
       [FromQuery] Guid imageId,
       [FromQuery] ImageType type)
     {
-      (byte[] conrent, string extension) response = command.Execute(imageId, type);
+      (byte[] content, string extension) = command.Execute(imageId, type);
 
-      return File(response.conrent, response.extension);
+      return File(content, extension);
     }
   }
 }
