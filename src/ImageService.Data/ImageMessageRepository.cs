@@ -10,6 +10,7 @@ namespace LT.DigitalOffice.ImageService.Data
   public class ImageMessageRepository : IImageMessageRepository
   {
     private readonly IDataProvider _provider;
+
     public ImageMessageRepository(IDataProvider provider)
     {
       _provider = provider;
