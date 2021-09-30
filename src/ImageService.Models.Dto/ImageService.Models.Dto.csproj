@@ -4,18 +4,6 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Enums\**" />
-    <Compile Remove="Models\**" />
-    <Compile Remove="Request\**" />
-    <EmbeddedResource Remove="Enums\**" />
-    <EmbeddedResource Remove="Models\**" />
-    <EmbeddedResource Remove="Request\**" />
-    <None Remove="Enums\**" />
-    <None Remove="Models\**" />
-    <None Remove="Request\**" />
-  </ItemGroup>
-
   <Import Project="$(ProjectDir)..\..\Common.Configurations.targets" />
 
 </Project>

@@ -14,9 +14,4 @@
     <ProjectReference Include="..\ImageService.Validation\ImageService.Validation.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Commands\ImageMessage\Interfaces\" />
-    <Folder Include="Commands\ImageProject\Interfaces\" />
-  </ItemGroup>
-
 </Project>
