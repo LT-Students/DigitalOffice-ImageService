@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageProject.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces;
@@ -26,11 +27,11 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageProject
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public OperationResultResponse<ImageResponse> Execute(Guid parentId)
+    public async Task<OperationResultResponse<ImageResponse>> Execute(Guid parentId)
     {
       OperationResultResponse<ImageResponse> response = new();
 
-      response.Body = _imageResponseMapper.Map(_imageProjectRepository.Get(parentId));
+      response.Body = _imageResponseMapper.Map(await _imageProjectRepository.GetAsync(parentId));
       response.Status = OperationResultStatusType.FullSuccess;
       if (response.Body == null)
       {

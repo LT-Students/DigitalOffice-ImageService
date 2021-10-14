@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.Kernel.Attributes;
 
@@ -8,12 +9,12 @@ namespace LT.DigitalOffice.ImageService.Data.Interfaces
   [AutoInject]
   public interface IImageNewsRepository
   {
-    List<Guid> Create(List<DbImageNews> imagesNews);
+    Task<List<Guid>> CreateAsync(List<DbImageNews> imagesNews);
 
-    List<DbImageNews> Get(List<Guid> imageIds);
+    Task<List<DbImageNews>> GetAsync(List<Guid> imageIds);
 
-    DbImageNews Get(Guid imageId);
+    Task<DbImageNews> GetAsync(Guid imageId);
 
-    bool Remove(List<Guid> imageIds);
+    Task<bool> RemoveAsync(List<Guid> imageIds);
   }
 }

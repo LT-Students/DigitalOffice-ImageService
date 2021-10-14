@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Provider;
 using LT.DigitalOffice.ImageService.Models.Db;
+using Microsoft.EntityFrameworkCore;
 
 namespace LT.DigitalOffice.ImageService.Data
 {
@@ -16,7 +18,7 @@ namespace LT.DigitalOffice.ImageService.Data
       _provider = provider;
     }
 
-    public List<Guid> Create(List<DbImageProject> imagesProjects)
+    public async Task<List<Guid>> CreateAsync(List<DbImageProject> imagesProjects)
     {
       if (imagesProjects == null || !imagesProjects.Any() || imagesProjects.Contains(null))
       {
@@ -24,12 +26,12 @@ namespace LT.DigitalOffice.ImageService.Data
       }
 
       _provider.ImagesProjects.AddRange(imagesProjects);
-      _provider.Save();
+      await _provider.SaveAsync();
 
       return imagesProjects.Select(x => x.Id).ToList();
     }
 
-    public bool Remove(List<Guid> imageIds)
+    public async Task<bool> RemoveAsync(List<Guid> imageIds)
     {
       if (imageIds == null)
       {
@@ -38,21 +40,21 @@ namespace LT.DigitalOffice.ImageService.Data
 
       foreach (Guid imageId in imageIds)
       {
-        _provider.ExecuteRawSql($@"DELETE FROM {DbImageProject.TableName} WHERE Id = '{imageId}' OR ParentId = '{imageId}' OR
+        await _provider.ExecuteRawSqlAsync($@"DELETE FROM {DbImageProject.TableName} WHERE Id = '{imageId}' OR ParentId = '{imageId}' OR
           Id IN (SELECT ParentId FROM {DbImageProject.TableName} WHERE Id = '{imageId}' AND ParentId IS NOT NULL);");
       }
 
       return true;
     }
 
-    public List<DbImageProject> Get(List<Guid> imageIds)
+    public async Task<List<DbImageProject>> GetAsync(List<Guid> imageIds)
     {
-      return _provider.ImagesProjects.Where(x => imageIds.Contains(x.Id)).ToList();
+      return await _provider.ImagesProjects.Where(x => imageIds.Contains(x.Id)).ToListAsync();
     }
 
-    public DbImageProject Get(Guid imageId)
+    public async Task<DbImageProject> GetAsync(Guid imageId)
     {
-      return _provider.ImagesProjects.FirstOrDefault(x => x.Id == imageId);
+      return await _provider.ImagesProjects.FirstOrDefaultAsync(x => x.Id == imageId);
     }
   }
 }

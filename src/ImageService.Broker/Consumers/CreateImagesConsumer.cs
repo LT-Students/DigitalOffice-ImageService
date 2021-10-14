@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
-using LT.DigitalOffice.ImageService.Mappers.Helpers.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
+using LT.DigitalOffice.ImageSupport.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Broker;
 using LT.DigitalOffice.Models.Broker.Enums;
 using LT.DigitalOffice.Models.Broker.Models;
@@ -22,7 +22,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
     private readonly IDbImageUserMapper _dbImageUserMapper;
     private readonly IDbImageProjectMapper _dbImageProjectMapper;
     private readonly IDbImageMessageMapper _dbImageMessageMapper;
-    private readonly IResizeImageHelper _resizeHelper;
+    private readonly IImageResizeHelper _resizeHelper;
 
     public CreateImagesConsumer(
       IImageUserRepository imageUserRepository,
@@ -31,7 +31,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       IDbImageUserMapper dbImageUserMapper,
       IDbImageProjectMapper dbImageProjectMapper,
       IDbImageMessageMapper dbImageMessageMapper,
-      IResizeImageHelper resizeHelper)
+      IImageResizeHelper resizeHelper)
     {
       _imageUserRepository = imageUserRepository;
       _imageProjectRepository = imageProjectRepository;
@@ -68,7 +68,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       await context.RespondAsync<IOperationResult<ICreateImagesResponse>>(response);
     }
 
-    private object CreateUserImages(ICreateImagesRequest request)
+    private async Task<object> CreateUserImages(ICreateImagesRequest request)
     {
       if (request.Images == null)
       {
@@ -79,21 +79,26 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       List<Guid> previewIds = new();
       DbImageUser dbImageUser;
       DbImageUser dbPrewiewImageUser;
-      string resizedContent;
+      (bool isSuccess, string resizedContent, string extension) resizeResult;
 
       foreach (CreateImageData createImage in request.Images)
       {
         dbImageUser = _dbImageUserMapper.Map(createImage);
-        resizedContent = _resizeHelper.Resize(createImage.Content, createImage.Extension);
+        resizeResult = await _resizeHelper.Resize(createImage.Content, createImage.Extension);
 
-        if (string.IsNullOrEmpty(resizedContent))
+        if (!resizeResult.isSuccess)
+        {
+          return ICreateImagesResponse.CreateObj(null);
+        }
+
+        if (string.IsNullOrEmpty(resizeResult.resizedContent))
         {
           dbImageUser.ParentId = dbImageUser.Id;
           previewIds.Add(dbImageUser.Id);
         }
         else
         {
-          dbPrewiewImageUser = _dbImageUserMapper.Map(createImage, dbImageUser.Id, resizedContent);
+          dbPrewiewImageUser = _dbImageUserMapper.Map(createImage, dbImageUser.Id, resizeResult.resizedContent, resizeResult.extension);
           dbImages.Add(dbPrewiewImageUser);
           previewIds.Add(dbPrewiewImageUser.Id);
         }
@@ -101,15 +106,15 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
         dbImages.Add(dbImageUser);
       }
 
-      if (_imageUserRepository.Create(dbImages) == null)
+      if (await _imageUserRepository.CreateAsync(dbImages) == null)
       {
-        return null;
+        return ICreateImagesResponse.CreateObj(null);
       }
 
       return ICreateImagesResponse.CreateObj(previewIds);
     }
 
-    private object CreateProjectImages(ICreateImagesRequest request)
+    private async Task<object> CreateProjectImages(ICreateImagesRequest request)
     {
       if (request.Images == null)
       {
@@ -120,21 +125,26 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       List<Guid> previewIds = new();
       DbImageProject dbImageProject;
       DbImageProject dbPrewiewImageProject;
-      string resizedContent;
+      (bool isSuccess, string resizedContent, string extension) resizeResult;
 
       foreach (CreateImageData createImage in request.Images)
       {
         dbImageProject = _dbImageProjectMapper.Map(createImage);
-        resizedContent = _resizeHelper.Resize(createImage.Content, createImage.Extension);
+        resizeResult = await _resizeHelper.Resize(createImage.Content, createImage.Extension);
 
-        if (string.IsNullOrEmpty(resizedContent))
+        if (!resizeResult.isSuccess)
+        {
+          return ICreateImagesResponse.CreateObj(null);
+        }
+
+        if (string.IsNullOrEmpty(resizeResult.resizedContent))
         {
           dbImageProject.ParentId = dbImageProject.Id;
           previewIds.Add(dbImageProject.Id);
         }
         else
         {
-          dbPrewiewImageProject = _dbImageProjectMapper.Map(createImage, dbImageProject.Id, resizedContent);
+          dbPrewiewImageProject = _dbImageProjectMapper.Map(createImage, dbImageProject.Id, resizeResult.resizedContent, resizeResult.extension);
           dbImages.Add(dbPrewiewImageProject);
           previewIds.Add(dbPrewiewImageProject.Id);
         }
@@ -142,15 +152,15 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
         dbImages.Add(dbImageProject);
       }
 
-      if (_imageProjectRepository.Create(dbImages) == null)
+      if (await _imageProjectRepository.CreateAsync(dbImages) == null)
       {
-        return null;
+        return ICreateImagesResponse.CreateObj(null);
       }
 
       return ICreateImagesResponse.CreateObj(previewIds);
     }
 
-    private object CreateMessageImages(ICreateImagesRequest request)
+    private async Task<object> CreateMessageImages(ICreateImagesRequest request)
     {
       if (request.Images == null)
       {
@@ -161,21 +171,26 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       List<Guid> previewIds = new();
       DbImageMessage dbImageMessage;
       DbImageMessage dbPrewiewImageMessage;
-      string resizedContent;
+      (bool isSuccess, string resizedContent, string extension) resizeResult;
 
       foreach (CreateImageData createImage in request.Images)
       {
         dbImageMessage = _dbImageMessageMapper.Map(createImage);
-        resizedContent = _resizeHelper.Resize(createImage.Content, createImage.Extension);
+        resizeResult = await _resizeHelper.Resize(createImage.Content, createImage.Extension);
 
-        if (string.IsNullOrEmpty(resizedContent))
+        if (!resizeResult.isSuccess)
+        {
+          return ICreateImagesResponse.CreateObj(null);
+        }
+
+        if (string.IsNullOrEmpty(resizeResult.resizedContent))
         {
           dbImageMessage.ParentId = dbImageMessage.Id;
           previewIds.Add(dbImageMessage.Id);
         }
         else
         {
-          dbPrewiewImageMessage = _dbImageMessageMapper.Map(createImage, dbImageMessage.Id, resizedContent);
+          dbPrewiewImageMessage = _dbImageMessageMapper.Map(createImage, dbImageMessage.Id, resizeResult.resizedContent, resizeResult.extension);
           dbImages.Add(dbPrewiewImageMessage);
           previewIds.Add(dbPrewiewImageMessage.Id);
         }
@@ -183,9 +198,9 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
         dbImages.Add(dbImageMessage);
       }
 
-      if (_imageMessageRepository.Create(dbImages) == null)
+      if (await _imageMessageRepository.CreateAsync(dbImages) == null)
       {
-        return null;
+        return ICreateImagesResponse.CreateObj(null);
       }
 
       return ICreateImagesResponse.CreateObj(previewIds);

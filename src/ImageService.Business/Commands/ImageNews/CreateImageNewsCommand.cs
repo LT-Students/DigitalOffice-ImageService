@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
-using LT.DigitalOffice.ImageService.Mappers.Helpers.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.ImageService.Validation.ImageNews.Interfaces;
+using LT.DigitalOffice.ImageSupport.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Enums;
@@ -23,7 +25,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IImageNewsRepository _repository;
     private readonly IDbImageNewsMapper _mapper;
-    private readonly IResizeImageHelper _resizeHelper;
+    private readonly IImageResizeHelper _resizeHelper;
     private readonly ICreateImageRequestValidator _validator;
 
     public CreateImageNewsCommand(
@@ -31,7 +33,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       IHttpContextAccessor httpContextAccessor,
       IImageNewsRepository repository,
       IDbImageNewsMapper mapper,
-      IResizeImageHelper resizeHelper,
+      IImageResizeHelper resizeHelper,
       ICreateImageRequestValidator validator)
     {
       _accessValidator = accessValidator;
@@ -42,9 +44,9 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       _validator = validator;
     }
 
-    public OperationResultResponse<CreateImageNewsResponse> Execute(CreateImageRequest request)
+    public async Task<OperationResultResponse<CreateImageNewsResponse>> Execute(CreateImageRequest request)
     {
-      if (!_accessValidator.HasRights(Rights.AddEditRemoveNews))
+      if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveNews))
       {
         _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
 
@@ -74,27 +76,39 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
       if (request.EnablePreview)
       {
-        string resizedContent = _resizeHelper.Resize(request.Content, request.Extension);
+        (bool isSuccess, string resizedContent, string extension) resizeResult = await _resizeHelper.Resize(request.Content, request.Extension);
 
-        if (resizedContent != null)
+        if (!resizeResult.isSuccess)
         {
-          dbPreviewNews = _mapper.Map(request, dbImageNews.Id, resizedContent);
+          response.Errors.Add("Resize operation has been failed.");
+        }
+
+        if (!string.IsNullOrEmpty(resizeResult.resizedContent))
+        {
+          dbPreviewNews = _mapper.Map(request, dbImageNews.Id, resizeResult.resizedContent, resizeResult.extension);
           dbImagesNews.Add(dbPreviewNews);
         }
+        else
+        {
+          dbImageNews.ParentId = dbImageNews.Id;
+        }
+      }
+
+      if (await _repository.CreateAsync(dbImagesNews) == null)
+      {
+        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+        response.Status = OperationResultStatusType.Failed;
+
+        return response;
       }
 
       response.Body = new CreateImageNewsResponse() { ImageId = dbImageNews.Id, PreviewId = dbPreviewNews?.Id };
 
       _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 
-      response.Status = OperationResultStatusType.FullSuccess;
-
-      if (_repository.Create(dbImagesNews) == null)
-      {
-        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-
-        response.Status = OperationResultStatusType.Failed;
-      }
+      response.Status = response.Errors.Any()
+        ? OperationResultStatusType.PartialSuccess
+        : OperationResultStatusType.FullSuccess;
 
       return response;
     }

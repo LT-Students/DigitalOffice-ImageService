@@ -54,9 +54,9 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       await context.RespondAsync<IOperationResult<IGetImagesResponse>>(response);
     }
 
-    private object GetUserImages(IGetImagesRequest request)
+    private async Task<object> GetUserImages(IGetImagesRequest request)
     {
-      List<DbImageUser> dbUserImages = _imageUserRepository.Get(request.ImagesIds);
+      List<DbImageUser> dbUserImages = await _imageUserRepository.GetAsync(request.ImagesIds);
 
       return IGetImagesResponse.CreateObj(
         dbUserImages
@@ -70,9 +70,9 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
           .ToList());
     }
 
-    private object GetMessageImages(IGetImagesRequest request)
+    private async Task<object> GetMessageImages(IGetImagesRequest request)
     {
-      List<DbImageMessage> dbMessageImages = _imageMessageRepository.Get(request.ImagesIds);
+      List<DbImageMessage> dbMessageImages = await _imageMessageRepository.GetAsync(request.ImagesIds);
 
       return IGetImagesResponse.CreateObj(
         dbMessageImages
@@ -86,9 +86,9 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
           .ToList());
     }
 
-    private object GetProjectImages(IGetImagesRequest request)
+    private async Task<object> GetProjectImages(IGetImagesRequest request)
     {
-      List<DbImageProject> dbProjectImages = _imageProjectRepository.Get(request.ImagesIds);
+      List<DbImageProject> dbProjectImages = await _imageProjectRepository.GetAsync(request.ImagesIds);
 
       return IGetImagesResponse.CreateObj(
         dbProjectImages

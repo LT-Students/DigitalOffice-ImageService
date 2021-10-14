@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Attributes;
@@ -10,6 +9,6 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces
   [AutoInject]
   public interface ICreateImageNewsCommand
   {
-    OperationResultResponse<CreateImageNewsResponse> Execute(CreateImageRequest request);
+    Task<OperationResultResponse<CreateImageNewsResponse>> Execute(CreateImageRequest request);
   }
 }

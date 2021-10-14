@@ -8,6 +8,6 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db.Interfaces
   [AutoInject]
   public interface IDbImageNewsMapper
   {
-    DbImageNews Map(CreateImageRequest request, Guid? parentId = null, string content = null);
+    DbImageNews Map(CreateImageRequest request, Guid? parentId = null, string content = null, string extension = null);
   }
 }

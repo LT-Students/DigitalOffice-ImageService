@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FluentValidation;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.ImageService.Validation.ImageNews.Interfaces;
+using LT.DigitalOffice.Kernel.Validators.Interfaces;
 
 namespace LT.DigitalOffice.ImageService.Validation.ImageNews
 {
@@ -11,29 +12,18 @@ namespace LT.DigitalOffice.ImageService.Validation.ImageNews
     private List<string> AllowedExtensions = new()
     { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tga" };
 
-    public CreateImageRequestValidator()
+    public CreateImageRequestValidator(
+      IImageContentValidator imageContentValidator,
+      IImageExtensionValidator imageExtensionValidator)
     {
       RuleFor(image => image.Name)
         .MaximumLength(150).WithMessage("Image name is too long.");
 
       RuleFor(image => image.Content)
-        .NotNull().WithMessage("Image content must not be null.")
-        .Must(x =>
-        {
-          try
-          {
-            var byteString = new Span<byte>(new byte[x.Length]);
-            return Convert.TryFromBase64String(x, byteString, out _);
-          }
-          catch
-          {
-            return false;
-          }
-        }).WithMessage("Wrong image content.");
+        .SetValidator(imageContentValidator);
 
       RuleFor(image => image.Extension)
-        .Must(AllowedExtensions.Contains)
-        .WithMessage($"Image extension is not {string.Join('/', AllowedExtensions)}");
+        .SetValidator(imageExtensionValidator);
     }
   }
 }

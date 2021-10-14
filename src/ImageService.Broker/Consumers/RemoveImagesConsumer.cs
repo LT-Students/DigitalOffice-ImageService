@@ -30,16 +30,16 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       await context.RespondAsync<IOperationResult<bool>>(response);
     }
 
-    private object RemoveImages(IRemoveImagesRequest request)
+    private async Task<object> RemoveImages(IRemoveImagesRequest request)
     {
       switch (request.ImageSource)
       {
         case ImageSource.Message:
-          return _imageMessageRepository.Remove(request.ImagesIds);
+          return await _imageMessageRepository.RemoveAsync(request.ImagesIds);
         case ImageSource.Project:
-          return _imageProjectRepository.Remove(request.ImagesIds);
+          return await _imageProjectRepository.RemoveAsync(request.ImagesIds);
         case ImageSource.User:
-          return _imageUserRepository.Remove(request.ImagesIds);
+          return await _imageUserRepository.RemoveAsync(request.ImagesIds);
         default:
           return null;
       }

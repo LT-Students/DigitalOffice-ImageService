@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Models.Db;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,9 +44,14 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef
       SaveChanges();
     }
 
-    public int ExecuteRawSql(string query)
+    public async Task SaveAsync()
     {
-      return Database.ExecuteSqlRaw(query);
+      await SaveChangesAsync();
+    }
+
+    public async Task<int> ExecuteRawSqlAsync(string query)
+    {
+      return await Database.ExecuteSqlRawAsync(query);
     }
   }
 }

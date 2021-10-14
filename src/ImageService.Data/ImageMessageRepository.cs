@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Provider;
 using LT.DigitalOffice.ImageService.Models.Db;
+using Microsoft.EntityFrameworkCore;
 
 namespace LT.DigitalOffice.ImageService.Data
 {
@@ -16,7 +18,7 @@ namespace LT.DigitalOffice.ImageService.Data
       _provider = provider;
     }
 
-    public List<Guid> Create(List<DbImageMessage> imagesMessages)
+    public async Task<List<Guid>> CreateAsync(List<DbImageMessage> imagesMessages)
     {
       if (imagesMessages == null || !imagesMessages.Any() || imagesMessages.Contains(null))
       {
@@ -24,22 +26,22 @@ namespace LT.DigitalOffice.ImageService.Data
       }
 
       _provider.ImagesMessages.AddRange(imagesMessages);
-      _provider.Save();
+      await _provider.SaveAsync();
 
       return imagesMessages.Select(x => x.Id).ToList();
     }
 
-    public List<DbImageMessage> Get(List<Guid> imageIds)
+    public async Task<List<DbImageMessage>> GetAsync(List<Guid> imageIds)
     {
-      return _provider.ImagesMessages.Where(x => imageIds.Contains(x.Id)).ToList();
+      return await _provider.ImagesMessages.Where(x => imageIds.Contains(x.Id)).ToListAsync();
     }
 
-    public DbImageMessage Get(Guid imageId)
+    public async Task<DbImageMessage> GetAsync(Guid imageId)
     {
-      return _provider.ImagesMessages.FirstOrDefault(x => x.Id == imageId);
+      return await _provider.ImagesMessages.FirstOrDefaultAsync(x => x.Id == imageId);
     }
 
-    public bool Remove(List<Guid> imageIds)
+    public async Task<bool> RemoveAsync(List<Guid> imageIds)
     {
       if (imageIds == null)
       {
@@ -48,7 +50,7 @@ namespace LT.DigitalOffice.ImageService.Data
 
       foreach (Guid imageId in imageIds)
       {
-        _provider.ExecuteRawSql($@"DELETE FROM {DbImageMessage.TableName} WHERE Id = '{imageId}' OR ParentId = '{imageId}' OR
+        await _provider.ExecuteRawSqlAsync($@"DELETE FROM {DbImageMessage.TableName} WHERE Id = '{imageId}' OR ParentId = '{imageId}' OR
           Id IN (SELECT ParentId FROM {DbImageMessage.TableName} WHERE Id = '{imageId}' AND ParentId IS NOT NULL);");
       }
 

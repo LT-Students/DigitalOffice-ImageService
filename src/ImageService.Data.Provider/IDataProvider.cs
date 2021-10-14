@@ -1,4 +1,5 @@
-﻿using LT.DigitalOffice.ImageService.Models.Db;
+﻿using System.Threading.Tasks;
+using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.Kernel.Attributes;
 using LT.DigitalOffice.Kernel.Database;
 using LT.DigitalOffice.Kernel.Enums;
@@ -14,6 +15,6 @@ namespace LT.DigitalOffice.ImageService.Data.Provider
     DbSet<DbImageNews> ImagesNews { get; set; }
     DbSet<DbImageMessage> ImagesMessages { get; set; }
 
-    int ExecuteRawSql(string query);
+    Task<int> ExecuteRawSqlAsync(string query);
   }
 }

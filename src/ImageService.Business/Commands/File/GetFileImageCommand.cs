@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Business.Commands.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
@@ -26,32 +27,32 @@ namespace LT.DigitalOffice.ImageService.Business.Commands
       _userRepository = userRepository;
     }
 
-    public (byte[] content, string extension) Execute(Guid imageId, ImageSource source)
+    public async Task<(byte[] content, string extension)> Execute(Guid imageId, ImageSource source)
     {
       string content = null;
       string extension = null;
 
       if (source == ImageSource.Message)
       {
-        DbImageMessage dbImageMessage = _messageRepository.Get(imageId);
+        DbImageMessage dbImageMessage = await _messageRepository.GetAsync(imageId);
         content = dbImageMessage.Content;
         extension = dbImageMessage.Extension;
       }
       else if (source == ImageSource.News)
       {
-        DbImageNews dbImageNews = _newsRepository.Get(imageId);
+        DbImageNews dbImageNews = await _newsRepository.GetAsync(imageId);
         content = dbImageNews.Content;
         extension = dbImageNews.Extension;
       }
       else if (source == ImageSource.Project)
       {
-        DbImageProject dbImageProject = _projectRepository.Get(imageId);
+        DbImageProject dbImageProject = await _projectRepository.GetAsync(imageId);
         content = dbImageProject.Content;
         extension = dbImageProject.Extension;
       }
       else if (source == ImageSource.User)
       {
-        DbImageUser dbImageUser = _userRepository.Get(imageId);
+        DbImageUser dbImageUser = await _userRepository.GetAsync(imageId);
         content = dbImageUser.Content;
         extension = dbImageUser.Extension;
       }
