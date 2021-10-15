@@ -11,10 +11,10 @@ namespace LT.DigitalOffice.ImageService.Data.Interfaces
   {
     Task<List<Guid>> CreateAsync(List<DbImageNews> imagesNews);
 
-    Task<List<DbImageNews>> GetAsync(List<Guid> imageIds);
+    Task<List<DbImageNews>> GetAsync(List<Guid> imagesIds);
 
     Task<DbImageNews> GetAsync(Guid imageId);
 
-    Task<bool> RemoveAsync(List<Guid> imageIds);
+    Task<bool> RemoveAsync(List<Guid> imagesIds);
   }
 }

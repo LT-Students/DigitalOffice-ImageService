@@ -31,14 +31,14 @@ namespace LT.DigitalOffice.ImageService.Data
       return imagesProjects.Select(x => x.Id).ToList();
     }
 
-    public async Task<bool> RemoveAsync(List<Guid> imageIds)
+    public async Task<bool> RemoveAsync(List<Guid> imagesIds)
     {
-      if (imageIds == null)
+      if (imagesIds == null)
       {
         return false;
       }
 
-      foreach (Guid imageId in imageIds)
+      foreach (Guid imageId in imagesIds)
       {
         await _provider.ExecuteRawSqlAsync($@"DELETE FROM {DbImageProject.TableName} WHERE Id = '{imageId}' OR ParentId = '{imageId}' OR
           Id IN (SELECT ParentId FROM {DbImageProject.TableName} WHERE Id = '{imageId}' AND ParentId IS NOT NULL);");
@@ -47,9 +47,14 @@ namespace LT.DigitalOffice.ImageService.Data
       return true;
     }
 
-    public async Task<List<DbImageProject>> GetAsync(List<Guid> imageIds)
+    public async Task<List<DbImageProject>> GetAsync(List<Guid> imagesIds)
     {
-      return await _provider.ImagesProjects.Where(x => imageIds.Contains(x.Id)).ToListAsync();
+      if (imagesIds == null || !imagesIds.Any())
+      {
+        return null;
+      }
+
+      return await _provider.ImagesProjects.Where(x => imagesIds.Contains(x.Id)).ToListAsync();
     }
 
     public async Task<DbImageProject> GetAsync(Guid imageId)
