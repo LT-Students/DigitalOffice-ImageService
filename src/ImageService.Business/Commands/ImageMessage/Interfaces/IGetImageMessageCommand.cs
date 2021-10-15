@@ -9,6 +9,6 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageMessage.Interface
   [AutoInject]
   public interface IGetImageMessageCommand
   {
-    Task<OperationResultResponse<ImageResponse>> Execute(Guid parentId);
+    Task<OperationResultResponse<ImageResponse>> ExecuteAsync(Guid parentId);
   }
 }

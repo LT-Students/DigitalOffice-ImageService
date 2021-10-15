@@ -9,6 +9,6 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces
   [AutoInject]
   public interface IGetImageNewsCommand
   {
-    Task<OperationResultResponse<ImageResponse>> Execute(Guid imageId);
+    Task<OperationResultResponse<ImageResponse>> ExecuteAsync(Guid imageId);
   }
 }

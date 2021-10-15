@@ -27,7 +27,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands
       _userRepository = userRepository;
     }
 
-    public async Task<(byte[] content, string extension)> Execute(Guid imageId, ImageSource source)
+    public async Task<(byte[] content, string extension)> ExecuteAsync(Guid imageId, ImageSource source)
     {
       string content = null;
       string extension = null;

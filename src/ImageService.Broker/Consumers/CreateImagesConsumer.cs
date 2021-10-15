@@ -49,15 +49,15 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       switch (context.Message.ImageSource)
       {
         case ImageSource.User:
-          response = OperationResultWrapper.CreateResponse(CreateUserImages, context.Message);
+          response = OperationResultWrapper.CreateResponse(CreateUserImagesAsync, context.Message);
           break;
 
         case ImageSource.Project:
-          response = OperationResultWrapper.CreateResponse(CreateProjectImages, context.Message);
+          response = OperationResultWrapper.CreateResponse(CreateProjectImagesAsync, context.Message);
           break;
 
         case ImageSource.Message:
-          response = OperationResultWrapper.CreateResponse(CreateMessageImages, context.Message);
+          response = OperationResultWrapper.CreateResponse(CreateMessageImagesAsync, context.Message);
           break;
 
         default:
@@ -68,7 +68,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       await context.RespondAsync<IOperationResult<ICreateImagesResponse>>(response);
     }
 
-    private async Task<object> CreateUserImages(ICreateImagesRequest request)
+    private async Task<object> CreateUserImagesAsync(ICreateImagesRequest request)
     {
       if (request.Images == null)
       {
@@ -114,7 +114,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       return ICreateImagesResponse.CreateObj(previewIds);
     }
 
-    private async Task<object> CreateProjectImages(ICreateImagesRequest request)
+    private async Task<object> CreateProjectImagesAsync(ICreateImagesRequest request)
     {
       if (request.Images == null)
       {
@@ -160,7 +160,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       return ICreateImagesResponse.CreateObj(previewIds);
     }
 
-    private async Task<object> CreateMessageImages(ICreateImagesRequest request)
+    private async Task<object> CreateMessageImagesAsync(ICreateImagesRequest request)
     {
       if (request.Images == null)
       {

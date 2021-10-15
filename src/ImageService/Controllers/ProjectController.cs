@@ -16,7 +16,7 @@ namespace LT.DigitalOffice.ImageService.Controllers
       [FromServices] IGetImageProjectCommand command,
       [FromQuery] Guid imageId)
     {
-      return await command.Execute(imageId);
+      return await command.ExecuteAsync(imageId);
     }
   }
 }

@@ -16,7 +16,7 @@ namespace LT.DigitalOffice.ImageService.Controllers
       [FromQuery] Guid imageId,
       [FromQuery] ImageSource source)
     {
-      (byte[] content, string extension) = await command.Execute(imageId, source);
+      (byte[] content, string extension) = await command.ExecuteAsync(imageId, source);
 
       return File(content, extension);
     }

@@ -9,6 +9,6 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces
   [AutoInject]
   public interface ICreateImageNewsCommand
   {
-    Task<OperationResultResponse<CreateImageNewsResponse>> Execute(CreateImageRequest request);
+    Task<OperationResultResponse<CreateImageNewsResponse>> ExecuteAsync(CreateImageRequest request);
   }
 }

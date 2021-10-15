@@ -17,7 +17,7 @@ namespace LT.DigitalOffice.ImageService.Controllers
       [FromServices] IGetImageNewsCommand command,
       [FromQuery] Guid imageId)
     {
-      return await command.Execute(imageId);
+      return await command.ExecuteAsync(imageId);
     }
 
     [HttpPost("create")]
@@ -25,7 +25,7 @@ namespace LT.DigitalOffice.ImageService.Controllers
       [FromServices] ICreateImageNewsCommand command,
       [FromBody] CreateImageRequest request)
     {
-      return await command.Execute(request);
+      return await command.ExecuteAsync(request);
     }
   }
 }

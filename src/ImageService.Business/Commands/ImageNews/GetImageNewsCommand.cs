@@ -28,7 +28,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<OperationResultResponse<ImageResponse>> Execute(Guid imageId)
+    public async Task<OperationResultResponse<ImageResponse>> ExecuteAsync(Guid imageId)
     {
       OperationResultResponse<ImageResponse> response = new();
 

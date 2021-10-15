@@ -44,7 +44,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       _validator = validator;
     }
 
-    public async Task<OperationResultResponse<CreateImageNewsResponse>> Execute(CreateImageRequest request)
+    public async Task<OperationResultResponse<CreateImageNewsResponse>> ExecuteAsync(CreateImageRequest request)
     {
       if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveNews))
       {

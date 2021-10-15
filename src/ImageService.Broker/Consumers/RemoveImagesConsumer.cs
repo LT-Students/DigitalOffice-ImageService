@@ -25,12 +25,12 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 
     public async Task Consume(ConsumeContext<IRemoveImagesRequest> context)
     {
-      object response = OperationResultWrapper.CreateResponse(RemoveImages, context.Message);
+      object response = OperationResultWrapper.CreateResponse(RemoveImagesAsync, context.Message);
 
       await context.RespondAsync<IOperationResult<bool>>(response);
     }
 
-    private async Task<object> RemoveImages(IRemoveImagesRequest request)
+    private async Task<object> RemoveImagesAsync(IRemoveImagesRequest request)
     {
       switch (request.ImageSource)
       {
