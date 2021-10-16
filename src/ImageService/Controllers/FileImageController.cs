@@ -11,7 +11,7 @@ namespace LT.DigitalOffice.ImageService.Controllers
   public class FileImageController : ControllerBase
   {
     [HttpGet("get")]
-    public async Task<FileResult> Get(
+    public async Task<FileResult> GetAsync(
       [FromServices] IGetFileImageCommand command,
       [FromQuery] Guid imageId,
       [FromQuery] ImageSource source)

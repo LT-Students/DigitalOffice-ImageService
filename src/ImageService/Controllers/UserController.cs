@@ -12,7 +12,7 @@ namespace LT.DigitalOffice.ImageService.Controllers
   public class UserController : ControllerBase
   {
     [HttpGet("get")]
-    public async Task<OperationResultResponse<ImageResponse>> Get(
+    public async Task<OperationResultResponse<ImageResponse>> GetAsync(
       [FromServices] IGetImageUserCommand command,
       [FromQuery] Guid imageId)
     {
