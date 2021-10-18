@@ -76,7 +76,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
       if (request.EnablePreview)
       {
-        (bool isSuccess, string resizedContent, string extension) resizeResult = await _resizeHelper.Resize(request.Content, request.Extension);
+        (bool isSuccess, string resizedContent, string extension) resizeResult = await _resizeHelper.ResizeAsync(request.Content, request.Extension);
 
         if (!resizeResult.isSuccess)
         {

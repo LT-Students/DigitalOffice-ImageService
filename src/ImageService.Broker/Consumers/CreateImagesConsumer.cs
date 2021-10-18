@@ -84,7 +84,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       foreach (CreateImageData createImage in request.Images)
       {
         dbImageUser = _dbImageUserMapper.Map(createImage);
-        resizeResult = await _resizeHelper.Resize(createImage.Content, createImage.Extension);
+        resizeResult = await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension);
 
         if (!resizeResult.isSuccess)
         {
@@ -130,7 +130,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       foreach (CreateImageData createImage in request.Images)
       {
         dbImageProject = _dbImageProjectMapper.Map(createImage);
-        resizeResult = await _resizeHelper.Resize(createImage.Content, createImage.Extension);
+        resizeResult = await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension);
 
         if (!resizeResult.isSuccess)
         {
@@ -176,7 +176,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       foreach (CreateImageData createImage in request.Images)
       {
         dbImageMessage = _dbImageMessageMapper.Map(createImage);
-        resizeResult = await _resizeHelper.Resize(createImage.Content, createImage.Extension);
+        resizeResult = await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension);
 
         if (!resizeResult.isSuccess)
         {
