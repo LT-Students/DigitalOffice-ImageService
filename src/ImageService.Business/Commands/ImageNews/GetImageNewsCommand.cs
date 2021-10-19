@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces;
@@ -27,11 +28,11 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public OperationResultResponse<ImageResponse> Execute(Guid imageId)
+    public async Task<OperationResultResponse<ImageResponse>> ExecuteAsync(Guid imageId)
     {
       OperationResultResponse<ImageResponse> response = new();
 
-      response.Body = _imageNewsResponseMapper.Map(_imageNewsRepository.Get(imageId));
+      response.Body = _imageNewsResponseMapper.Map(await _imageNewsRepository.GetAsync(imageId));
       response.Status = OperationResultStatusType.FullSuccess;
       if (response.Body == null)
       {
