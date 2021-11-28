@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageUser.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Responses;
@@ -11,11 +12,11 @@ namespace LT.DigitalOffice.ImageService.Controllers
   public class UserController : ControllerBase
   {
     [HttpGet("get")]
-    public OperationResultResponse<ImageResponse> Get(
+    public async Task<OperationResultResponse<ImageResponse>> GetAsync(
       [FromServices] IGetImageUserCommand command,
       [FromQuery] Guid imageId)
     {
-      return command.Execute(imageId);
+      return await command.ExecuteAsync(imageId);
     }
   }
 }

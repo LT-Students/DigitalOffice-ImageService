@@ -7,7 +7,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
 {
   public class DbImageMessageMapper : IDbImageMessageMapper
   {
-    public DbImageMessage Map(CreateImageData createImageData, Guid? parentId = null, string content = null)
+    public DbImageMessage Map(CreateImageData createImageData, Guid? parentId = null, string content = null, string extension = null)
     {
       if (createImageData == null)
       {
@@ -20,7 +20,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
         ParentId = parentId,
         Name = createImageData.Name,
         Content = content ?? createImageData.Content,
-        Extension = createImageData.Extension,
+        Extension = extension ?? createImageData.Extension,
         CreatedAtUtc = DateTime.UtcNow,
         CreatedBy = createImageData.CreatedBy
       };

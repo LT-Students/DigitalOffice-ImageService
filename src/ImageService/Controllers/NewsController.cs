@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
@@ -12,19 +13,19 @@ namespace LT.DigitalOffice.ImageService.Controllers
   public class NewsController : ControllerBase
   {
     [HttpGet("get")]
-    public OperationResultResponse<ImageResponse> Get(
+    public async Task<OperationResultResponse<ImageResponse>> GetAsync(
       [FromServices] IGetImageNewsCommand command,
       [FromQuery] Guid imageId)
     {
-      return command.Execute(imageId);
+      return await command.ExecuteAsync(imageId);
     }
 
     [HttpPost("create")]
-    public OperationResultResponse<CreateImageNewsResponse> Create(
+    public async Task<OperationResultResponse<CreateImageNewsResponse>> CreateAsync(
       [FromServices] ICreateImageNewsCommand command,
       [FromBody] CreateImageRequest request)
     {
-      return command.Execute(request);
+      return await command.ExecuteAsync(request);
     }
   }
 }

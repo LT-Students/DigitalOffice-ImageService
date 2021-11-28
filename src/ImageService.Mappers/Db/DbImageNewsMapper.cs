@@ -16,7 +16,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public DbImageNews Map(CreateImageRequest request, Guid? parentId = null, string content = null)
+    public DbImageNews Map(CreateImageRequest request, Guid? parentId = null, string content = null, string extension = null)
     {
       if (request == null)
       {
@@ -29,7 +29,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
         ParentId = parentId,
         Name = request.Name,
         Content = content ?? request.Content,
-        Extension = request.Extension,
+        Extension = extension ?? request.Extension,
         CreatedAtUtc = DateTime.UtcNow,
         CreatedBy = _httpContextAccessor.HttpContext.GetUserId()
       };
