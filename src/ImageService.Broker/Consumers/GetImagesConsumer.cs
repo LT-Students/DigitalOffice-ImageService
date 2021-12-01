@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
-using LT.DigitalOffice.Kernel.Broker;
+using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Models.Broker.Enums;
 using LT.DigitalOffice.Models.Broker.Models;
 using LT.DigitalOffice.Models.Broker.Requests.Image;
