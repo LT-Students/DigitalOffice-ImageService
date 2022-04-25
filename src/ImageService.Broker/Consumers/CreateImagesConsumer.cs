@@ -8,13 +8,13 @@ using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Kernel.ImageSupport.Helpers.Interfaces;
 using LT.DigitalOffice.Models.Broker.Enums;
 using LT.DigitalOffice.Models.Broker.Models;
-using LT.DigitalOffice.Models.Broker.Requests.Image;
+using LT.DigitalOffice.Models.Broker.Publishing.Subscriber.Image;
 using LT.DigitalOffice.Models.Broker.Responses.Image;
 using MassTransit;
 
 namespace LT.DigitalOffice.ImageService.Broker.Consumers
 {
-  public class CreateImagesConsumer : IConsumer<ICreateImagesRequest>
+  public class CreateImagesConsumer : IConsumer<ICreateImagesPublish>
   {
     private readonly IImageUserRepository _imageUserRepository;
     private readonly IImageProjectRepository _imageProjectRepository;
@@ -42,7 +42,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       _resizeHelper = resizeHelper;
     }
 
-    public async Task Consume(ConsumeContext<ICreateImagesRequest> context)
+    public async Task Consume(ConsumeContext<ICreateImagesPublish> context)
     {
       object response;
 
@@ -68,7 +68,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       await context.RespondAsync<IOperationResult<ICreateImagesResponse>>(response);
     }
 
-    private async Task<object> CreateUserImagesAsync(ICreateImagesRequest request)
+    private async Task<object> CreateUserImagesAsync(ICreateImagesPublish request)
     {
       if (request.Images == null)
       {
@@ -114,7 +114,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       return ICreateImagesResponse.CreateObj(previewIds);
     }
 
-    private async Task<object> CreateProjectImagesAsync(ICreateImagesRequest request)
+    private async Task<object> CreateProjectImagesAsync(ICreateImagesPublish request)
     {
       if (request.Images == null)
       {
@@ -160,7 +160,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       return ICreateImagesResponse.CreateObj(previewIds);
     }
 
-    private async Task<object> CreateMessageImagesAsync(ICreateImagesRequest request)
+    private async Task<object> CreateMessageImagesAsync(ICreateImagesPublish request)
     {
       if (request.Images == null)
       {

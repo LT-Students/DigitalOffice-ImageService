@@ -2,12 +2,12 @@
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Models.Broker.Enums;
-using LT.DigitalOffice.Models.Broker.Requests.Image;
+using LT.DigitalOffice.Models.Broker.Publishing.Subscriber.Image;
 using MassTransit;
 
 namespace LT.DigitalOffice.ImageService.Broker.Consumers
 {
-  public class RemoveImagesConsumer : IConsumer<IRemoveImagesRequest>
+  public class RemoveImagesConsumer : IConsumer<IRemoveImagesPublish>
   {
     private readonly IImageMessageRepository _imageMessageRepository;
     private readonly IImageProjectRepository _imageProjectRepository;
@@ -23,14 +23,14 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       _imageUserRepository = imageUserRepository;
     }
 
-    public async Task Consume(ConsumeContext<IRemoveImagesRequest> context)
+    public async Task Consume(ConsumeContext<IRemoveImagesPublish> context)
     {
       object response = OperationResultWrapper.CreateResponse(RemoveImagesAsync, context.Message);
 
       await context.RespondAsync<IOperationResult<bool>>(response);
     }
 
-    private async Task<object> RemoveImagesAsync(IRemoveImagesRequest request)
+    private async Task<object> RemoveImagesAsync(IRemoveImagesPublish request)
     {
       switch (request.ImageSource)
       {
