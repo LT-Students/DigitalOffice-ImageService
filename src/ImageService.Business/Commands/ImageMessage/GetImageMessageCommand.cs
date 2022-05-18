@@ -7,23 +7,24 @@ using LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Responses;
+using LT.DigitalOffice.Models.Broker.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace LT.DigitalOffice.ImageService.Business.Commands.ImageMessage
 {
   public class GetImageMessageCommand : IGetImageMessageCommand
   {
-    private readonly IImageMessageRepository _imageMessageRepository;
-    private readonly IImageResponseMapper _imageMessageResponseMapper;
+    private readonly IImageRepository _repository;
+    private readonly IImageResponseMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public GetImageMessageCommand(
-      IImageMessageRepository imageMessageRepository,
-      IImageResponseMapper imageMessageResponseMapper,
+      IImageRepository repository,
+      IImageResponseMapper mapper,
       IHttpContextAccessor httpContextAccessor)
     {
-      _imageMessageRepository = imageMessageRepository;
-      _imageMessageResponseMapper = imageMessageResponseMapper;
+      _repository = repository;
+      _mapper = mapper;
       _httpContextAccessor = httpContextAccessor;
     }
 
@@ -31,8 +32,9 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageMessage
     {
       OperationResultResponse<ImageResponse> response = new();
 
-      response.Body = _imageMessageResponseMapper.Map(await _imageMessageRepository.GetAsync(parentId));
+      response.Body = _mapper.Map(await _repository.GetAsync(ImageSource.Message, parentId));
       response.Status = OperationResultStatusType.FullSuccess;
+
       if (response.Body == null)
       {
         _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;

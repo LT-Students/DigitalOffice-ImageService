@@ -4,27 +4,28 @@ using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageUser.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces;
-using LT.DigitalOffice.ImageService.Models.Db;
+using LT.DigitalOffice.ImageService.Models.Dto.Constants;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Responses;
+using LT.DigitalOffice.Models.Broker.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace LT.DigitalOffice.ImageService.Business.Commands.ImageUser
 {
   public class GetImageUserCommand : IGetImageUserCommand
   {
-    private readonly IImageUserRepository _imageUserRepository;
-    private readonly IImageResponseMapper _imageUserResponseMapper;
+    private readonly IImageRepository _repository;
+    private readonly IImageResponseMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public GetImageUserCommand(
-      IImageUserRepository imageUserRepository,
-      IImageResponseMapper imageUserResponseMapper,
+      IImageRepository repository,
+      IImageResponseMapper mapper,
       IHttpContextAccessor httpContextAccessor)
     {
-      _imageUserRepository = imageUserRepository;
-      _imageUserResponseMapper = imageUserResponseMapper;
+      _repository = repository;
+      _mapper = mapper;
       _httpContextAccessor = httpContextAccessor;
     }
 
@@ -32,8 +33,8 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageUser
     {
       OperationResultResponse<ImageResponse> response = new();
 
-      response.Body = _imageUserResponseMapper.Map(await _imageUserRepository.GetAsync(imageId));
-      response.Status = OperationResultStatusType.FullSuccess;
+      response.Body = _mapper.Map(await _repository.GetAsync(ImageSource.User, imageId));
+
       if (response.Body == null)
       {
         _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;

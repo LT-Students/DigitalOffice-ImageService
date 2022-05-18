@@ -4,27 +4,27 @@ using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Responses.Interfaces;
-using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Responses;
+using LT.DigitalOffice.Models.Broker.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 {
   public class GetImageNewsCommand : IGetImageNewsCommand
   {
-    private readonly IImageNewsRepository _imageNewsRepository;
-    private readonly IImageResponseMapper _imageNewsResponseMapper;
+    private readonly IImageRepository _repository;
+    private readonly IImageResponseMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public GetImageNewsCommand(
-      IImageNewsRepository imageNewsRepository,
-      IImageResponseMapper imageNewsResponseMapper,
+      IImageRepository repository,
+      IImageResponseMapper mapper,
       IHttpContextAccessor httpContextAccessor)
     {
-      _imageNewsRepository = imageNewsRepository;
-      _imageNewsResponseMapper = imageNewsResponseMapper;
+      _repository = repository;
+      _mapper = mapper;
       _httpContextAccessor = httpContextAccessor;
     }
 
@@ -32,7 +32,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
     {
       OperationResultResponse<ImageResponse> response = new();
 
-      response.Body = _imageNewsResponseMapper.Map(await _imageNewsRepository.GetAsync(imageId));
+      response.Body = _mapper.Map(await _repository.GetAsync(ImageSource.News, imageId));
       response.Status = OperationResultStatusType.FullSuccess;
       if (response.Body == null)
       {

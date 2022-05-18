@@ -1,5 +1,6 @@
 ﻿using System;
 using LT.DigitalOffice.ImageService.Models.Db;
+using LT.DigitalOffice.ImageService.Models.Dto.Constants;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -11,10 +12,10 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
   {
     protected override void Up(MigrationBuilder builder)
     {
-      CreateTable(builder, DbImageMessage.TableName);
-      CreateTable(builder, DbImageNews.TableName);
-      CreateTable(builder, DbImageProject.TableName);
-      CreateTable(builder, DbImageUser.TableName);
+      CreateTable(builder, DBTablesNames.MESSAGE);
+      CreateTable(builder, DBTablesNames.NEWS);
+      CreateTable(builder, DBTablesNames.PROJECT);
+      CreateTable(builder, DBTablesNames.USER);
     }
 
     private static void CreateTable(MigrationBuilder builder, string tableName)

@@ -10,56 +10,21 @@ namespace LT.DigitalOffice.ImageService.Business.Commands
 {
   public class GetFileImageCommand : IGetFileImageCommand
   {
-    private readonly IImageMessageRepository _messageRepository;
-    private readonly IImageNewsRepository _newsRepository;
-    private readonly IImageProjectRepository _projectRepository;
-    private readonly IImageUserRepository _userRepository;
+    private readonly IImageRepository _repository;
 
     public GetFileImageCommand(
-      IImageMessageRepository messageRepository,
-      IImageNewsRepository newsRepository,
-      IImageProjectRepository projectRepository,
-      IImageUserRepository userRepository)
+      IImageRepository messageRepository)
     {
-      _messageRepository = messageRepository;
-      _newsRepository = newsRepository;
-      _projectRepository = projectRepository;
-      _userRepository = userRepository;
+      _repository = messageRepository;
     }
 
     public async Task<(byte[] content, string extension)> ExecuteAsync(Guid imageId, ImageSource source)
     {
-      string content = null;
-      string extension = null;
+      DbImage dbImageMessage = await _repository.GetAsync(source, imageId);
 
-      if (source == ImageSource.Message)
-      {
-        DbImageMessage dbImageMessage = await _messageRepository.GetAsync(imageId);
-        content = dbImageMessage.Content;
-        extension = dbImageMessage.Extension;
-      }
-      else if (source == ImageSource.News)
-      {
-        DbImageNews dbImageNews = await _newsRepository.GetAsync(imageId);
-        content = dbImageNews.Content;
-        extension = dbImageNews.Extension;
-      }
-      else if (source == ImageSource.Project)
-      {
-        DbImageProject dbImageProject = await _projectRepository.GetAsync(imageId);
-        content = dbImageProject.Content;
-        extension = dbImageProject.Extension;
-      }
-      else if (source == ImageSource.User)
-      {
-        DbImageUser dbImageUser = await _userRepository.GetAsync(imageId);
-        content = dbImageUser.Content;
-        extension = dbImageUser.Extension;
-      }
+      new FileExtensionContentTypeProvider().TryGetContentType(dbImageMessage.Extension, out var contentType);
 
-      new FileExtensionContentTypeProvider().TryGetContentType(extension, out var contentType);
-
-      return (Convert.FromBase64String(content), contentType);
+      return (Convert.FromBase64String(dbImageMessage.Content), contentType);
     }
   }
 }
