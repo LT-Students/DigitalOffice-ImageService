@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LT.DigitalOffice.ImageService.Broker.Helpers;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
