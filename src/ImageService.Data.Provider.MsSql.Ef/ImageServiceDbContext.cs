@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Models.Db;
 using Microsoft.EntityFrameworkCore;
@@ -7,10 +9,7 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef
 {
   public class ImageServiceDbContext : DbContext, IDataProvider
   {
-    public DbSet<DbImageUser> ImagesUsers { get; set; }
-    public DbSet<DbImageProject> ImagesProjects { get; set; }
-    public DbSet<DbImageNews> ImagesNews { get; set; }
-    public DbSet<DbImageMessage> ImagesMessages { get; set; }
+    public DbSet<DbImage> Images { get; set; }
 
     public ImageServiceDbContext(DbContextOptions<ImageServiceDbContext> options)
       : base(options)
@@ -52,6 +51,11 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef
     public async Task<int> ExecuteRawSqlAsync(string query)
     {
       return await Database.ExecuteSqlRawAsync(query);
+    }
+
+    public IQueryable<DbImage> FromSqlRaw(string query)
+    {
+      return Images.FromSqlRaw(query);
     }
   }
 }

@@ -7,6 +7,7 @@
   <Import Project="$(ProjectDir)..\..\Common.Configurations.targets" />
 
   <ItemGroup>
+    <ProjectReference Include="..\ImageService.Broker\ImageService.Broker.csproj" />
     <ProjectReference Include="..\ImageService.Data\ImageService.Data.csproj" />
     <ProjectReference Include="..\ImageService.Mappers\ImageService.Mappers.csproj" />
     <ProjectReference Include="..\ImageService.Models.Db\ImageService.Models.Db.csproj" />
