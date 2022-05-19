@@ -17,17 +17,13 @@ namespace LT.DigitalOffice.ImageService.Data
 
     private string GetTargetDBTableName(ImageSource imageSource)
     {
-      string tableName = String.Empty;
-
       switch (imageSource)
       {
-        case ImageSource.User: tableName = DBTablesNames.USER; break;
-        case ImageSource.Project: tableName = DBTablesNames.PROJECT; break;
-        case ImageSource.Message: tableName = DBTablesNames.MESSAGE; break;
+        case ImageSource.User: return DBTablesNames.USER;
+        case ImageSource.Project: return DBTablesNames.PROJECT;
+        case ImageSource.Message: return DBTablesNames.MESSAGE;
         default: throw new ArgumentOutOfRangeException();
       }
-
-      return tableName;
     }
 
     public ImageRepository(IDataProvider provider)
@@ -44,15 +40,15 @@ namespace LT.DigitalOffice.ImageService.Data
         string parentId = null;
         string name = null;
 
-        foreach (DbImage i in dbImages)
+        foreach (DbImage image in dbImages)
         {
-          parentId = i.ParentId is null ? "null" : $"'{i.ParentId}'";
-          name = i.Name is null ? "null" : $"'{i.Name}'";
+          parentId = image.ParentId is null ? "null" : $"'{image.ParentId}'";
+          name = image.Name is null ? "null" : $"'{image.Name}'";
 
           await _provider.ExecuteRawSqlAsync(
             @$"INSERT INTO {tableName}
               (Id, ParentId, Name, Content, Extension, CreatedAtUtc, CreatedBy)
-              VALUES ('{i.Id}', {parentId}, {name}, '{i.Content}', '{i.Extension}', '{i.CreatedAtUtc}', '{i.CreatedBy}')");
+              VALUES ('{image.Id}', {parentId}, {name}, '{image.Content}', '{image.Extension}', '{image.CreatedAtUtc}', '{image.CreatedBy}')");
         }
       }
     }
