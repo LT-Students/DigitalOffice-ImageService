@@ -2,9 +2,12 @@
 {
   public static class DBTablesNames
   {
-    public const string USER = "ImagesUsers";
-    public const string MESSAGE = "ImagesMessages";
-    public const string NEWS = "ImagesNews";
-    public const string PROJECT = "ImagesProjects";
+    public const string USER = "UsersImages";
+    public const string MESSAGE = "MessagesImages";
+    public const string NEWS = "NewsImages";
+    public const string PROJECT = "ProjectsImages";
+    public const string TASK = "TasksImages";
+    public const string EDUCATION = "EducationsImages";
+    public const string OFFICE = "OfficesImages";
   }
 }

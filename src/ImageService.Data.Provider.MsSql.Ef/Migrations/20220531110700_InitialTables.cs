@@ -1,5 +1,4 @@
 ﻿using System;
-using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Constants;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -7,8 +6,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
 {
   [DbContext(typeof(ImageServiceDbContext))]
-  [Migration("20210820233300_InitialTables")]
-  class InitialTable : Migration
+  [Migration("20220531110700_InitialTables")]
+  class InitialTables : Migration
   {
     protected override void Up(MigrationBuilder builder)
     {
@@ -16,6 +15,9 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
       CreateTable(builder, DBTablesNames.NEWS);
       CreateTable(builder, DBTablesNames.PROJECT);
       CreateTable(builder, DBTablesNames.USER);
+      CreateTable(builder, DBTablesNames.TASK);
+      CreateTable(builder, DBTablesNames.EDUCATION);
+      CreateTable(builder, DBTablesNames.OFFICE);
     }
 
     private static void CreateTable(MigrationBuilder builder, string tableName)
