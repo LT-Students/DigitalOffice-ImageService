@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
-using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Models.Broker.Publishing.Subscriber.Image;
 using MassTransit;
 
@@ -24,9 +23,6 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
           context.Message.ImageSource,
           context.Message.ImagesIds);
       }
-
-      //move to publish
-      await context.RespondAsync<IOperationResult<bool>>(true);
     }
   }
 }
