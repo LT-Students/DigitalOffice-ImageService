@@ -22,6 +22,8 @@ namespace LT.DigitalOffice.ImageService.Data
         case ImageSource.User: return DBTablesNames.USER;
         case ImageSource.Project: return DBTablesNames.PROJECT;
         case ImageSource.Message: return DBTablesNames.MESSAGE;
+        case ImageSource.News: return DBTablesNames.NEWS;
+        case ImageSource.Education: return DBTablesNames.EDUCATION;
         default: throw new ArgumentOutOfRangeException();
       }
     }
