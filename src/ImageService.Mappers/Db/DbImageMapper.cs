@@ -3,7 +3,7 @@ using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.Kernel.Extensions;
-using LT.DigitalOffice.Models.Broker.Models;
+using LT.DigitalOffice.Models.Broker.Models.Image;
 using Microsoft.AspNetCore.Http;
 
 namespace LT.DigitalOffice.ImageService.Mappers.Db
@@ -20,6 +20,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
 
     public DbImage Map(
       CreateImageData request,
+      Guid createdBy,
       Guid? parentId = null,
       string content = null,
       string extension = null)
@@ -34,7 +35,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db
           Content = content ?? request.Content,
           Extension = extension ?? request.Extension,
           CreatedAtUtc = DateTime.UtcNow,
-          CreatedBy = request.CreatedBy
+          CreatedBy = createdBy
         };
     }
 

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
-using LT.DigitalOffice.Models.Broker.Models;
+using LT.DigitalOffice.Models.Broker.Models.Image;
 using LT.DigitalOffice.Models.Broker.Requests.Image;
 using LT.DigitalOffice.Models.Broker.Responses.Image;
 using MassTransit;
@@ -25,7 +25,6 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
           .Select(dbImagesUser => new ImageData(
             dbImagesUser.Id,
             dbImagesUser.ParentId,
-            null,
             dbImagesUser.Content,
             dbImagesUser.Extension,
             dbImagesUser.Name))

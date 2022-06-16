@@ -6,22 +6,22 @@ using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Kernel.ImageSupport.Helpers.Interfaces;
-using LT.DigitalOffice.Models.Broker.Models;
-using LT.DigitalOffice.Models.Broker.Publishing.Subscriber.Image;
+using LT.DigitalOffice.Models.Broker.Models.Image;
+using LT.DigitalOffice.Models.Broker.Requests.Image;
 using LT.DigitalOffice.Models.Broker.Responses.Image;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
 namespace LT.DigitalOffice.ImageService.Broker.Consumers
 {
-  public class CreateImagesConsumer : IConsumer<ICreateImagesPublish>
+  public class CreateImagesConsumer : IConsumer<ICreateImagesRequest>
   {
     private readonly IImageRepository _imageRepository;
     private readonly IDbImageMapper _dbImageMapper;
     private readonly IImageResizeHelper _resizeHelper;
     private readonly ILogger<CreateImagesConsumer> _logger;
 
-    private async Task<object> CreateImagesAsync(ICreateImagesPublish request)
+    private async Task<object> CreateImagesAsync(ICreateImagesRequest request)
     {
       List<DbImage> dbImages = new();
       List<Guid> previewIds = new();
@@ -31,7 +31,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 
       foreach (CreateImageData createImage in request.Images)
       {
-        dbImage = _dbImageMapper.Map(createImage);
+        dbImage = _dbImageMapper.Map(createImage, request.CreatedBy);
         resizeResult = await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension);
 
         if (!resizeResult.isSuccess)
@@ -47,7 +47,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
         }
         else
         {
-          dbPrewiewImage = _dbImageMapper.Map(createImage, dbImage.Id, resizeResult.resizedContent, resizeResult.extension);
+          dbPrewiewImage = _dbImageMapper.Map(createImage, request.CreatedBy, dbImage.Id, resizeResult.resizedContent, resizeResult.extension);
           dbImages.Add(dbPrewiewImage);
           previewIds.Add(dbPrewiewImage.Id);
         }
@@ -72,7 +72,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       _logger = logger;
     }
 
-    public async Task Consume(ConsumeContext<ICreateImagesPublish> context)
+    public async Task Consume(ConsumeContext<ICreateImagesRequest> context)
     {
       object response = OperationResultWrapper.CreateResponse(CreateImagesAsync, context.Message);
 

@@ -2,7 +2,7 @@
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.Kernel.Attributes;
-using LT.DigitalOffice.Models.Broker.Models;
+using LT.DigitalOffice.Models.Broker.Models.Image;
 
 namespace LT.DigitalOffice.ImageService.Mappers.Db.Interfaces
 {
@@ -11,6 +11,7 @@ namespace LT.DigitalOffice.ImageService.Mappers.Db.Interfaces
   {
     DbImage Map(
       CreateImageData createImageData,
+      Guid createdBy,
       Guid? parentId = null,
       string content = null,
       string extension = null);
