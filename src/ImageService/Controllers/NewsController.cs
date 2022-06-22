@@ -12,14 +12,7 @@ namespace LT.DigitalOffice.ImageService.Controllers
   [Route("[controller]")]
   public class NewsController : ControllerBase
   {
-    [HttpGet("get")]
-    public async Task<OperationResultResponse<ImageResponse>> GetAsync(
-      [FromServices] IGetImageNewsCommand command,
-      [FromQuery] Guid imageId)
-    {
-      return await command.ExecuteAsync(imageId);
-    }
-
+    
     [HttpPost("create")]
     public async Task<OperationResultResponse<CreateImageNewsResponse>> CreateAsync(
       [FromServices] ICreateImageNewsCommand command,
