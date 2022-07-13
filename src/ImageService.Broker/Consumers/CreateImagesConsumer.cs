@@ -23,77 +23,41 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
     private readonly IImageResizeHelper _resizeHelper;
     private readonly ILogger<CreateImagesConsumer> _logger;
 
-    private async Task<object> CreateAvatarImagesAsync(ICreateImagesRequest request)
+    private async Task<object> CreateImagesAsync(ICreateImagesRequest request)
     {
       List<DbImage> dbImages = new();
       List<Guid> previewIds = new(); 
 
       foreach (CreateImageData createImage in request.Images)
       {
-        (bool isSuccess, string resizedContent, string extension) bigAvatarResizeResult = await _resizeHelper.ResizePreciselyAsync(createImage.Content, createImage.Extension, (int)AvatarSizes.BigAvatar, (int)AvatarSizes.BigAvatar);
-        (bool isSuccess, string resizedContent, string extension) smallAvatarResizeResult = await _resizeHelper.ResizePreciselyAsync(createImage.Content, createImage.Extension, (int)AvatarSizes.SmallAvatar, (int)AvatarSizes.SmallAvatar);
+        (bool isSuccess, string resizedContent, string extension) imageResizeResult =
+          request.ImageSource.Equals(ImageSource.User) 
+            ? await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension, (int)ImageSizes.Middle)
+            : await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension, (int)ImageSizes.Big);
 
-        if (!bigAvatarResizeResult.isSuccess || !smallAvatarResizeResult.isSuccess)
+        (bool isSuccess, string resizedContent, string extension) previewResizeResult =
+          request.ImageSource.Equals(ImageSource.User)
+            ? await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension)
+            : await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension, 4, 3);
+
+        if (!imageResizeResult.isSuccess || !previewResizeResult.isSuccess)
         {
           _logger.LogError("Error while resize image.");
           return null;
         }
 
-        DbImage dbImage;
+        DbImage dbImage = string.IsNullOrEmpty(imageResizeResult.resizedContent)
+          ? _dbImageMapper.Map(createImage, request.CreatedBy)
+          : _dbImageMapper.Map(createImage, request.CreatedBy, null, imageResizeResult.resizedContent, imageResizeResult.extension);
 
-        if (string.IsNullOrEmpty(bigAvatarResizeResult.resizedContent))
-        {
-          dbImage = _dbImageMapper.Map(createImage, request.CreatedBy);
-        } 
-        else
-        {
-          dbImage = _dbImageMapper.Map(createImage, request.CreatedBy, null, bigAvatarResizeResult.resizedContent, bigAvatarResizeResult.extension);
-        }
-
-        if (string.IsNullOrEmpty(smallAvatarResizeResult.resizedContent))
+        if (string.IsNullOrEmpty(previewResizeResult.resizedContent))
         {
           dbImage.ParentId = dbImage.Id;
           previewIds.Add(dbImage.Id);
         }
         else
         {
-          DbImage dbPrewiewImage = _dbImageMapper.Map(createImage, request.CreatedBy, dbImage.Id, smallAvatarResizeResult.resizedContent, smallAvatarResizeResult.extension);
-          dbImages.Add(dbPrewiewImage);
-          previewIds.Add(dbPrewiewImage.Id);
-        }
-
-        dbImages.Add(dbImage);
-      }
-
-      await _imageRepository.CreateAsync(request.ImageSource, dbImages);
-
-      return ICreateImagesResponse.CreateObj(previewIds);
-    }
-
-    private async Task<object> CreateImagesAsync(ICreateImagesRequest request)
-    {
-      List<DbImage> dbImages = new();
-      List<Guid> previewIds = new();
-
-      foreach (CreateImageData createImage in request.Images)
-      {
-        DbImage dbImage = _dbImageMapper.Map(createImage, request.CreatedBy);
-        (bool isSuccess, string resizedContent, string extension) resizeResult = await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension);
-
-        if (!resizeResult.isSuccess)
-        {
-          _logger.LogError("Error while resize image.");
-          return null;
-        }
-
-        if (string.IsNullOrEmpty(resizeResult.resizedContent))
-        {
-          dbImage.ParentId = dbImage.Id;
-          previewIds.Add(dbImage.Id);
-        }
-        else
-        {
-          DbImage dbPrewiewImage = _dbImageMapper.Map(createImage, request.CreatedBy, dbImage.Id, resizeResult.resizedContent, resizeResult.extension);
+          DbImage dbPrewiewImage = _dbImageMapper.Map(createImage, request.CreatedBy, dbImage.Id, previewResizeResult.resizedContent, previewResizeResult.extension);
           dbImages.Add(dbPrewiewImage);
           previewIds.Add(dbPrewiewImage.Id);
         }
@@ -120,9 +84,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
 
     public async Task Consume(ConsumeContext<ICreateImagesRequest> context)
     {
-      object response = context.Message.ImageSource.Equals(ImageSource.User)
-        ? OperationResultWrapper.CreateResponse(CreateAvatarImagesAsync, context.Message)
-        : OperationResultWrapper.CreateResponse(CreateImagesAsync, context.Message);
+      object response = OperationResultWrapper.CreateResponse(CreateImagesAsync, context.Message);
 
       await context.RespondAsync<IOperationResult<ICreateImagesResponse>>(response);
     }

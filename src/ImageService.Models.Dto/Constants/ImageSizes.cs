@@ -1,8 +1,9 @@
 ﻿namespace LT.DigitalOffice.ImageService.Models.Dto.Constants
 {
-  public enum AvatarSizes
+  public enum ImageSizes
   {
-    SmallAvatar = 150,
-    BigAvatar = 500
+    Small = 150,
+    Middle = 500,
+    Big = 1000
   }
 }
