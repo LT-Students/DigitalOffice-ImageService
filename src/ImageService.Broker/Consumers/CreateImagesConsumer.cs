@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
+using LT.DigitalOffice.ImageService.Models.Dto.Constants;
 using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Kernel.ImageSupport.Helpers.Interfaces;
+using LT.DigitalOffice.Models.Broker.Enums;
 using LT.DigitalOffice.Models.Broker.Models.Image;
 using LT.DigitalOffice.Models.Broker.Requests.Image;
 using LT.DigitalOffice.Models.Broker.Responses.Image;
@@ -24,30 +26,44 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
     private async Task<object> CreateImagesAsync(ICreateImagesRequest request)
     {
       List<DbImage> dbImages = new();
-      List<Guid> previewIds = new();
-      DbImage dbImage;
-      DbImage dbPrewiewImage;
-      (bool isSuccess, string resizedContent, string extension) resizeResult;
+      List<Guid> previewIds = new(); 
 
       foreach (CreateImageData createImage in request.Images)
       {
-        dbImage = _dbImageMapper.Map(createImage, request.CreatedBy);
-        resizeResult = await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension);
+        (bool isSuccess, string resizedContent, string extension) imageResizeResult =
+          request.ImageSource.Equals(ImageSource.User) 
+            ? await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension, (int)ImageSizes.Middle)
+            : await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension, (int)ImageSizes.Big);
 
-        if (!resizeResult.isSuccess)
+        if (!imageResizeResult.isSuccess)
         {
           _logger.LogError("Error while resize image.");
           return null;
         }
 
-        if (string.IsNullOrEmpty(resizeResult.resizedContent))
+        (bool isSuccess, string resizedContent, string extension) previewResizeResult =
+          request.ImageSource.Equals(ImageSource.User)
+            ? await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension)
+            : await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension, 4, 3);
+
+        if (!previewResizeResult.isSuccess)
+        {
+          _logger.LogError("Error while resize image.");
+          return null;
+        }
+
+        DbImage dbImage = string.IsNullOrEmpty(imageResizeResult.resizedContent)
+          ? _dbImageMapper.Map(createImage, request.CreatedBy)
+          : _dbImageMapper.Map(createImage, request.CreatedBy, null, imageResizeResult.resizedContent, imageResizeResult.extension);
+
+        if (string.IsNullOrEmpty(previewResizeResult.resizedContent))
         {
           dbImage.ParentId = dbImage.Id;
           previewIds.Add(dbImage.Id);
         }
         else
         {
-          dbPrewiewImage = _dbImageMapper.Map(createImage, request.CreatedBy, dbImage.Id, resizeResult.resizedContent, resizeResult.extension);
+          DbImage dbPrewiewImage = _dbImageMapper.Map(createImage, request.CreatedBy, dbImage.Id, previewResizeResult.resizedContent, previewResizeResult.extension);
           dbImages.Add(dbPrewiewImage);
           previewIds.Add(dbPrewiewImage.Id);
         }

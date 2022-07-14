@@ -50,7 +50,7 @@ namespace LT.DigitalOffice.ImageService.Data
           await _provider.ExecuteRawSqlAsync(
             @$"INSERT INTO {tableName}
               (Id, ParentId, Name, Content, Extension, CreatedAtUtc, CreatedBy)
-              VALUES ('{image.Id}', {parentId}, {name}, '{image.Content}', '{image.Extension}', '{image.CreatedAtUtc}', '{image.CreatedBy}')");
+              VALUES ('{image.Id}', {parentId}, {name}, '{image.Content}', '{image.Extension}', '{image.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm:ss")}', '{image.CreatedBy}')");
         }
       }
     }
