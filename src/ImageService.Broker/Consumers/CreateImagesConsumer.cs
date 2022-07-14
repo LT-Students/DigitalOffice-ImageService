@@ -35,12 +35,18 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
             ? await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension, (int)ImageSizes.Middle)
             : await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension, (int)ImageSizes.Big);
 
+        if (!imageResizeResult.isSuccess)
+        {
+          _logger.LogError("Error while resize image.");
+          return null;
+        }
+
         (bool isSuccess, string resizedContent, string extension) previewResizeResult =
           request.ImageSource.Equals(ImageSource.User)
             ? await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension)
             : await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension, 4, 3);
 
-        if (!imageResizeResult.isSuccess || !previewResizeResult.isSuccess)
+        if (!previewResizeResult.isSuccess)
         {
           _logger.LogError("Error while resize image.");
           return null;
