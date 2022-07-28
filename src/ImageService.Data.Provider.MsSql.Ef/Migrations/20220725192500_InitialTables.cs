@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
 {
   [DbContext(typeof(ImageServiceDbContext))]
-  [Migration("20220531110700_InitialTables")]
+  [Migration("20220725192500_InitialTables")]
   class InitialTables : Migration
   {
     protected override void Up(MigrationBuilder builder)
@@ -18,6 +18,7 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations
       CreateTable(builder, DBTablesNames.TASK);
       CreateTable(builder, DBTablesNames.EDUCATION);
       CreateTable(builder, DBTablesNames.OFFICE);
+      CreateTable(builder, DBTablesNames.REACTION);
     }
 
     private static void CreateTable(MigrationBuilder builder, string tableName)

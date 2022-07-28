@@ -6,6 +6,7 @@ using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Provider;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Constants;
+using LT.DigitalOffice.ImageService.Models.Dto.Requests.Filters;
 using LT.DigitalOffice.Models.Broker.Enums;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,8 +25,35 @@ namespace LT.DigitalOffice.ImageService.Data
         case ImageSource.Message: return DBTablesNames.MESSAGE;
         case ImageSource.News: return DBTablesNames.NEWS;
         case ImageSource.Education: return DBTablesNames.EDUCATION;
+        case ImageSource.Reaction: return DBTablesNames.REACTION;
         default: throw new ArgumentOutOfRangeException();
       }
+    }
+
+    private IQueryable<DbImage> CreateFindReactionPredicates(
+      FindReactionFilter filter,
+      IQueryable<DbImage> dbReactionList)
+    {
+      if (filter.IsPreview.HasValue)
+      {
+        dbReactionList = filter.IsPreview.Value
+          ? dbReactionList.Where(rl => rl.ParentId != null || rl.ParentId == rl.Id)
+          : dbReactionList.Where(rl => rl.ParentId == null);
+      }
+
+      if (!string.IsNullOrEmpty(filter.NameIncludeSubstring))
+      {
+        dbReactionList = dbReactionList.Where(rl => rl.Name.Contains(filter.NameIncludeSubstring));
+      }
+
+      if (filter.IsAscendingSort.HasValue)
+      {
+        dbReactionList = filter.IsAscendingSort.Value
+          ? dbReactionList.OrderBy(rl => rl.Name)
+          : dbReactionList.OrderByDescending(rl => rl.Name);
+      }
+
+      return dbReactionList;
     }
 
     public ImageRepository(IDataProvider provider)
@@ -55,19 +83,19 @@ namespace LT.DigitalOffice.ImageService.Data
       }
     }
 
-    public async Task<List<DbImage>> GetAsync(ImageSource sourse, List<Guid> imagesIds)
+    public Task<List<DbImage>> GetAsync(ImageSource sourse, List<Guid> imagesIds)
     {
       return imagesIds is null || !imagesIds.Any()
         ? null
-        : await _provider
+        : _provider
           .FromSqlRaw($"SELECT * FROM {GetTargetDBTableName(sourse)}")
           .Where(x => imagesIds.Contains(x.Id))
           .ToListAsync();
     }
 
-    public async Task<DbImage> GetAsync(ImageSource sourse, Guid imageId)
+    public Task<DbImage> GetAsync(ImageSource sourse, Guid imageId)
     {
-      return await _provider
+      return _provider
         .FromSqlRaw($"SELECT * FROM {GetTargetDBTableName(sourse)}")
         .FirstOrDefaultAsync(i => i.Id == imageId);
     }
@@ -88,6 +116,30 @@ namespace LT.DigitalOffice.ImageService.Data
               WHERE Id = '{imageId}' AND ParentId IS NOT NULL);");
         }
       }
+    }
+
+    public async Task<(List<DbImage> dbReactions, int totalCount)> FindReactionAsync(FindReactionFilter filter)
+    {
+      if (filter is null)
+      {
+        return (null, default);
+      }
+
+      IQueryable<DbImage> dbReactionList = CreateFindReactionPredicates(
+        filter,
+        _provider
+        .FromSqlRaw($"SELECT * FROM {GetTargetDBTableName(ImageSource.Reaction)}")
+            .OrderByDescending(x => x.CreatedAtUtc)
+            .AsQueryable());
+
+      return (
+        await dbReactionList.Skip(filter.SkipCount).Take(filter.TakeCount).ToListAsync(),
+        await dbReactionList.CountAsync());
+    }
+
+    public Task<bool> DoesSameNameExistAsync(string name, ImageSource source)
+    {
+      return _provider.FromSqlRaw($"SELECT * FROM {GetTargetDBTableName(source)}").AnyAsync(x => x.Name == name);
     }
   }
 }

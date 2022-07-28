@@ -1,18 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
-using LT.DigitalOffice.ImageService.Models.Dto.Constants;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.ImageService.Validation.ImageNews.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Constants;
-using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.ImageSupport.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
@@ -54,7 +51,6 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
         return new OperationResultResponse<CreateImageNewsResponse>
         {
-          Status = OperationResultStatusType.Failed,
           Errors = new() { "Not enough rights." }
         };
       }
@@ -65,7 +61,6 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
         return new OperationResultResponse<CreateImageNewsResponse>
         {
-          Status = OperationResultStatusType.Failed,
           Errors = errors
         };
       }
@@ -101,10 +96,6 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       response.Body = new CreateImageNewsResponse() { ImageId = dbImageNews.Id, PreviewId = dbPreviewNews?.Id };
 
       _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
-
-      response.Status = response.Errors.Any()
-        ? OperationResultStatusType.PartialSuccess
-        : OperationResultStatusType.FullSuccess;
 
       return response;
     }

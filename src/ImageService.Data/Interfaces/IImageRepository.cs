@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Models.Db;
+using LT.DigitalOffice.ImageService.Models.Dto.Requests.Filters;
 using LT.DigitalOffice.Kernel.Attributes;
 using LT.DigitalOffice.Models.Broker.Enums;
 
@@ -17,5 +18,8 @@ namespace LT.DigitalOffice.ImageService.Data.Interfaces
     Task<DbImage> GetAsync(ImageSource sourse, Guid imageId);
 
     Task RemoveAsync(ImageSource sourse, List<Guid> imagesIds);
+
+    Task<(List<DbImage> dbReactions, int totalCount)> FindReactionAsync(FindReactionFilter filter);
+    Task<bool> DoesSameNameExistAsync(string name, ImageSource source);
   }
 }

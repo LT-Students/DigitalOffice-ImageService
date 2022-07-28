@@ -43,14 +43,14 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef
       SaveChanges();
     }
 
-    public async Task SaveAsync()
+    public Task SaveAsync()
     {
-      await SaveChangesAsync();
+      return SaveChangesAsync();
     }
 
-    public async Task<int> ExecuteRawSqlAsync(string query)
+    public Task<int> ExecuteRawSqlAsync(string query)
     {
-      return await Database.ExecuteSqlRawAsync(query);
+      return Database.ExecuteSqlRawAsync(query);
     }
 
     public IQueryable<DbImage> FromSqlRaw(string query)

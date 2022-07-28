@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
@@ -12,7 +11,7 @@ namespace LT.DigitalOffice.ImageService.Controllers
   [Route("[controller]")]
   public class NewsController : ControllerBase
   {
-    
+
     [HttpPost("create")]
     public async Task<OperationResultResponse<CreateImageNewsResponse>> CreateAsync(
       [FromServices] ICreateImageNewsCommand command,
