@@ -32,28 +32,28 @@ namespace LT.DigitalOffice.ImageService.Data
 
     private IQueryable<DbImage> CreateFindReactionPredicates(
       FindReactionFilter filter,
-      IQueryable<DbImage> dbReactionList)
+      IQueryable<DbImage> query)
     {
       if (filter.IsPreview.HasValue)
       {
-        dbReactionList = filter.IsPreview.Value
-          ? dbReactionList.Where(rl => rl.ParentId != null || rl.ParentId == rl.Id)
-          : dbReactionList.Where(rl => rl.ParentId == null);
+        query = filter.IsPreview.Value
+          ? query.Where(rl => rl.ParentId != null || rl.ParentId == rl.Id)
+          : query.Where(rl => rl.ParentId == null);
       }
 
       if (!string.IsNullOrEmpty(filter.NameIncludeSubstring))
       {
-        dbReactionList = dbReactionList.Where(rl => rl.Name.Contains(filter.NameIncludeSubstring));
+        query = query.Where(rl => rl.Name.Contains(filter.NameIncludeSubstring));
       }
 
       if (filter.IsAscendingSort.HasValue)
       {
-        dbReactionList = filter.IsAscendingSort.Value
-          ? dbReactionList.OrderBy(rl => rl.Name)
-          : dbReactionList.OrderByDescending(rl => rl.Name);
+        query = filter.IsAscendingSort.Value
+          ? query.OrderBy(rl => rl.Name)
+          : query.OrderByDescending(rl => rl.Name);
       }
 
-      return dbReactionList;
+      return query;
     }
 
     public ImageRepository(IDataProvider provider)
@@ -129,8 +129,8 @@ namespace LT.DigitalOffice.ImageService.Data
         filter,
         _provider
         .FromSqlRaw($"SELECT * FROM {GetTargetDBTableName(ImageSource.Reaction)}")
-            .OrderByDescending(x => x.CreatedAtUtc)
-            .AsQueryable());
+        .OrderByDescending(x => x.CreatedAtUtc)
+        .AsQueryable());
 
       return (
         await dbReactionList.Skip(filter.SkipCount).Take(filter.TakeCount).ToListAsync(),

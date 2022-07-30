@@ -1,4 +1,6 @@
-﻿using LT.DigitalOffice.ImageService.Mappers.Models.Interfaces;
+﻿using System.Collections.Generic;
+using System.Linq;
+using LT.DigitalOffice.ImageService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Models;
 
@@ -6,17 +8,17 @@ namespace LT.DigitalOffice.ImageService.Mappers.Models
 {
   public class ReactionInfoMapper : IReactionInfoMapper
   {
-    public ReactionInfo Map(DbImage dbImage)
+    public List<ReactionInfo> Map(List<DbImage> dbReactions)
     {
-      return dbImage is null
+      return dbReactions is null
         ? null
-        : new ReactionInfo
+        : dbReactions.Select(dbImage => new ReactionInfo
         {
           Id = dbImage.Id,
           Name = dbImage.Name,
           Content = dbImage.Content,
           Extension = dbImage.Extension
-        };
+        }).ToList();
     }
   }
 }

@@ -15,14 +15,14 @@ using LT.DigitalOffice.Kernel.Validators.Interfaces;
 
 namespace LT.DigitalOffice.ImageService.Business.Commands.ImageReaction
 {
-  public class FIndImageReactionCommand : IFindImageReactionCommand
+  public class FindImageReactionCommand : IFindImageReactionCommand
   {
     private readonly IBaseFindFilterValidator _baseFindValidator;
     private readonly IResponseCreator _responseCreator;
     private readonly IImageRepository _repository;
     private readonly IReactionInfoMapper _mapper;
 
-    public FIndImageReactionCommand(
+    public FindImageReactionCommand(
       IBaseFindFilterValidator baseValidator,
       IResponseCreator responseCreator,
       IImageRepository imageRepository,
@@ -46,7 +46,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageReaction
       FindResultResponse<ReactionInfo> response = new();
       (List<DbImage> dbRectionList, int totalCount) = await _repository.FindReactionAsync(findReactionFilter);
 
-      response.Body = dbRectionList?.Select(dbImage => _mapper.Map(dbImage)).ToList();
+      response.Body = _mapper.Map(dbRectionList);
       response.TotalCount = totalCount;
 
       return response;

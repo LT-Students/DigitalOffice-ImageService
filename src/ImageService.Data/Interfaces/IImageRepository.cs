@@ -20,6 +20,7 @@ namespace LT.DigitalOffice.ImageService.Data.Interfaces
     Task RemoveAsync(ImageSource sourse, List<Guid> imagesIds);
 
     Task<(List<DbImage> dbReactions, int totalCount)> FindReactionAsync(FindReactionFilter filter);
+
     Task<bool> DoesSameNameExistAsync(string name, ImageSource source);
   }
 }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using FluentValidation.Results;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
@@ -10,7 +12,7 @@ using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.ImageService.Validation.ImageNews.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Constants;
-using LT.DigitalOffice.Kernel.FluentValidationExtensions;
+using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.ImageSupport.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Models.Broker.Enums;
@@ -26,6 +28,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
     private readonly IDbImageMapper _mapper;
     private readonly IImageResizeHelper _resizeHelper;
     private readonly ICreateImageRequestValidator _validator;
+    private readonly IResponseCreator _responseCreator;
 
     public CreateImageNewsCommand(
       IAccessValidator accessValidator,
@@ -33,7 +36,8 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       IImageRepository repository,
       IDbImageMapper mapper,
       IImageResizeHelper resizeHelper,
-      ICreateImageRequestValidator validator)
+      ICreateImageRequestValidator validator,
+      IResponseCreator responseCreator)
     {
       _accessValidator = accessValidator;
       _httpContextAccessor = httpContextAccessor;
@@ -41,28 +45,23 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       _mapper = mapper;
       _resizeHelper = resizeHelper;
       _validator = validator;
+      _responseCreator = responseCreator;
     }
 
     public async Task<OperationResultResponse<CreateImageNewsResponse>> ExecuteAsync(CreateImageRequest request)
     {
       if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveNews))
       {
-        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-
-        return new OperationResultResponse<CreateImageNewsResponse>
-        {
-          Errors = new() { "Not enough rights." }
-        };
+        return _responseCreator.CreateFailureResponse<CreateImageNewsResponse>(HttpStatusCode.Forbidden);
       }
 
-      if (!_validator.ValidateCustom(request, out List<string> errors))
-      {
-        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+      ValidationResult validationResult = await _validator.ValidateAsync(request);
 
-        return new OperationResultResponse<CreateImageNewsResponse>
-        {
-          Errors = errors
-        };
+      if (!validationResult.IsValid)
+      {
+        return _responseCreator.CreateFailureResponse<CreateImageNewsResponse>(
+            HttpStatusCode.BadRequest,
+            validationResult.Errors.Select(vf => vf.ErrorMessage).ToList());
       }
 
       OperationResultResponse<CreateImageNewsResponse> response = new();
