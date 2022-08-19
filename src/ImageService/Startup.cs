@@ -7,8 +7,11 @@ using LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef;
 using LT.DigitalOffice.ImageService.Models.Dto.Configuration;
 using LT.DigitalOffice.Kernel.BrokerSupport.Configurations;
 using LT.DigitalOffice.Kernel.BrokerSupport.Extensions;
+using LT.DigitalOffice.Kernel.BrokerSupport.Helpers;
 using LT.DigitalOffice.Kernel.BrokerSupport.Middlewares.Token;
 using LT.DigitalOffice.Kernel.Configurations;
+using LT.DigitalOffice.Kernel.EFSupport.Extensions;
+using LT.DigitalOffice.Kernel.EFSupport.Helpers;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.Middlewares.ApiInformation;
 using MassTransit;
@@ -20,7 +23,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace LT.DigitalOffice.ImageService
 {
@@ -47,7 +49,7 @@ namespace LT.DigitalOffice.ImageService
         .GetSection(BaseRabbitMqConfig.SectionName)
         .Get<RabbitMqConfig>();
 
-      Version = "1.0.0.1";
+      Version = "1.0.1.0";
       Description = "ImageService is an API that intended to work with images.";
       StartTime = DateTime.UtcNow;
       ApiName = $"LT Digital Office - {_serviceInfoConfig.Name}";
@@ -82,20 +84,21 @@ namespace LT.DigitalOffice.ImageService
         })
         .AddNewtonsoftJson();
 
-      string connStr = Environment.GetEnvironmentVariable("ConnectionString");
-      if (string.IsNullOrEmpty(connStr))
+      string dbConnStr = ConnectionStringHandler.Get(Configuration);
+
+      if (string.IsNullOrEmpty(dbConnStr))
       {
-        connStr = Configuration.GetConnectionString("SQLConnectionString");
+        dbConnStr = Configuration.GetConnectionString("SQLConnectionString");
       }
 
       services.AddDbContext<ImageServiceDbContext>(options =>
       {
-        options.UseSqlServer(connStr);
+        options.UseSqlServer(dbConnStr);
       });
 
       services.AddHealthChecks()
         .AddRabbitMqCheck()
-        .AddSqlServer(connStr);
+        .AddSqlServer(dbConnStr);
 
       services.AddBusinessObjects();
 
@@ -104,7 +107,7 @@ namespace LT.DigitalOffice.ImageService
 
     public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
     {
-      UpdateDatabase(app);
+      app.UpdateDatabase<ImageServiceDbContext>();
 
       app.UseForwardedHeaders();
 
@@ -140,35 +143,10 @@ namespace LT.DigitalOffice.ImageService
 
     #region private methods
 
-    private (string username, string password) GetRabbitMqCredentials()
-    {
-      static string GetString(string envVar, string formAppsettings, string generated, string fieldName)
-      {
-        string str = Environment.GetEnvironmentVariable(envVar);
-        if (string.IsNullOrEmpty(str))
-        {
-          str = formAppsettings ?? generated;
-
-          Log.Information(
-            formAppsettings == null
-              ? $"Default RabbitMq {fieldName} was used."
-              : $"RabbitMq {fieldName} from appsetings.json was used.");
-        }
-        else
-        {
-          Log.Information($"RabbitMq {fieldName} from environment was used.");
-        }
-
-        return str;
-      }
-
-      return (GetString("RabbitMqUsername", _rabbitMqConfig.Username, $"{_serviceInfoConfig.Name}_{_serviceInfoConfig.Id}", "Username"),
-        GetString("RabbitMqPassword", _rabbitMqConfig.Password, _serviceInfoConfig.Id, "Password"));
-    }
-
     private void ConfigureMassTransit(IServiceCollection services)
     {
-      (string username, string password) = GetRabbitMqCredentials();
+      (string username, string password) = RabbitMqCredentialsHelper
+        .Get(_rabbitMqConfig, _serviceInfoConfig);
 
       services.AddMassTransit(x =>
       {
@@ -197,10 +175,6 @@ namespace LT.DigitalOffice.ImageService
       IBusRegistrationContext context,
       IRabbitMqBusFactoryConfigurator cfg)
     {
-      cfg.ReceiveEndpoint(_rabbitMqConfig.RemoveImagesEndpoint, ep =>
-      {
-        ep.ConfigureConsumer<RemoveImagesConsumer>(context);
-      });
       cfg.ReceiveEndpoint(_rabbitMqConfig.GetImagesEndpoint, ep =>
       {
         ep.ConfigureConsumer<GetImagesConsumer>(context);
@@ -209,17 +183,6 @@ namespace LT.DigitalOffice.ImageService
       {
         ep.ConfigureConsumer<CreateImagesConsumer>(context);
       });
-    }
-
-    private void UpdateDatabase(IApplicationBuilder app)
-    {
-      using var serviceScope = app.ApplicationServices
-        .GetRequiredService<IServiceScopeFactory>()
-        .CreateScope();
-
-      using var context = serviceScope.ServiceProvider.GetService<ImageServiceDbContext>();
-
-      context.Database.Migrate();
     }
 
     #endregion

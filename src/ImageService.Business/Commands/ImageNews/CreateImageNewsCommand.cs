@@ -6,6 +6,7 @@ using LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
+using LT.DigitalOffice.ImageService.Models.Dto.Constants;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.ImageService.Validation.ImageNews.Interfaces;
@@ -15,6 +16,7 @@ using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.ImageSupport.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
+using LT.DigitalOffice.Models.Broker.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
@@ -23,16 +25,16 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
   {
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IImageNewsRepository _repository;
-    private readonly IDbImageNewsMapper _mapper;
+    private readonly IImageRepository _repository;
+    private readonly IDbImageMapper _mapper;
     private readonly IImageResizeHelper _resizeHelper;
     private readonly ICreateImageRequestValidator _validator;
 
     public CreateImageNewsCommand(
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
-      IImageNewsRepository repository,
-      IDbImageNewsMapper mapper,
+      IImageRepository repository,
+      IDbImageMapper mapper,
       IImageResizeHelper resizeHelper,
       ICreateImageRequestValidator validator)
     {
@@ -70,9 +72,9 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
       OperationResultResponse<CreateImageNewsResponse> response = new();
 
-      DbImageNews dbImageNews = _mapper.Map(request);
-      DbImageNews dbPreviewNews = null;
-      List<DbImageNews> dbImagesNews = new() { dbImageNews };
+      DbImage dbImageNews = _mapper.Map(request);
+      DbImage dbPreviewNews = null;
+      List<DbImage> dbImagesNews = new() { dbImageNews };
 
       if (request.EnablePreview)
       {
@@ -94,13 +96,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
         }
       }
 
-      if (await _repository.CreateAsync(dbImagesNews) == null)
-      {
-        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-        response.Status = OperationResultStatusType.Failed;
-
-        return response;
-      }
+      await _repository.CreateAsync(ImageSource.News, dbImagesNews);
 
       response.Body = new CreateImageNewsResponse() { ImageId = dbImageNews.Id, PreviewId = dbPreviewNews?.Id };
 

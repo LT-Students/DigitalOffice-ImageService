@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Threading.Tasks;
-using LT.DigitalOffice.ImageService.Business.Commands.ImageProject.Interfaces;
+using LT.DigitalOffice.ImageService.Business.Commands.Image.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Responses;
+using LT.DigitalOffice.Models.Broker.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LT.DigitalOffice.ImageService.Controllers
 {
   [ApiController]
-  [Route("[controller]")]
-  public class ProjectController : ControllerBase
+  [Route("[Controller]")]
+  public class ImageController : ControllerBase
   {
     [HttpGet("get")]
     public async Task<OperationResultResponse<ImageResponse>> GetAsync(
-      [FromServices] IGetImageProjectCommand command,
-      [FromQuery] Guid imageId)
+      [FromServices] IGetImageCommand command,
+      [FromQuery] Guid imageId,
+      [FromQuery] ImageSource source)
     {
-      return await command.ExecuteAsync(imageId);
+      return await command.ExecuteAsync(imageId, source);
     }
   }
 }

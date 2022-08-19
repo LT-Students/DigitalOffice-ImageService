@@ -4,206 +4,95 @@ using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
+using LT.DigitalOffice.ImageService.Models.Dto.Constants;
 using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
 using LT.DigitalOffice.Kernel.ImageSupport.Helpers.Interfaces;
 using LT.DigitalOffice.Models.Broker.Enums;
-using LT.DigitalOffice.Models.Broker.Models;
+using LT.DigitalOffice.Models.Broker.Models.Image;
 using LT.DigitalOffice.Models.Broker.Requests.Image;
 using LT.DigitalOffice.Models.Broker.Responses.Image;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 
 namespace LT.DigitalOffice.ImageService.Broker.Consumers
 {
   public class CreateImagesConsumer : IConsumer<ICreateImagesRequest>
   {
-    private readonly IImageUserRepository _imageUserRepository;
-    private readonly IImageProjectRepository _imageProjectRepository;
-    private readonly IImageMessageRepository _imageMessageRepository;
-    private readonly IDbImageUserMapper _dbImageUserMapper;
-    private readonly IDbImageProjectMapper _dbImageProjectMapper;
-    private readonly IDbImageMessageMapper _dbImageMessageMapper;
+    private readonly IImageRepository _imageRepository;
+    private readonly IDbImageMapper _dbImageMapper;
     private readonly IImageResizeHelper _resizeHelper;
+    private readonly ILogger<CreateImagesConsumer> _logger;
+
+    private async Task<object> CreateImagesAsync(ICreateImagesRequest request)
+    {
+      List<DbImage> dbImages = new();
+      List<Guid> previewIds = new(); 
+
+      foreach (CreateImageData createImage in request.Images)
+      {
+        (bool isSuccess, string resizedContent, string extension) imageResizeResult =
+          request.ImageSource.Equals(ImageSource.User) 
+            ? await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension, (int)ImageSizes.Middle)
+            : await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension, (int)ImageSizes.Big);
+
+        if (!imageResizeResult.isSuccess)
+        {
+          _logger.LogError("Error while resize image.");
+          return null;
+        }
+
+        (bool isSuccess, string resizedContent, string extension) previewResizeResult =
+          request.ImageSource.Equals(ImageSource.User)
+            ? await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension)
+            : await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension, 4, 3);
+
+        if (!previewResizeResult.isSuccess)
+        {
+          _logger.LogError("Error while resize image.");
+          return null;
+        }
+
+        DbImage dbImage = string.IsNullOrEmpty(imageResizeResult.resizedContent)
+          ? _dbImageMapper.Map(createImage, request.CreatedBy)
+          : _dbImageMapper.Map(createImage, request.CreatedBy, null, imageResizeResult.resizedContent, imageResizeResult.extension);
+
+        if (string.IsNullOrEmpty(previewResizeResult.resizedContent))
+        {
+          dbImage.ParentId = dbImage.Id;
+          previewIds.Add(dbImage.Id);
+        }
+        else
+        {
+          DbImage dbPrewiewImage = _dbImageMapper.Map(createImage, request.CreatedBy, dbImage.Id, previewResizeResult.resizedContent, previewResizeResult.extension);
+          dbImages.Add(dbPrewiewImage);
+          previewIds.Add(dbPrewiewImage.Id);
+        }
+
+        dbImages.Add(dbImage);
+      }
+
+      await _imageRepository.CreateAsync(request.ImageSource, dbImages);
+
+      return ICreateImagesResponse.CreateObj(previewIds);
+    }
 
     public CreateImagesConsumer(
-      IImageUserRepository imageUserRepository,
-      IImageProjectRepository imageProjectRepository,
-      IImageMessageRepository imageMessageRepository,
-      IDbImageUserMapper dbImageUserMapper,
-      IDbImageProjectMapper dbImageProjectMapper,
-      IDbImageMessageMapper dbImageMessageMapper,
-      IImageResizeHelper resizeHelper)
+      IImageRepository imageRepository,
+      IDbImageMapper dbImageUserMapper,
+      IImageResizeHelper resizeHelper,
+      ILogger<CreateImagesConsumer> logger)
     {
-      _imageUserRepository = imageUserRepository;
-      _imageProjectRepository = imageProjectRepository;
-      _imageMessageRepository = imageMessageRepository;
-      _dbImageUserMapper = dbImageUserMapper;
-      _dbImageProjectMapper = dbImageProjectMapper;
-      _dbImageMessageMapper = dbImageMessageMapper;
+      _imageRepository = imageRepository;
+      _dbImageMapper = dbImageUserMapper;
       _resizeHelper = resizeHelper;
+      _logger = logger;
     }
 
     public async Task Consume(ConsumeContext<ICreateImagesRequest> context)
     {
-      object response;
-
-      switch (context.Message.ImageSource)
-      {
-        case ImageSource.User:
-          response = OperationResultWrapper.CreateResponse(CreateUserImagesAsync, context.Message);
-          break;
-
-        case ImageSource.Project:
-          response = OperationResultWrapper.CreateResponse(CreateProjectImagesAsync, context.Message);
-          break;
-
-        case ImageSource.Message:
-          response = OperationResultWrapper.CreateResponse(CreateMessageImagesAsync, context.Message);
-          break;
-
-        default:
-          response = null;
-          break;
-      }
+      object response = OperationResultWrapper.CreateResponse(CreateImagesAsync, context.Message);
 
       await context.RespondAsync<IOperationResult<ICreateImagesResponse>>(response);
-    }
-
-    private async Task<object> CreateUserImagesAsync(ICreateImagesRequest request)
-    {
-      if (request.Images == null)
-      {
-        return ICreateImagesResponse.CreateObj(null);
-      }
-
-      List<DbImageUser> dbImages = new();
-      List<Guid> previewIds = new();
-      DbImageUser dbImageUser;
-      DbImageUser dbPrewiewImageUser;
-      (bool isSuccess, string resizedContent, string extension) resizeResult;
-
-      foreach (CreateImageData createImage in request.Images)
-      {
-        dbImageUser = _dbImageUserMapper.Map(createImage);
-        resizeResult = await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension);
-
-        if (!resizeResult.isSuccess)
-        {
-          return ICreateImagesResponse.CreateObj(null);
-        }
-
-        if (string.IsNullOrEmpty(resizeResult.resizedContent))
-        {
-          dbImageUser.ParentId = dbImageUser.Id;
-          previewIds.Add(dbImageUser.Id);
-        }
-        else
-        {
-          dbPrewiewImageUser = _dbImageUserMapper.Map(createImage, dbImageUser.Id, resizeResult.resizedContent, resizeResult.extension);
-          dbImages.Add(dbPrewiewImageUser);
-          previewIds.Add(dbPrewiewImageUser.Id);
-        }
-
-        dbImages.Add(dbImageUser);
-      }
-
-      if (await _imageUserRepository.CreateAsync(dbImages) == null)
-      {
-        return ICreateImagesResponse.CreateObj(null);
-      }
-
-      return ICreateImagesResponse.CreateObj(previewIds);
-    }
-
-    private async Task<object> CreateProjectImagesAsync(ICreateImagesRequest request)
-    {
-      if (request.Images == null)
-      {
-        return ICreateImagesResponse.CreateObj(null);
-      }
-
-      List<DbImageProject> dbImages = new();
-      List<Guid> previewIds = new();
-      DbImageProject dbImageProject;
-      DbImageProject dbPrewiewImageProject;
-      (bool isSuccess, string resizedContent, string extension) resizeResult;
-
-      foreach (CreateImageData createImage in request.Images)
-      {
-        dbImageProject = _dbImageProjectMapper.Map(createImage);
-        resizeResult = await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension);
-
-        if (!resizeResult.isSuccess)
-        {
-          return ICreateImagesResponse.CreateObj(null);
-        }
-
-        if (string.IsNullOrEmpty(resizeResult.resizedContent))
-        {
-          dbImageProject.ParentId = dbImageProject.Id;
-          previewIds.Add(dbImageProject.Id);
-        }
-        else
-        {
-          dbPrewiewImageProject = _dbImageProjectMapper.Map(createImage, dbImageProject.Id, resizeResult.resizedContent, resizeResult.extension);
-          dbImages.Add(dbPrewiewImageProject);
-          previewIds.Add(dbPrewiewImageProject.Id);
-        }
-
-        dbImages.Add(dbImageProject);
-      }
-
-      if (await _imageProjectRepository.CreateAsync(dbImages) == null)
-      {
-        return ICreateImagesResponse.CreateObj(null);
-      }
-
-      return ICreateImagesResponse.CreateObj(previewIds);
-    }
-
-    private async Task<object> CreateMessageImagesAsync(ICreateImagesRequest request)
-    {
-      if (request.Images == null)
-      {
-        return ICreateImagesResponse.CreateObj(null);
-      }
-
-      List<DbImageMessage> dbImages = new();
-      List<Guid> previewIds = new();
-      DbImageMessage dbImageMessage;
-      DbImageMessage dbPrewiewImageMessage;
-      (bool isSuccess, string resizedContent, string extension) resizeResult;
-
-      foreach (CreateImageData createImage in request.Images)
-      {
-        dbImageMessage = _dbImageMessageMapper.Map(createImage);
-        resizeResult = await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension);
-
-        if (!resizeResult.isSuccess)
-        {
-          return ICreateImagesResponse.CreateObj(null);
-        }
-
-        if (string.IsNullOrEmpty(resizeResult.resizedContent))
-        {
-          dbImageMessage.ParentId = dbImageMessage.Id;
-          previewIds.Add(dbImageMessage.Id);
-        }
-        else
-        {
-          dbPrewiewImageMessage = _dbImageMessageMapper.Map(createImage, dbImageMessage.Id, resizeResult.resizedContent, resizeResult.extension);
-          dbImages.Add(dbPrewiewImageMessage);
-          previewIds.Add(dbPrewiewImageMessage.Id);
-        }
-
-        dbImages.Add(dbImageMessage);
-      }
-
-      if (await _imageMessageRepository.CreateAsync(dbImages) == null)
-      {
-        return ICreateImagesResponse.CreateObj(null);
-      }
-
-      return ICreateImagesResponse.CreateObj(previewIds);
     }
   }
 }

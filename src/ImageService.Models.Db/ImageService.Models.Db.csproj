@@ -6,4 +6,8 @@
 
   <Import Project="$(ProjectDir)..\..\Common.Configurations.targets" />
 
+  <ItemGroup>
+    <ProjectReference Include="..\ImageService.Models.Dto\ImageService.Models.Dto.csproj" />
+  </ItemGroup>
+
 </Project>

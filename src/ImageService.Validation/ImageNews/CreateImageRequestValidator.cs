@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using FluentValidation;
+﻿using FluentValidation;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.ImageService.Validation.ImageNews.Interfaces;
 using LT.DigitalOffice.Kernel.Validators.Interfaces;
@@ -9,9 +7,6 @@ namespace LT.DigitalOffice.ImageService.Validation.ImageNews
 {
   public class CreateImageRequestValidator : AbstractValidator<CreateImageRequest>, ICreateImageRequestValidator
   {
-    private List<string> AllowedExtensions = new()
-    { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tga" };
-
     public CreateImageRequestValidator(
       IImageContentValidator imageContentValidator,
       IImageExtensionValidator imageExtensionValidator)

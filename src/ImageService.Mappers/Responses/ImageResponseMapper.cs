@@ -6,68 +6,17 @@ namespace LT.DigitalOffice.ImageService.Mappers.Responses
 {
   public class ImageResponseMapper : IImageResponseMapper
   {
-    public ImageResponse Map(DbImageNews dbImagesNews)
+    public ImageResponse Map(DbImage dbImage)
     {
-      if (dbImagesNews == null)
-      {
-        return null;
-      }
-
-      return new ImageResponse
-      {
-        Id = dbImagesNews.Id,
-        Content = dbImagesNews.Content,
-        Name = dbImagesNews.Name,
-        Extension = dbImagesNews.Extension
-      };
-    }
-
-    public ImageResponse Map(DbImageMessage dbImageMessage)
-    {
-      if (dbImageMessage == null)
-      {
-        return null;
-      }
-
-      return new ImageResponse
-      {
-        Id = dbImageMessage.Id,
-        Content = dbImageMessage.Content,
-        Name = dbImageMessage.Name,
-        Extension = dbImageMessage.Extension
-      };
-    }
-
-    public ImageResponse Map(DbImageProject dbImageProject)
-    {
-      if (dbImageProject == null)
-      {
-        return null;
-      }
-
-      return new ImageResponse
-      {
-        Id = dbImageProject.Id,
-        Content = dbImageProject.Content,
-        Name = dbImageProject.Name,
-        Extension = dbImageProject.Extension
-      };
-    }
-
-    public ImageResponse Map(DbImageUser dbImagesUser)
-    {
-      if (dbImagesUser == null)
-      {
-        return null;
-      }
-
-      return new ImageResponse
-      {
-        Id = dbImagesUser.Id,
-        Content = dbImagesUser.Content,
-        Name = dbImagesUser.Name,
-        Extension = dbImagesUser.Extension
-      };
+      return dbImage is null
+        ? null
+        : new ImageResponse
+        {
+          Id = dbImage.Id,
+          Content = dbImage.Content,
+          Name = dbImage.Name,
+          Extension = dbImage.Extension
+        };
     }
   }
 }
