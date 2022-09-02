@@ -8,6 +8,6 @@ namespace LT.DigitalOffice.ImageService.Mappers.Models.Interfaces
   [AutoInject]
   public interface IReactionInfoMapper
   {
-    List<ReactionInfo> Map(List<DbImage> dbReactions);
+    List<ReactionInfo> Map(List<DbReaction> dbReactions);
   }
 }

@@ -9,6 +9,5 @@
     public const string TASK = "TasksImages";
     public const string EDUCATION = "EducationsImages";
     public const string OFFICE = "OfficesImages";
-    public const string REACTION = "ReactionsImages";
   }
 }

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentValidation.Results;
-using LT.DigitalOffice.ImageService.Business.Commands.ImageReaction.Interfaces;
+using LT.DigitalOffice.ImageService.Business.Commands.Reaction.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
@@ -13,30 +13,31 @@ using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Kernel.Validators.Interfaces;
 
-namespace LT.DigitalOffice.ImageService.Business.Commands.ImageReaction
+namespace LT.DigitalOffice.ImageService.Business.Commands.Reaction
 {
-  public class FindImageReactionCommand : IFindImageReactionCommand
+  public class FindReactionCommand : IFindReactionCommand
   {
     private readonly IBaseFindFilterValidator _baseFindValidator;
     private readonly IResponseCreator _responseCreator;
-    private readonly IImageRepository _repository;
+    private readonly IReactionRepository _repository;
     private readonly IReactionInfoMapper _mapper;
 
-    public FindImageReactionCommand(
+    public FindReactionCommand(
       IBaseFindFilterValidator baseValidator,
       IResponseCreator responseCreator,
-      IImageRepository imageRepository,
+      IReactionRepository repository,
       IReactionInfoMapper mapper)
     {
       _baseFindValidator = baseValidator;
       _responseCreator = responseCreator;
-      _repository = imageRepository;
+      _repository = repository;
       _mapper = mapper;
     }
 
     public async Task<FindResultResponse<ReactionInfo>> ExecuteAsync(FindReactionFilter findReactionFilter)
     {
       ValidationResult validationResult = await _baseFindValidator.ValidateAsync(findReactionFilter);
+
       if (!validationResult.IsValid)
       {
         return _responseCreator.CreateFailureFindResponse<ReactionInfo>(HttpStatusCode.BadRequest,
@@ -44,7 +45,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageReaction
       }
 
       FindResultResponse<ReactionInfo> response = new();
-      (List<DbImage> dbRectionList, int totalCount) = await _repository.FindReactionAsync(findReactionFilter);
+      (List<DbReaction> dbRectionList, int totalCount) = await _repository.FindReactionAsync(findReactionFilter);
 
       response.Body = _mapper.Map(dbRectionList);
       response.TotalCount = totalCount;

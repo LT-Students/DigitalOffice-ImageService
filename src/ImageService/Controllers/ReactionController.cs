@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
-using LT.DigitalOffice.ImageService.Business.Commands.ImageReaction.Interfaces;
+﻿using System;
+using System.Threading.Tasks;
+using LT.DigitalOffice.ImageService.Business.Commands.Reaction.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Dto.Models;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests.Filters;
@@ -14,16 +15,24 @@ namespace LT.DigitalOffice.ImageService.Controllers
   public class ReactionController : ControllerBase
   {
     [HttpPost("create")]
-    public async Task<OperationResultResponse<CreateImageReactionResponse>> CreateAsync(
-      [FromServices] ICreateImageReactionCommand command,
-      [FromBody] CreateImageRequest request)
+    public async Task<OperationResultResponse<Guid?>> CreateAsync(
+      [FromServices] ICreateReactionCommand command,
+      [FromBody] CreateReactionRequest request)
     {
       return await command.ExecuteAsync(request);
     }
 
+    [HttpGet("get")]
+    public async Task<OperationResultResponse<GetReactionResponse>> GetAsync(
+      [FromServices] IGetReactionCommand command,
+      [FromQuery] Guid reactionId)
+    {
+      return await command.ExecuteAsync(reactionId);
+    }
+
     [HttpGet("find")]
     public async Task<FindResultResponse<ReactionInfo>> FindAsync(
-      [FromServices] IFindImageReactionCommand command,
+      [FromServices] IFindReactionCommand command,
       [FromQuery] FindReactionFilter findReactionFilter)
     {
       return await command.ExecuteAsync(findReactionFilter);

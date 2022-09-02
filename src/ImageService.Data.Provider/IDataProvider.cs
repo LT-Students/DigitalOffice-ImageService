@@ -12,6 +12,8 @@ namespace LT.DigitalOffice.ImageService.Data.Provider
   public interface IDataProvider : IBaseDataProvider
   {
     DbSet<DbImage> Images { get; set; }
+    DbSet<DbReaction> Reactions { get; set; }
+    DbSet<DbReactionGroup> ReactionsGroups { get; set; }
 
     Task<int> ExecuteRawSqlAsync(string query);
 

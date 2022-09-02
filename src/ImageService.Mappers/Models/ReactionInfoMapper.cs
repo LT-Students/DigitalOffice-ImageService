@@ -8,16 +8,19 @@ namespace LT.DigitalOffice.ImageService.Mappers.Models
 {
   public class ReactionInfoMapper : IReactionInfoMapper
   {
-    public List<ReactionInfo> Map(List<DbImage> dbReactions)
+    public List<ReactionInfo> Map(List<DbReaction> dbReactions)
     {
       return dbReactions is null
         ? null
-        : dbReactions.Select(dbImage => new ReactionInfo
+        : dbReactions.Select(dbReaction => new ReactionInfo
         {
-          Id = dbImage.Id,
-          Name = dbImage.Name,
-          Content = dbImage.Content,
-          Extension = dbImage.Extension
+          Id = dbReaction.Id,
+          Name = dbReaction.Name,
+          Unicode = dbReaction.Unicode,
+          Content = dbReaction.Content,
+          Extension = dbReaction.Extension,
+          GroupId = dbReaction.GroupId,
+          IsActive = dbReaction.IsActive
         }).ToList();
     }
   }

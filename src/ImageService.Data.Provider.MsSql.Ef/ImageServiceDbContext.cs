@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Models.Db;
+using LT.DigitalOffice.Kernel.EFSupport.Provider;
 using Microsoft.EntityFrameworkCore;
 
 namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef
@@ -10,6 +10,8 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef
   public class ImageServiceDbContext : DbContext, IDataProvider
   {
     public DbSet<DbImage> Images { get; set; }
+    public DbSet<DbReaction> Reactions { get; set; }
+    public DbSet<DbReactionGroup> ReactionsGroups { get ; set; }
 
     public ImageServiceDbContext(DbContextOptions<ImageServiceDbContext> options)
       : base(options)
@@ -17,7 +19,7 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef
     }
 
     // Fluent API is written here.
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+   protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("LT.DigitalOffice.ImageService.Models.Db"));
     }
@@ -38,14 +40,24 @@ namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef
       return Entry(obj).State;
     }
 
-    public void Save()
+    /*public void Save()
     {
       SaveChanges();
     }
 
-    public Task SaveAsync()
+    public async Task SaveAsync()
     {
-      return SaveChangesAsync();
+      await SaveChangesAsync();
+    }*/
+
+    void IBaseDataProvider.Save()
+    {
+      SaveChanges();
+    }
+
+    async Task IBaseDataProvider.SaveAsync()
+    {
+      await SaveChangesAsync();
     }
 
     public Task<int> ExecuteRawSqlAsync(string query)
