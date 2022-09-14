@@ -6,17 +6,16 @@ using LT.DigitalOffice.Kernel.EFSupport.Provider;
 using LT.DigitalOffice.Kernel.Enums;
 using Microsoft.EntityFrameworkCore;
 
-namespace LT.DigitalOffice.ImageService.Data.Provider
+namespace LT.DigitalOffice.ImageService.Data.Provider;
+
+[AutoInject(InjectType.Scoped)]
+public interface IDataProvider : IBaseDataProvider
 {
-  [AutoInject(InjectType.Scoped)]
-  public interface IDataProvider : IBaseDataProvider
-  {
-    DbSet<DbImage> Images { get; set; }
-    DbSet<DbReaction> Reactions { get; set; }
-    DbSet<DbReactionGroup> ReactionsGroups { get; set; }
+  DbSet<DbImage> Images { get; set; }
+  DbSet<DbReaction> Reactions { get; set; }
+  DbSet<DbReactionGroup> ReactionsGroups { get; set; }
 
-    Task<int> ExecuteRawSqlAsync(string query);
+  Task<int> ExecuteRawSqlAsync(string query);
 
-    IQueryable<DbImage> FromSqlRaw(string query);
-  }
+  IQueryable<DbImage> FromSqlRaw(string query);
 }

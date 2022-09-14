@@ -5,11 +5,10 @@ using LT.DigitalOffice.Kernel.Attributes;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Models.Broker.Enums;
 
-namespace LT.DigitalOffice.ImageService.Business.Commands.Image.Interfaces
+namespace LT.DigitalOffice.ImageService.Business.Commands.Image.Interfaces;
+
+[AutoInject]
+public interface IGetImageCommand
 {
-  [AutoInject]
-  public interface IGetImageCommand
-  {
-    Task<OperationResultResponse<ImageResponse>> ExecuteAsync(Guid imageId, ImageSource source);
-  }
+  Task<OperationResultResponse<ImageResponse>> ExecuteAsync(Guid imageId, ImageSource source);
 }

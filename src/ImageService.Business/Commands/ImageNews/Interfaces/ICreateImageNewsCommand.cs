@@ -4,11 +4,10 @@ using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Attributes;
 using LT.DigitalOffice.Kernel.Responses;
 
-namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces
+namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces;
+
+[AutoInject]
+public interface ICreateImageNewsCommand
 {
-  [AutoInject]
-  public interface ICreateImageNewsCommand
-  {
-    Task<OperationResultResponse<CreateImageNewsResponse>> ExecuteAsync(CreateImageRequest request);
-  }
+  Task<OperationResultResponse<CreateImageNewsResponse>> ExecuteAsync(CreateImageRequest request);
 }

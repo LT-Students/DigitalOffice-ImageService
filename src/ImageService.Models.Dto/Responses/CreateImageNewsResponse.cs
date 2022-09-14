@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace LT.DigitalOffice.ImageService.Models.Dto.Responses
+namespace LT.DigitalOffice.ImageService.Models.Dto.Responses;
+
+public record CreateImageNewsResponse
 {
-  public record CreateImageNewsResponse
-  {
-    public Guid ImageId { get; set; }
-    public Guid? PreviewId { get; set; }
-  }
+  public Guid ImageId { get; set; }
+  public Guid? PreviewId { get; set; }
 }

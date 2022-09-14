@@ -8,32 +8,31 @@ using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 
-namespace LT.DigitalOffice.ImageService.Business.Commands.Reaction
+namespace LT.DigitalOffice.ImageService.Business.Commands.Reaction;
+
+public class GetReactionCommand : IGetReactionCommand
 {
-  public class GetReactionCommand : IGetReactionCommand
+  private readonly IReactionRepository _repository;
+  private readonly IGetReactionResponseMapper _mapper;
+  private readonly IResponseCreator _responseCreator;
+
+  public GetReactionCommand(
+    IReactionRepository repository,
+    IGetReactionResponseMapper mapper,
+    IResponseCreator responseCreator)
   {
-    private readonly IReactionRepository _repository;
-    private readonly IGetReactionResponseMapper _mapper;
-    private readonly IResponseCreator _responseCreator;
+    _repository = repository;
+    _mapper = mapper;
+    _responseCreator = responseCreator;
+  }
 
-    public GetReactionCommand(
-      IReactionRepository repository,
-      IGetReactionResponseMapper mapper,
-      IResponseCreator responseCreator)
-    {
-      _repository = repository;
-      _mapper = mapper;
-      _responseCreator = responseCreator;
-    }
+  public async Task<OperationResultResponse<GetReactionResponse>> ExecuteAsync(Guid reactionId)
+  {
+    OperationResultResponse<GetReactionResponse> response = new();
+    response.Body = _mapper.Map(await _repository.GetAsync(reactionId));
 
-    public async Task<OperationResultResponse<GetReactionResponse>> ExecuteAsync(Guid reactionId)
-    {
-      OperationResultResponse<GetReactionResponse> response = new();
-      response.Body = _mapper.Map(await _repository.GetAsync(reactionId));
-
-      return response.Body is null
-        ? _responseCreator.CreateFailureResponse<GetReactionResponse>(HttpStatusCode.NotFound)
-        : response;
-    }
+    return response.Body is null
+      ? _responseCreator.CreateFailureResponse<GetReactionResponse>(HttpStatusCode.NotFound)
+      : response;
   }
 }

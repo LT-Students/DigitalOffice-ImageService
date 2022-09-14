@@ -4,25 +4,24 @@ using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.Models.Broker.Publishing.Subscriber.Image;
 using MassTransit;
 
-namespace LT.DigitalOffice.ImageService.Broker.Consumers
+namespace LT.DigitalOffice.ImageService.Broker.Consumers;
+
+public class RemoveImagesConsumer : IConsumer<IRemoveImagesPublish>
 {
-  public class RemoveImagesConsumer : IConsumer<IRemoveImagesPublish>
+  private readonly IImageRepository _repository;
+
+  public RemoveImagesConsumer(IImageRepository repository)
   {
-    private readonly IImageRepository _repository;
+    _repository = repository;
+  }
 
-    public RemoveImagesConsumer(IImageRepository repository)
+  public async Task Consume(ConsumeContext<IRemoveImagesPublish> context)
+  {
+    if (context.Message.ImagesIds is not null && context.Message.ImagesIds.Any())
     {
-      _repository = repository;
-    }
-
-    public async Task Consume(ConsumeContext<IRemoveImagesPublish> context)
-    {
-      if (context.Message.ImagesIds is not null && context.Message.ImagesIds.Any())
-      {
-        await _repository.RemoveAsync(
-          context.Message.ImageSource,
-          context.Message.ImagesIds);
-      }
+      await _repository.RemoveAsync(
+        context.Message.ImageSource,
+        context.Message.ImagesIds);
     }
   }
 }

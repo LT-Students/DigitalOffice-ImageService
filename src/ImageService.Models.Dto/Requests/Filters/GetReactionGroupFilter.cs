@@ -1,17 +1,16 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LT.DigitalOffice.ImageService.Models.Dto.Requests.Filters
+namespace LT.DigitalOffice.ImageService.Models.Dto.Requests.Filters;
+
+public record GetReactionGroupFilter
 {
-  public record GetReactionGroupFilter
-  {
-    [FromQuery(Name = "groupId")]
-    public Guid GroupId { get; set; }
+  [FromQuery(Name = "groupId")]
+  public Guid GroupId { get; set; }
 
-    [FromQuery(Name = "includeReactions")]
-    public bool IncludeReactions { get; set; } = true;
+  [FromQuery(Name = "includeReactions")]
+  public bool IncludeReactions { get; set; } = true;
 
-    [FromQuery(Name = "includeActiveReactions")]
-    public bool? IncludeActiveReactions { get; set; }
-  }
+  [FromQuery(Name = "includeActiveReactions")]
+  public bool? IncludeActiveReactions { get; set; }
 }

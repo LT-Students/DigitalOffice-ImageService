@@ -14,85 +14,84 @@ using LT.DigitalOffice.Models.Broker.Responses.Image;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
-namespace LT.DigitalOffice.ImageService.Broker.Consumers
+namespace LT.DigitalOffice.ImageService.Broker.Consumers;
+
+public class CreateImagesConsumer : IConsumer<ICreateImagesRequest>
 {
-  public class CreateImagesConsumer : IConsumer<ICreateImagesRequest>
+  private readonly IImageRepository _imageRepository;
+  private readonly IDbImageMapper _dbImageMapper;
+  private readonly IImageResizeHelper _resizeHelper;
+  private readonly ILogger<CreateImagesConsumer> _logger;
+
+  private async Task<object> CreateImagesAsync(ICreateImagesRequest request)
   {
-    private readonly IImageRepository _imageRepository;
-    private readonly IDbImageMapper _dbImageMapper;
-    private readonly IImageResizeHelper _resizeHelper;
-    private readonly ILogger<CreateImagesConsumer> _logger;
+    List<DbImage> dbImages = new();
+    List<Guid> previewIds = new(); 
 
-    private async Task<object> CreateImagesAsync(ICreateImagesRequest request)
+    foreach (CreateImageData createImage in request.Images)
     {
-      List<DbImage> dbImages = new();
-      List<Guid> previewIds = new(); 
+      (bool isSuccess, string resizedContent, string extension) imageResizeResult =
+        request.ImageSource.Equals(ImageSource.User) 
+          ? await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension, (int)ImageSizes.Middle)
+          : await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension, (int)ImageSizes.Big);
 
-      foreach (CreateImageData createImage in request.Images)
+      if (!imageResizeResult.isSuccess)
       {
-        (bool isSuccess, string resizedContent, string extension) imageResizeResult =
-          request.ImageSource.Equals(ImageSource.User) 
-            ? await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension, (int)ImageSizes.Middle)
-            : await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension, (int)ImageSizes.Big);
-
-        if (!imageResizeResult.isSuccess)
-        {
-          _logger.LogError("Error while resize image.");
-          return null;
-        }
-
-        (bool isSuccess, string resizedContent, string extension) previewResizeResult =
-          request.ImageSource.Equals(ImageSource.User)
-            ? await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension)
-            : await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension, 4, 3);
-
-        if (!previewResizeResult.isSuccess)
-        {
-          _logger.LogError("Error while resize image.");
-          return null;
-        }
-
-        DbImage dbImage = string.IsNullOrEmpty(imageResizeResult.resizedContent)
-          ? _dbImageMapper.Map(createImage, request.CreatedBy)
-          : _dbImageMapper.Map(createImage, request.CreatedBy, null, imageResizeResult.resizedContent, imageResizeResult.extension);
-
-        if (string.IsNullOrEmpty(previewResizeResult.resizedContent))
-        {
-          dbImage.ParentId = dbImage.Id;
-          previewIds.Add(dbImage.Id);
-        }
-        else
-        {
-          DbImage dbPrewiewImage = _dbImageMapper.Map(createImage, request.CreatedBy, dbImage.Id, previewResizeResult.resizedContent, previewResizeResult.extension);
-          dbImages.Add(dbPrewiewImage);
-          previewIds.Add(dbPrewiewImage.Id);
-        }
-
-        dbImages.Add(dbImage);
+        _logger.LogError("Error while resize image.");
+        return null;
       }
 
-      await _imageRepository.CreateAsync(request.ImageSource, dbImages);
+      (bool isSuccess, string resizedContent, string extension) previewResizeResult =
+        request.ImageSource.Equals(ImageSource.User)
+          ? await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension)
+          : await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension, 4, 3);
 
-      return ICreateImagesResponse.CreateObj(previewIds);
+      if (!previewResizeResult.isSuccess)
+      {
+        _logger.LogError("Error while resize image.");
+        return null;
+      }
+
+      DbImage dbImage = string.IsNullOrEmpty(imageResizeResult.resizedContent)
+        ? _dbImageMapper.Map(createImage, request.CreatedBy)
+        : _dbImageMapper.Map(createImage, request.CreatedBy, null, imageResizeResult.resizedContent, imageResizeResult.extension);
+
+      if (string.IsNullOrEmpty(previewResizeResult.resizedContent))
+      {
+        dbImage.ParentId = dbImage.Id;
+        previewIds.Add(dbImage.Id);
+      }
+      else
+      {
+        DbImage dbPrewiewImage = _dbImageMapper.Map(createImage, request.CreatedBy, dbImage.Id, previewResizeResult.resizedContent, previewResizeResult.extension);
+        dbImages.Add(dbPrewiewImage);
+        previewIds.Add(dbPrewiewImage.Id);
+      }
+
+      dbImages.Add(dbImage);
     }
 
-    public CreateImagesConsumer(
-      IImageRepository imageRepository,
-      IDbImageMapper dbImageUserMapper,
-      IImageResizeHelper resizeHelper,
-      ILogger<CreateImagesConsumer> logger)
-    {
-      _imageRepository = imageRepository;
-      _dbImageMapper = dbImageUserMapper;
-      _resizeHelper = resizeHelper;
-      _logger = logger;
-    }
+    await _imageRepository.CreateAsync(request.ImageSource, dbImages);
 
-    public async Task Consume(ConsumeContext<ICreateImagesRequest> context)
-    {
-      object response = OperationResultWrapper.CreateResponse(CreateImagesAsync, context.Message);
+    return ICreateImagesResponse.CreateObj(previewIds);
+  }
 
-      await context.RespondAsync<IOperationResult<ICreateImagesResponse>>(response);
-    }
+  public CreateImagesConsumer(
+    IImageRepository imageRepository,
+    IDbImageMapper dbImageUserMapper,
+    IImageResizeHelper resizeHelper,
+    ILogger<CreateImagesConsumer> logger)
+  {
+    _imageRepository = imageRepository;
+    _dbImageMapper = dbImageUserMapper;
+    _resizeHelper = resizeHelper;
+    _logger = logger;
+  }
+
+  public async Task Consume(ConsumeContext<ICreateImagesRequest> context)
+  {
+    object response = OperationResultWrapper.CreateResponse(CreateImagesAsync, context.Message);
+
+    await context.RespondAsync<IOperationResult<ICreateImagesResponse>>(response);
   }
 }

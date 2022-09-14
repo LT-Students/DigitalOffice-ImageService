@@ -4,11 +4,10 @@ using LT.DigitalOffice.ImageService.Models.Dto.Requests.Filters;
 using LT.DigitalOffice.Kernel.Attributes;
 using LT.DigitalOffice.Kernel.Responses;
 
-namespace LT.DigitalOffice.ImageService.Business.Commands.Reaction.Interfaces
+namespace LT.DigitalOffice.ImageService.Business.Commands.Reaction.Interfaces;
+
+[AutoInject]
+public interface IFindReactionCommand
 {
-  [AutoInject]
-  public interface IFindReactionCommand
-  {
-    Task<FindResultResponse<ReactionInfo>> ExecuteAsync(FindReactionFilter findReactionFilter);
-  }
+  Task<FindResultResponse<ReactionInfo>> ExecuteAsync(FindReactionFilter findReactionFilter);
 }

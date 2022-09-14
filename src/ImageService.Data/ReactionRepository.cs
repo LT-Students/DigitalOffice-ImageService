@@ -8,89 +8,83 @@ using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests.Filters;
 using Microsoft.EntityFrameworkCore;
 
-namespace LT.DigitalOffice.ImageService.Data
+namespace LT.DigitalOffice.ImageService.Data;
+
+public class ReactionRepository : IReactionRepository
 {
-  public class ReactionRepository : IReactionRepository
+  private readonly IDataProvider _provider;
+
+  public ReactionRepository(IDataProvider provider)
   {
-    private readonly IDataProvider _provider;
+    _provider = provider;
+  }
 
-    public ReactionRepository(IDataProvider provider)
+  private IQueryable<DbReaction> CreateFindReactionPredicates(
+    FindReactionFilter filter,
+    IQueryable<DbReaction> query)
+  {
+    if (!string.IsNullOrEmpty(filter.NameIncludeSubstring))
     {
-      _provider = provider;
+      query = query.Where(rl => rl.Name.Contains(filter.NameIncludeSubstring));
     }
 
-    private IQueryable<DbReaction> CreateFindReactionPredicates(
-      FindReactionFilter filter,
-      IQueryable<DbReaction> query)
+    if (!string.IsNullOrEmpty(filter.UnicodeIncludeSubstring))
     {
-      if (!string.IsNullOrEmpty(filter.NameIncludeSubstring))
-      {
-        query = query.Where(rl => rl.Name.Contains(filter.NameIncludeSubstring));
-      }
-
-      if (!string.IsNullOrEmpty(filter.UnicodeIncludeSubstring))
-      {
-        query = query.Where(rl => rl.Unicode.Contains(filter.UnicodeIncludeSubstring));
-      }
-
-      if (!filter.IsAscendingSort)
-      {
-        query = query.OrderByDescending(rl => rl.Name);
-      }
-
-      if (filter.IsActive.HasValue)
-      {
-        query = query.Where(rl => rl.IsActive == filter.IsActive.Value);
-      }
-
-      return query;
+      query = query.Where(rl => rl.Unicode.Contains(filter.UnicodeIncludeSubstring));
     }
 
-    public async Task<Guid?> CreateAsync(DbReaction dbReaction)
+    if (!filter.IsAscendingSort)
     {
-
-      if (dbReaction is null)
-      {
-        return null;
-      }
-
-      _provider.Reactions.Add(dbReaction);
-      await _provider.SaveAsync();
-
-      return dbReaction.Id;
+      query = query.OrderByDescending(rl => rl.Name);
     }
 
-    public Task<DbReaction> GetAsync(Guid reactionId)
+    if (filter.IsActive.HasValue)
     {
-      return _provider.Reactions.FirstOrDefaultAsync(x => x.Id == reactionId);
+      query = query.Where(rl => rl.IsActive == filter.IsActive.Value);
     }
 
-    public async Task<(List<DbReaction> dbReactions, int totalCount)> FindReactionAsync(FindReactionFilter filter)
+    return query;
+  }
+
+  public Task CreateAsync(DbReaction dbReaction)
+  {
+    if (dbReaction is null)
     {
-      if (filter is null)
-      {
-        return (null, default);
-      }
-
-      IQueryable<DbReaction> dbReactionList = CreateFindReactionPredicates(
-        filter,
-        _provider.Reactions.OrderBy(x => x.Name).AsQueryable());  //.Select(x => x) -?
-
-      return (
-        await dbReactionList.Skip(filter.SkipCount).Take(filter.TakeCount).ToListAsync(),
-        await dbReactionList.CountAsync());
+      return null;
     }
 
-    public Task<bool> DoesSameNameExistAsync(string name)
+    _provider.Reactions.Add(dbReaction);
+    return _provider.SaveAsync();
+  }
+
+  public Task<DbReaction> GetAsync(Guid reactionId)
+  {
+    return _provider.Reactions.FirstOrDefaultAsync(x => x.Id == reactionId);
+  }
+
+  public async Task<(List<DbReaction> dbReactions, int totalCount)> FindReactionAsync(FindReactionFilter filter)
+  {
+    if (filter is null)
     {
-      return _provider.Reactions.AnyAsync(x => x.Name == name && x.IsActive == true);
+      return (null, default);
     }
 
-    public Task<int> CountReactionsInGroupAsync(Guid? groupId)
-    {
-      return groupId is null
-        ? default
-        : _provider.Reactions.Where(x => x.Id == groupId && x.IsActive == true).CountAsync();
-    }
+    IQueryable<DbReaction> dbReactionList = CreateFindReactionPredicates(
+      filter,
+      _provider.Reactions.OrderBy(x => x.Name).AsQueryable());
+
+    return (
+      await dbReactionList.Skip(filter.SkipCount).Take(filter.TakeCount).ToListAsync(),
+      await dbReactionList.CountAsync());
+  }
+
+  public Task<bool> DoesSameNameExistAsync(string name)
+  {
+    return _provider.Reactions.AnyAsync(x => x.Name == name && x.IsActive == true);
+  }
+
+  public Task<int> CountReactionsInGroupAsync(Guid groupId)
+  {
+    return _provider.Reactions.Where(x => x.GroupId == groupId && x.IsActive == true).CountAsync();
   }
 }

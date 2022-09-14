@@ -13,44 +13,43 @@ using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Kernel.Validators.Interfaces;
 
-namespace LT.DigitalOffice.ImageService.Business.Commands.Reaction
+namespace LT.DigitalOffice.ImageService.Business.Commands.Reaction;
+
+public class FindReactionCommand : IFindReactionCommand
 {
-  public class FindReactionCommand : IFindReactionCommand
+  private readonly IBaseFindFilterValidator _baseFindValidator;
+  private readonly IResponseCreator _responseCreator;
+  private readonly IReactionRepository _repository;
+  private readonly IReactionInfoMapper _mapper;
+
+  public FindReactionCommand(
+    IBaseFindFilterValidator baseValidator,
+    IResponseCreator responseCreator,
+    IReactionRepository repository,
+    IReactionInfoMapper mapper)
   {
-    private readonly IBaseFindFilterValidator _baseFindValidator;
-    private readonly IResponseCreator _responseCreator;
-    private readonly IReactionRepository _repository;
-    private readonly IReactionInfoMapper _mapper;
+    _baseFindValidator = baseValidator;
+    _responseCreator = responseCreator;
+    _repository = repository;
+    _mapper = mapper;
+  }
 
-    public FindReactionCommand(
-      IBaseFindFilterValidator baseValidator,
-      IResponseCreator responseCreator,
-      IReactionRepository repository,
-      IReactionInfoMapper mapper)
+  public async Task<FindResultResponse<ReactionInfo>> ExecuteAsync(FindReactionFilter findReactionFilter)
+  {
+    ValidationResult validationResult = await _baseFindValidator.ValidateAsync(findReactionFilter);
+
+    if (!validationResult.IsValid)
     {
-      _baseFindValidator = baseValidator;
-      _responseCreator = responseCreator;
-      _repository = repository;
-      _mapper = mapper;
+      return _responseCreator.CreateFailureFindResponse<ReactionInfo>(HttpStatusCode.BadRequest,
+        validationResult.Errors.Select(vf => vf.ErrorMessage).ToList());
     }
 
-    public async Task<FindResultResponse<ReactionInfo>> ExecuteAsync(FindReactionFilter findReactionFilter)
-    {
-      ValidationResult validationResult = await _baseFindValidator.ValidateAsync(findReactionFilter);
+    FindResultResponse<ReactionInfo> response = new();
+    (List<DbReaction> dbRectionList, int totalCount) = await _repository.FindReactionAsync(findReactionFilter);
 
-      if (!validationResult.IsValid)
-      {
-        return _responseCreator.CreateFailureFindResponse<ReactionInfo>(HttpStatusCode.BadRequest,
-          validationResult.Errors.Select(vf => vf.ErrorMessage).ToList());
-      }
+    response.Body = _mapper.Map(dbRectionList);
+    response.TotalCount = totalCount;
 
-      FindResultResponse<ReactionInfo> response = new();
-      (List<DbReaction> dbRectionList, int totalCount) = await _repository.FindReactionAsync(findReactionFilter);
-
-      response.Body = _mapper.Map(dbRectionList);
-      response.TotalCount = totalCount;
-
-      return response;
-    }
+    return response;
   }
 }

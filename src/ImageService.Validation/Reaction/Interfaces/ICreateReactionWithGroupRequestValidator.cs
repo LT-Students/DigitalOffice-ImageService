@@ -5,6 +5,6 @@ using LT.DigitalOffice.Kernel.Attributes;
 namespace LT.DigitalOffice.ImageService.Validation.Reaction.Interfaces;
 
 [AutoInject]
-public interface ICreateReactionRequestValidator : IValidator<CreateReactionRequest>
+public interface ICreateReactionWithGroupRequestValidator : IValidator<CreateReactionWithGroupRequest>
 {
 }

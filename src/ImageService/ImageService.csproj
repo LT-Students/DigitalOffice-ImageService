@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+   
     <ProjectReference Include="..\ImageService.Broker\ImageService.Broker.csproj" />
     <ProjectReference Include="..\ImageService.Business\ImageService.Business.csproj" />
     <ProjectReference Include="..\ImageService.Validation\ImageService.Validation.csproj" />

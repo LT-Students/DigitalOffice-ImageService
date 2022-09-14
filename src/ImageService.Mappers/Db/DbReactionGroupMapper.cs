@@ -1,46 +1,49 @@
 ﻿using System;
+using System.Linq;
 using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.Kernel.Extensions;
 using Microsoft.AspNetCore.Http;
 
-namespace LT.DigitalOffice.ImageService.Mappers.Db
+namespace LT.DigitalOffice.ImageService.Mappers.Db;
+
+public class DbReactionGroupMapper : IDbReactionGroupMapper
 {
-  public class DbReactionGroupMapper : IDbReactionGroupMapper
+  private readonly IHttpContextAccessor _httpContextAccessor;
+
+  public DbReactionGroupMapper(IHttpContextAccessor httpContextAccessor)
   {
-    private readonly IHttpContextAccessor _contextAccessor;
-
-    public DbReactionGroupMapper(IHttpContextAccessor contextAccessor)
+    _httpContextAccessor = httpContextAccessor;
+  }
+  public DbReactionGroup Map(CreateReactionGroupRequest request)
+  {
+    if (request is null)
     {
-      _contextAccessor = contextAccessor;
+      return null;
     }
-    public DbReactionGroup Map(CreateReactionGroupRequest request)
-    {
-      return request is null
-        ? null
-        : new DbReactionGroup
-        {
-          Id = Guid.NewGuid(),
-          Name = request.Name,
-          IsActive = true,
-          CreatedBy = _contextAccessor.HttpContext.GetUserId(),
-          CreatedAtUtc = DateTime.UtcNow
-        };
-      /*if (request is null)
-      {
-        return null;
-      }
 
-      DbReactionGroup dbrg = new DbReactionGroup
+    Guid groupId = Guid.NewGuid();
+
+    return new DbReactionGroup
+    {
+      Id = groupId,
+      Name = request.Name,
+      IsActive = true,
+      CreatedBy = _httpContextAccessor.HttpContext.GetUserId(),
+      CreatedAtUtc = DateTime.UtcNow,
+      Reactions = request.ReactionList.Select(r => new DbReaction
       {
         Id = Guid.NewGuid(),
-        Name = request.Name,
+        Name = r.Name,
+        Unicode = r.Unicode,
+        Content = r.Content,
+        Extension = r.Extension,
+        GroupId = groupId,
         IsActive = true,
-        CreatedBy = _contextAccessor.HttpContext.GetUserId(),
-        CreatedAtUtc = DateTime.UtcNow
-      };
-      return dbrg;*/
-    }
+        CreatedAtUtc = DateTime.UtcNow,
+        CreatedBy = _httpContextAccessor.HttpContext.GetUserId()
+      }).ToList()
+    };
   }
 }

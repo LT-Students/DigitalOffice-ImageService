@@ -1,9 +1,8 @@
-﻿namespace LT.DigitalOffice.ImageService.Models.Dto.Constants
+﻿namespace LT.DigitalOffice.ImageService.Models.Dto.Constants;
+
+public enum ImageSizes
 {
-  public enum ImageSizes
-  {
-    Small = 150,
-    Middle = 500,
-    Big = 1000
-  }
+  Small = 150,
+  Middle = 500,
+  Big = 1000
 }

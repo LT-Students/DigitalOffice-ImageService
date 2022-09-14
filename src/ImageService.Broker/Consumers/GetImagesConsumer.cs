@@ -9,38 +9,37 @@ using LT.DigitalOffice.Models.Broker.Requests.Image;
 using LT.DigitalOffice.Models.Broker.Responses.Image;
 using MassTransit;
 
-namespace LT.DigitalOffice.ImageService.Broker.Consumers
+namespace LT.DigitalOffice.ImageService.Broker.Consumers;
+
+public class GetImagesConsumer : IConsumer<IGetImagesRequest>
 {
-  public class GetImagesConsumer : IConsumer<IGetImagesRequest>
+  private readonly IImageRepository _repository;
+
+  private async Task<object> GetUserImagesAsync(IGetImagesRequest request)
   {
-    private readonly IImageRepository _repository;
+    List<DbImage> dbUserImages = await _repository
+      .GetAsync(request.ImageSource, request.ImagesIds);
 
-    private async Task<object> GetUserImagesAsync(IGetImagesRequest request)
-    {
-      List<DbImage> dbUserImages = await _repository
-        .GetAsync(request.ImageSource, request.ImagesIds);
+    return IGetImagesResponse.CreateObj(
+      dbUserImages
+        .Select(dbImagesUser => new ImageData(
+          dbImagesUser.Id,
+          dbImagesUser.ParentId,
+          dbImagesUser.Content,
+          dbImagesUser.Extension,
+          dbImagesUser.Name))
+        .ToList());
+  }
 
-      return IGetImagesResponse.CreateObj(
-        dbUserImages
-          .Select(dbImagesUser => new ImageData(
-            dbImagesUser.Id,
-            dbImagesUser.ParentId,
-            dbImagesUser.Content,
-            dbImagesUser.Extension,
-            dbImagesUser.Name))
-          .ToList());
-    }
+  public GetImagesConsumer(IImageRepository repository)
+  {
+    _repository = repository;
+  }
 
-    public GetImagesConsumer(IImageRepository repository)
-    {
-      _repository = repository;
-    }
+  public async Task Consume(ConsumeContext<IGetImagesRequest> context)
+  {
+    object response = OperationResultWrapper.CreateResponse(GetUserImagesAsync, context.Message);
 
-    public async Task Consume(ConsumeContext<IGetImagesRequest> context)
-    {
-      object response = OperationResultWrapper.CreateResponse(GetUserImagesAsync, context.Message);
-
-      await context.RespondAsync<IOperationResult<IGetImagesResponse>>(response);
-    }
+    await context.RespondAsync<IOperationResult<IGetImagesResponse>>(response);
   }
 }

@@ -4,11 +4,10 @@ using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Attributes;
 using LT.DigitalOffice.Kernel.Responses;
 
-namespace LT.DigitalOffice.ImageService.Business.Commands.Reaction.Interfaces
+namespace LT.DigitalOffice.ImageService.Business.Commands.Reaction.Interfaces;
+
+[AutoInject]
+public interface IGetReactionGroupCommand
 {
-  [AutoInject]
-  public interface IGetReactionGroupCommand
-  {
-    Task<OperationResultResponse<GetReactionGroupResponse>> ExecuteAsync(GetReactionGroupFilter filter);
-  }
+  Task<OperationResultResponse<GetReactionGroupResponse>> ExecuteAsync(GetReactionGroupFilter filter);
 }
