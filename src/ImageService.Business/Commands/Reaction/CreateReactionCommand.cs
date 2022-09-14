@@ -21,6 +21,7 @@ public class CreateReactionCommand : ICreateReactionCommand
 {
   private readonly IAccessValidator _accessValidator;
   private readonly IResponseCreator _responseCreator;
+
   private readonly ICreateReactionRequestValidator _validator;
   private readonly IDbReactionMapper _mapper;
   private readonly IReactionRepository _reactionRepository;
