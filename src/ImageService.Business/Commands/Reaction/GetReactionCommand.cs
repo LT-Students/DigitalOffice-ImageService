@@ -28,8 +28,7 @@ public class GetReactionCommand : IGetReactionCommand
 
   public async Task<OperationResultResponse<GetReactionResponse>> ExecuteAsync(Guid reactionId)
   {
-    OperationResultResponse<GetReactionResponse> response = new();
-    response.Body = _mapper.Map(await _repository.GetAsync(reactionId));
+    OperationResultResponse<GetReactionResponse> response = new(body: _mapper.Map(await _repository.GetAsync(reactionId)));
 
     return response.Body is null
       ? _responseCreator.CreateFailureResponse<GetReactionResponse>(HttpStatusCode.NotFound)

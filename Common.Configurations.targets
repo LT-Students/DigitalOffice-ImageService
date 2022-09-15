@@ -29,14 +29,11 @@
   </ItemGroup>
 
   <ItemGroup Condition="$(AssemblyName.Contains('.UnitTests')) != 'true'">
-    <ProjectReference Include="..\..\..\DigitalOffice-Kernel\src\Kernel.ImageSupport\Kernel.ImageSupport.csproj" />
-    <PackageReference Include="LT.DigitalOffice.Kernel" Version="1.1.63" />
-    <PackageReference Include="LT.DigitalOffice.Kernel.BrokerSupport" Version="1.0.7" />
-    <PackageReference Include="LT.DigitalOffice.Kernel.EFSupport" Version="1.0.1" />
-    <PackageReference Include="DigitalOffice.Kernel.ImageSupport" Version="1.0.0" />
+    <PackageReference Include="DigitalOffice.Kernel" Version="1.0.0" />
+    <PackageReference Include="DigitalOffice.Kernel.BrokerSupport" Version="1.0.0" />
+    <PackageReference Include="DigitalOffice.Kernel.EFSupport" Version="1.0.0" />
+    <PackageReference Include="DigitalOffice.Kernel.ImageSupport" Version="1.0.1" />
     <PackageReference Include="DigitalOffice.Models" Version="1.0.2" />
-    <!--<PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />-->
-    <!--<PackageReference Include="Svg" Version="3.3.0" />-->
   </ItemGroup>
 
   <ItemGroup Condition="$(AssemblyName.Contains('.UnitTests'))">

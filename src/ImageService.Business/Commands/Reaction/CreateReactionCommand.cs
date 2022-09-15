@@ -21,7 +21,6 @@ public class CreateReactionCommand : ICreateReactionCommand
 {
   private readonly IAccessValidator _accessValidator;
   private readonly IResponseCreator _responseCreator;
-
   private readonly ICreateReactionRequestValidator _validator;
   private readonly IDbReactionMapper _mapper;
   private readonly IReactionRepository _reactionRepository;
@@ -71,7 +70,9 @@ public class CreateReactionCommand : ICreateReactionCommand
     OperationResultResponse<Guid?> response = new(body: dbReaction.Id);
 
     (bool isSuccess, string resizedContent, string extension) resizeResult = await _resizeHelper.ResizeAsync(
-      dbReaction.Content, dbReaction.Extension, resizeMinValue: 24);
+      dbReaction.Content, dbReaction.Extension, resizeMinValue: 24);    //reaction image should be 24*24 px
+
+    //TODO Add image weight check and ImageCompressor
 
     if (!resizeResult.isSuccess)
     {

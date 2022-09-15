@@ -80,11 +80,11 @@ public class ReactionRepository : IReactionRepository
 
   public Task<bool> DoesSameNameExistAsync(string name)
   {
-    return _provider.Reactions.AnyAsync(x => x.Name == name && x.IsActive == true);
+    return _provider.Reactions.AnyAsync(x => x.Name == name && x.IsActive);
   }
 
   public Task<int> CountReactionsInGroupAsync(Guid groupId)
   {
-    return _provider.Reactions.Where(x => x.GroupId == groupId && x.IsActive == true).CountAsync();
+    return _provider.Reactions.Where(x => x.GroupId == groupId && x.IsActive).CountAsync();
   }
 }

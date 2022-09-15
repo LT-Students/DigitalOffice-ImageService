@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Provider;
@@ -69,23 +68,17 @@ public class ReactionGroupRepository : IReactionGroupRepository
 
   public Task<bool> DoesExistAsync(Guid groupId)
   {
-    return _provider.ReactionsGroups.AnyAsync(x => x.Id == groupId && x.IsActive == true);
+    return _provider.ReactionsGroups.AnyAsync(x => x.Id == groupId && x.IsActive);
   }
 
   public Task<bool> DoesSameNameExistAsync(string name)
   {
-    return _provider.ReactionsGroups.AnyAsync(x => x.Name == name && x.IsActive == true);
+    return _provider.ReactionsGroups.AnyAsync(x => x.Name == name && x.IsActive);
   }
 
   public Guid PickGroup()      //remove when Groups will be added by front
   {
-    return _provider.ReactionsGroups.Where(x => x.IsActive == true).Select(x => x.Id).ToList()
+    return _provider.ReactionsGroups.Where(x => x.IsActive).Select(x => x.Id).ToList()
       .FirstOrDefault(x => _reactionRepository.CountReactionsInGroupAsync(x).Result < 16);
   }
 }
-
-
-/*      return _provider.ReactionsGroups.AnyAsync(x => (_reactionRepository.CountReactionsInGroupAsync(x.Id).Result < 16) && (x.IsActive == true)).Result
-      ? _provider.ReactionsGroups.Where(x => (_reactionRepository.CountReactionsInGroupAsync(x.Id).Result < 16) && (x.IsActive == true)).Select(x => x.Id)
-        .FirstAsync()
-      : null;*/

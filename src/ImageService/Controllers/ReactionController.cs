@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Business.Commands.Reaction.Interfaces;
-using LT.DigitalOffice.ImageService.Data.Provider;
 using LT.DigitalOffice.ImageService.Models.Dto.Models;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests.Filters;
 using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.Kernel.Responses;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LT.DigitalOffice.ImageService.Controllers;
 
@@ -40,19 +36,5 @@ public class ReactionController : ControllerBase
     [FromQuery] FindReactionFilter findReactionFilter)
   {
     return await command.ExecuteAsync(findReactionFilter);
-  }
-
-  private readonly IDataProvider _provider;
-  public ReactionController(IDataProvider provider)
-  {
-    _provider = provider;
-  }
-
-  [HttpGet("test")]
-  [ResponseCache(Duration = 20)]
-  public DateTime TestAsync(
-    [FromQuery] Guid groupId)
-  {
-    return DateTime.UtcNow;
   }
 }

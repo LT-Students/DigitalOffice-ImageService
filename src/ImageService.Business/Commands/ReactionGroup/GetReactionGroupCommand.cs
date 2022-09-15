@@ -28,8 +28,7 @@ public class GetReactionGroupCommand : IGetReactionGroupCommand
 
   public async Task<OperationResultResponse<GetReactionGroupResponse>> ExecuteAsync(GetReactionGroupFilter filter)
   {
-    OperationResultResponse<GetReactionGroupResponse> response = new();
-    response.Body = _mapper.Map(await _repository.GetAsync(filter));
+    OperationResultResponse<GetReactionGroupResponse> response = new(body: _mapper.Map(await _repository.GetAsync(filter)));
 
     return response.Body is null
       ? _responseCreator.CreateFailureResponse<GetReactionGroupResponse>(HttpStatusCode.NotFound)

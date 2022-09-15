@@ -66,8 +66,8 @@ public class CreateReactionGroupCommand : ICreateReactionGroupCommand
 
     foreach (DbReaction reaction in dbReactionGroup.Reactions)
     {
-      (bool isSuccess, string resizedContent, string extension) resizeResult = 
-        await _resizeHelper.ResizeAsync(reaction.Content, reaction.Extension, resizeMinValue: 24);
+      (bool isSuccess, string resizedContent, string extension) resizeResult =
+        await _resizeHelper.ResizeAsync(reaction.Content, reaction.Extension, resizeMinValue: 24);  //reaction image should be 24*24 px
 
       if (!resizeResult.isSuccess)
       {
@@ -79,6 +79,8 @@ public class CreateReactionGroupCommand : ICreateReactionGroupCommand
         reaction.Content = resizeResult.resizedContent;
         reaction.Extension = resizeResult.extension;
       }
+
+      //TODO Add image weight check and ImageCompressor
     }
 
     await _repository.CreateAsync(dbReactionGroup);
