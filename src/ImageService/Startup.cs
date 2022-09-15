@@ -175,19 +175,23 @@ public class Startup : BaseApiInfo
     services.AddMassTransitHostedService();
   }
 
-  private void ConfigureEndpoints(
-    IBusRegistrationContext context,
-    IRabbitMqBusFactoryConfigurator cfg)
-  {
-    cfg.ReceiveEndpoint(_rabbitMqConfig.GetImagesEndpoint, ep =>
+    private void ConfigureEndpoints(
+      IBusRegistrationContext context,
+      IRabbitMqBusFactoryConfigurator cfg)
     {
-      ep.ConfigureConsumer<GetImagesConsumer>(context);
-    });
-    cfg.ReceiveEndpoint(_rabbitMqConfig.CreateImagesEndpoint, ep =>
-    {
-      ep.ConfigureConsumer<CreateImagesConsumer>(context);
-    });
-  }
+      cfg.ReceiveEndpoint(_rabbitMqConfig.GetImagesEndpoint, ep =>
+      {
+        ep.ConfigureConsumer<GetImagesConsumer>(context);
+      });
+      cfg.ReceiveEndpoint(_rabbitMqConfig.CreateImagesEndpoint, ep =>
+      {
+        ep.ConfigureConsumer<CreateImagesConsumer>(context);
+      });
+      cfg.ReceiveEndpoint(_rabbitMqConfig.RemoveImagesEndpoint, ep =>
+      {
+        ep.ConfigureConsumer<RemoveImagesConsumer>(context);
+      });
+    }
 
   #endregion
 }
