@@ -14,7 +14,7 @@ public class CreateReactionWithGroupRequestValidator : AbstractValidator<CreateR
     IReactionRepository reactionRepository)
   {
     RuleFor(reaction => reaction.Name)
-     .MaximumLength(8)                            //check max length in task!!!!!!!!!
+     .MaximumLength(8)
      .WithMessage("Image name is too long.")
      .MustAsync(async (name, _) => !await reactionRepository.DoesSameNameExistAsync(name))
      .WithMessage("Reaction with this name already exists.");

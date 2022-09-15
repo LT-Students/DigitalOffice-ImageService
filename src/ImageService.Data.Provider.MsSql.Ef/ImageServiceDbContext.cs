@@ -40,16 +40,6 @@ public class ImageServiceDbContext : DbContext, IDataProvider
     return Entry(obj).State;
   }
 
-  /*public void Save()
-  {
-    SaveChanges();
-  }
-
-  public async Task SaveAsync()
-  {
-    await SaveChangesAsync();
-  }*/
-
   void IBaseDataProvider.Save()
   {
     SaveChanges();
