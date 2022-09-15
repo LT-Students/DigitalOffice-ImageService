@@ -183,6 +183,10 @@ namespace LT.DigitalOffice.ImageService
       {
         ep.ConfigureConsumer<CreateImagesConsumer>(context);
       });
+      cfg.ReceiveEndpoint(_rabbitMqConfig.RemoveImagesEndpoint, ep =>
+      {
+        ep.ConfigureConsumer<RemoveImagesConsumer>(context);
+      });
     }
 
     #endregion
