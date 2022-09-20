@@ -18,7 +18,7 @@ public class DbReactionMapper : IDbReactionMapper
 
   public DbReaction Map(CreateReactionRequest request)
   {
-    return !(request is not null && request.GroupId.HasValue)
+    return request is null
       ? null
       : new DbReaction
       {
@@ -27,7 +27,7 @@ public class DbReactionMapper : IDbReactionMapper
         Unicode = request.Unicode,
         Content = request.Content,
         Extension = request.Extension,
-        GroupId = request.GroupId.Value,
+        GroupId = request.GroupId,
         IsActive = true,
         CreatedAtUtc = DateTime.UtcNow,
         CreatedBy = _httpContextAccessor.HttpContext.GetUserId(),

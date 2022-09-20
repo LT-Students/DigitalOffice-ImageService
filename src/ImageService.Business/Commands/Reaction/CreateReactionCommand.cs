@@ -55,8 +55,6 @@ public class CreateReactionCommand : ICreateReactionCommand
       return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.Forbidden);
     }
 
-    request.GroupId ??= _reactionGroupRepository.PickGroup();   //remove when Groups will be added by front
-
     ValidationResult validationResult = await _validator.ValidateAsync(request);
 
     if (!validationResult.IsValid)
@@ -88,7 +86,7 @@ public class CreateReactionCommand : ICreateReactionCommand
     await _reactionRepository.CreateAsync(dbReaction);
 
     _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
-    
+
     return response;
   }
 }

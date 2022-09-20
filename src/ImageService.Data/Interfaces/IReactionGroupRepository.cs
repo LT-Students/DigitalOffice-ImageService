@@ -13,5 +13,4 @@ public interface IReactionGroupRepository
   Task<DbReactionGroup> GetAsync(GetReactionGroupFilter filter);
   Task<bool> DoesExistAsync(Guid groupId);
   Task<bool> DoesSameNameExistAsync(string name);
-  Guid PickGroup();
 }

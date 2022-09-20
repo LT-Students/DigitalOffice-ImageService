@@ -1,8 +1,9 @@
-﻿using FluentValidation;
+﻿using System.Collections.Immutable;
+using FluentValidation;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
-using LT.DigitalOffice.ImageService.Models.Dto.Constants;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.ImageService.Validation.Reaction.Interfaces;
+using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Validators.Interfaces;
 
 namespace LT.DigitalOffice.ImageService.Validation.Reaction;
@@ -23,9 +24,14 @@ public class CreateReactionWithGroupRequestValidator : AbstractValidator<CreateR
       .SetValidator(imageContentValidator);
 
     RuleFor(reaction => reaction.Extension)
-       .Cascade(CascadeMode.Stop)
-       .NotEmpty().WithMessage("Image extension can't be empty.")
-       .Must(extension => ReactionFormats.formats.Contains(extension))
+       .Must(extension => ImmutableList.Create(
+         ImageFormats.jpg,
+         ImageFormats.jpeg,
+         ImageFormats.png,
+         ImageFormats.svg,
+         ImageFormats.gif,
+         ".webp")                        //update Kernel and change to ImageFormats.webp
+       .Contains(extension))
        .WithMessage("Wrong image extension.");
   }
 }

@@ -75,10 +75,4 @@ public class ReactionGroupRepository : IReactionGroupRepository
   {
     return _provider.ReactionsGroups.AnyAsync(x => x.Name == name && x.IsActive);
   }
-
-  public Guid PickGroup()      //remove when Groups will be added by front
-  {
-    return _provider.ReactionsGroups.Where(x => x.IsActive).Select(x => x.Id).ToList()
-      .FirstOrDefault(x => _reactionRepository.CountReactionsInGroupAsync(x).Result < 16);
-  }
 }
