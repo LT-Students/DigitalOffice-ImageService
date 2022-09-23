@@ -30,7 +30,7 @@ public class CreateReactionWithGroupRequestValidator : AbstractValidator<CreateR
          ImageFormats.png,
          ImageFormats.svg,
          ImageFormats.gif,
-         ".webp")                        //update Kernel and change to ImageFormats.webp
+         ImageFormats.webp)
        .Contains(extension))
        .WithMessage("Wrong image extension.");
   }

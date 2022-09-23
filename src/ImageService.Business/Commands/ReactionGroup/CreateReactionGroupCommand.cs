@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using DigitalOffice.Kernel.ImageSupport.Helpers.Interfaces;
 using FluentValidation.Results;
 using LT.DigitalOffice.ImageService.Business.Commands.ReactionGroup.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
@@ -26,6 +27,7 @@ public class CreateReactionGroupCommand : ICreateReactionGroupCommand
   private readonly IDbReactionGroupMapper _mapper;
   private readonly IHttpContextAccessor _contextAccessor;
   private readonly IImageResizeHelper _resizeHelper;
+  private readonly IImageCompressHelper _compressHelper;
 
   public CreateReactionGroupCommand(
     IAccessValidator accessValidator,
@@ -34,7 +36,8 @@ public class CreateReactionGroupCommand : ICreateReactionGroupCommand
     IReactionGroupRepository repository,
     IDbReactionGroupMapper mapper,
     IHttpContextAccessor contextAccessor,
-    IImageResizeHelper resizeHelper)
+    IImageResizeHelper resizeHelper,
+    IImageCompressHelper compressHelper)
   {
     _accessValidator = accessValidator;
     _responseCreator = responseCreator;
@@ -43,6 +46,7 @@ public class CreateReactionGroupCommand : ICreateReactionGroupCommand
     _mapper = mapper;
     _contextAccessor = contextAccessor;
     _resizeHelper = resizeHelper;
+    _compressHelper = compressHelper;
   }
 
   public async Task<OperationResultResponse<Guid?>> ExecuteAsync(CreateReactionGroupRequest request)
@@ -80,7 +84,18 @@ public class CreateReactionGroupCommand : ICreateReactionGroupCommand
         reaction.Extension = resizeResult.extension;
       }
 
-      //TODO Add image weight check and ImageCompressor
+      (bool isSuccess, string compressedContent, string extension) compressedResult = await _compressHelper.CompressAsync(
+      reaction.Content, reaction.Extension, MaxWeighInKB: 10);    //reaction image should be less 10KB
+
+      if (resizeResult.isSuccess)
+      {
+        reaction.Content = compressedResult.compressedContent;
+        reaction.Extension = compressedResult.extension;
+      }
+      else
+      {
+        response.Errors.Add("Compress operation has been failed.");
+      }
     }
 
     await _repository.CreateAsync(dbReactionGroup);
