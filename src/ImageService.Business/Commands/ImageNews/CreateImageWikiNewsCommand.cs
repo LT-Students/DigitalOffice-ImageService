@@ -21,7 +21,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 {
-  public class CreateImageNewsCommand : ICreateImageNewsCommand
+  public class CreateImageWikiNewsCommand : ICreateImageWikiNewsCommand
   {
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -30,7 +30,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
     private readonly IImageResizeHelper _resizeHelper;
     private readonly ICreateImageRequestValidator _validator;
 
-    public CreateImageNewsCommand(
+    public CreateImageWikiNewsCommand(
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
       IImageRepository repository,
@@ -46,13 +46,13 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       _validator = validator;
     }
 
-    public async Task<OperationResultResponse<CreateImageNewsResponse>> ExecuteAsync(CreateImageRequest request)
+    public async Task<OperationResultResponse<CreateImageWikiNewsResponse>> ExecuteAsync(CreateImageRequest request)
     {
       if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveNews))
       {
         _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
 
-        return new OperationResultResponse<CreateImageNewsResponse>
+        return new OperationResultResponse<CreateImageWikiNewsResponse>
         {
           Status = OperationResultStatusType.Failed,
           Errors = new() { "Not enough rights." }
@@ -63,14 +63,14 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       {
         _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-        return new OperationResultResponse<CreateImageNewsResponse>
+        return new OperationResultResponse<CreateImageWikiNewsResponse>
         {
           Status = OperationResultStatusType.Failed,
           Errors = errors
         };
       }
 
-      OperationResultResponse<CreateImageNewsResponse> response = new();
+      OperationResultResponse<CreateImageWikiNewsResponse> response = new();
 
       DbImage dbImageNews = _mapper.Map(request);
       DbImage dbPreviewNews = null;
@@ -98,7 +98,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
       await _repository.CreateAsync(ImageSource.News, dbImagesNews);
 
-      response.Body = new CreateImageNewsResponse() { ImageId = dbImageNews.Id, PreviewId = dbPreviewNews?.Id };
+      response.Body = new CreateImageWikiNewsResponse() { ImageId = dbImageNews.Id, PreviewId = dbPreviewNews?.Id };
 
       _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 
