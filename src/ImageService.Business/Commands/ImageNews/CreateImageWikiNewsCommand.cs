@@ -96,7 +96,14 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
         }
       }
 
-      await _repository.CreateAsync(ImageSource.News, dbImagesNews);
+      if (request.Purpose == ImagePurpose.News)
+      {
+        await _repository.CreateAsync(ImageSource.News, dbImagesNews);
+      }
+      else
+      {
+        await _repository.CreateAsync(ImageSource.Wiki, dbImagesNews);
+      }
 
       response.Body = new CreateImageWikiNewsResponse() { ImageId = dbImageNews.Id, PreviewId = dbPreviewNews?.Id };
 
