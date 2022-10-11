@@ -1,7 +1,9 @@
-﻿using FluentValidation;
+﻿using System;
+using FluentValidation;
 using LT.DigitalOffice.ImageService.Models.Dto.Requests;
 using LT.DigitalOffice.ImageService.Validation.ImageNews.Interfaces;
 using LT.DigitalOffice.Kernel.Validators.Interfaces;
+using LT.DigitalOffice.Models.Broker.Enums;
 
 namespace LT.DigitalOffice.ImageService.Validation.ImageNews
 {
@@ -19,6 +21,10 @@ namespace LT.DigitalOffice.ImageService.Validation.ImageNews
 
       RuleFor(image => image.Extension)
         .SetValidator(imageExtensionValidator);
+
+      RuleFor(image => image.Purpose)
+        .Must(image => Enum.IsDefined(typeof(ImageSource), image))
+        .WithMessage("This image purpose doesn't exist.");
     }
   }
 }

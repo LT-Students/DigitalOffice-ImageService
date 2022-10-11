@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LT.DigitalOffice.ImageService.Data.Provider.MsSql.Ef.Migrations;
 
 [DbContext(typeof(ImageServiceDbContext))]
-[Migration("20221006115000_InitialTable")]
+[Migration("20221006115000_AddWikiTable")]
 class InitialTable : Migration
 {
   protected override void Up(MigrationBuilder builder)

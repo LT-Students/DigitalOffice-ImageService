@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -48,13 +49,13 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
     public async Task<OperationResultResponse<CreateImageWikiNewsResponse>> ExecuteAsync(CreateImageRequest request)
     {
-      if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveNews))
+      if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveNews)
+        || !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveWiki))
       {
         _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
 
         return new OperationResultResponse<CreateImageWikiNewsResponse>
         {
-          Status = OperationResultStatusType.Failed,
           Errors = new() { "Not enough rights." }
         };
       }
@@ -65,16 +66,15 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
         return new OperationResultResponse<CreateImageWikiNewsResponse>
         {
-          Status = OperationResultStatusType.Failed,
           Errors = errors
         };
       }
 
       OperationResultResponse<CreateImageWikiNewsResponse> response = new();
 
-      DbImage dbImageNews = _mapper.Map(request);
-      DbImage dbPreviewNews = null;
-      List<DbImage> dbImagesNews = new() { dbImageNews };
+      DbImage dbImage = _mapper.Map(request);
+      DbImage dbPreview = null;
+      List<DbImage> dbImages = new() { dbImage };
 
       if (request.EnablePreview)
       {
@@ -87,31 +87,20 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
         if (!string.IsNullOrEmpty(resizeResult.resizedContent))
         {
-          dbPreviewNews = _mapper.Map(request, dbImageNews.Id, resizeResult.resizedContent, resizeResult.extension);
-          dbImagesNews.Add(dbPreviewNews);
+          dbPreview = _mapper.Map(request, dbImage.Id, resizeResult.resizedContent, resizeResult.extension);
+          dbImages.Add(dbPreview);
         }
         else
         {
-          dbImageNews.ParentId = dbImageNews.Id;
+          dbImage.ParentId = dbImage.Id;
         }
       }
 
-      if (request.Purpose == ImagePurpose.News)
-      {
-        await _repository.CreateAsync(ImageSource.News, dbImagesNews);
-      }
-      else
-      {
-        await _repository.CreateAsync(ImageSource.Wiki, dbImagesNews);
-      }
+      await _repository.CreateAsync((ImageSource)Enum.Parse(typeof(ImageSource), request.Purpose.ToString()), dbImages);
 
-      response.Body = new CreateImageWikiNewsResponse() { ImageId = dbImageNews.Id, PreviewId = dbPreviewNews?.Id };
+      response.Body = new CreateImageWikiNewsResponse() { ImageId = dbImage.Id, PreviewId = dbPreview?.Id };
 
       _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
-
-      response.Status = response.Errors.Any()
-        ? OperationResultStatusType.PartialSuccess
-        : OperationResultStatusType.FullSuccess;
 
       return response;
     }
