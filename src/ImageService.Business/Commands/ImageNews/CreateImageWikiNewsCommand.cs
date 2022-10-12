@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces;
@@ -13,7 +12,6 @@ using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.ImageService.Validation.ImageNews.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Constants;
-using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.ImageSupport.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
@@ -49,29 +47,17 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
     public async Task<OperationResultResponse<CreateImageWikiNewsResponse>> ExecuteAsync(CreateImageRequest request)
     {
-      if (request.Purpose == ImagePurpose.News)
+      if (request.Purpose == ImagePurpose.News
+        && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveNews)
+        || request.Purpose == ImagePurpose.Wiki
+        && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveWiki))
       {
-        if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveNews))
-        {
-          _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
 
-          return new OperationResultResponse<CreateImageWikiNewsResponse>
-          {
-            Errors = new() { "Not enough rights." }
-          };
-        }
-      }
-      else if (request.Purpose == ImagePurpose.Wiki)
-      {
-        if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveWiki))
+        return new OperationResultResponse<CreateImageWikiNewsResponse>
         {
-          _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-
-          return new OperationResultResponse<CreateImageWikiNewsResponse>
-          {
-            Errors = new() { "Not enough rights." }
-          };
-        }
+          Errors = new() { "Not enough rights." }
+        };
       }
 
       if (!_validator.ValidateCustom(request, out List<string> errors))
