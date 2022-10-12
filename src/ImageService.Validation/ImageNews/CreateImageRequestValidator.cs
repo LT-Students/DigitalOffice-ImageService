@@ -23,7 +23,7 @@ namespace LT.DigitalOffice.ImageService.Validation.ImageNews
         .SetValidator(imageExtensionValidator);
 
       RuleFor(image => image.Purpose)
-        .Must(image => Enum.IsDefined(typeof(ImageSource), image))
+        .Must(image => Enum.IsDefined(typeof(ImageSource), (ImageSource)image))
         .WithMessage("This image purpose doesn't exist.");
     }
   }

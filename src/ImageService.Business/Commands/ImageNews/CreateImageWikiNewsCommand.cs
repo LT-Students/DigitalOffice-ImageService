@@ -47,10 +47,10 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
     public async Task<OperationResultResponse<CreateImageWikiNewsResponse>> ExecuteAsync(CreateImageRequest request)
     {
-      if (request.Purpose == ImagePurpose.News
-        && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveNews)
-        || request.Purpose == ImagePurpose.Wiki
-        && !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveWiki))
+      if (!((request.Purpose == ImagePurpose.News
+        && await _accessValidator.HasRightsAsync(Rights.AddEditRemoveNews))
+        || (request.Purpose == ImagePurpose.Wiki
+        && await _accessValidator.HasRightsAsync(Rights.AddEditRemoveWiki))))
       {
         _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
 
