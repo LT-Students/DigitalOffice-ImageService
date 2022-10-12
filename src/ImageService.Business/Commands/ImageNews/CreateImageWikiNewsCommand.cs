@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces;
@@ -12,7 +12,6 @@ using LT.DigitalOffice.ImageService.Models.Dto.Responses;
 using LT.DigitalOffice.ImageService.Validation.ImageNews.Interfaces;
 using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Constants;
-using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.ImageSupport.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
@@ -21,7 +20,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 {
-  public class CreateImageNewsCommand : ICreateImageNewsCommand
+  public class CreateImageWikiNewsCommand : ICreateImageWikiNewsCommand
   {
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -30,7 +29,7 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
     private readonly IImageResizeHelper _resizeHelper;
     private readonly ICreateImageRequestValidator _validator;
 
-    public CreateImageNewsCommand(
+    public CreateImageWikiNewsCommand(
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
       IImageRepository repository,
@@ -46,15 +45,17 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       _validator = validator;
     }
 
-    public async Task<OperationResultResponse<CreateImageNewsResponse>> ExecuteAsync(CreateImageRequest request)
+    public async Task<OperationResultResponse<CreateImageWikiNewsResponse>> ExecuteAsync(CreateImageRequest request)
     {
-      if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveNews))
+      if (!((request.Purpose == ImagePurpose.News
+        && await _accessValidator.HasRightsAsync(Rights.AddEditRemoveNews))
+        || (request.Purpose == ImagePurpose.Wiki
+        && await _accessValidator.HasRightsAsync(Rights.AddEditRemoveWiki))))
       {
         _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
 
-        return new OperationResultResponse<CreateImageNewsResponse>
+        return new OperationResultResponse<CreateImageWikiNewsResponse>
         {
-          Status = OperationResultStatusType.Failed,
           Errors = new() { "Not enough rights." }
         };
       }
@@ -63,18 +64,17 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
       {
         _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
-        return new OperationResultResponse<CreateImageNewsResponse>
+        return new OperationResultResponse<CreateImageWikiNewsResponse>
         {
-          Status = OperationResultStatusType.Failed,
           Errors = errors
         };
       }
 
-      OperationResultResponse<CreateImageNewsResponse> response = new();
+      OperationResultResponse<CreateImageWikiNewsResponse> response = new();
 
-      DbImage dbImageNews = _mapper.Map(request);
-      DbImage dbPreviewNews = null;
-      List<DbImage> dbImagesNews = new() { dbImageNews };
+      DbImage dbImage = _mapper.Map(request);
+      DbImage dbPreview = null;
+      List<DbImage> dbImages = new() { dbImage };
 
       if (request.EnablePreview)
       {
@@ -87,24 +87,20 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
         if (!string.IsNullOrEmpty(resizeResult.resizedContent))
         {
-          dbPreviewNews = _mapper.Map(request, dbImageNews.Id, resizeResult.resizedContent, resizeResult.extension);
-          dbImagesNews.Add(dbPreviewNews);
+          dbPreview = _mapper.Map(request, dbImage.Id, resizeResult.resizedContent, resizeResult.extension);
+          dbImages.Add(dbPreview);
         }
         else
         {
-          dbImageNews.ParentId = dbImageNews.Id;
+          dbImage.ParentId = dbImage.Id;
         }
       }
 
-      await _repository.CreateAsync(ImageSource.News, dbImagesNews);
+      await _repository.CreateAsync((ImageSource)Enum.Parse(typeof(ImageSource), request.Purpose.ToString()), dbImages);
 
-      response.Body = new CreateImageNewsResponse() { ImageId = dbImageNews.Id, PreviewId = dbPreviewNews?.Id };
+      response.Body = new CreateImageWikiNewsResponse() { ImageId = dbImage.Id, PreviewId = dbPreview?.Id };
 
       _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
-
-      response.Status = response.Errors.Any()
-        ? OperationResultStatusType.PartialSuccess
-        : OperationResultStatusType.FullSuccess;
 
       return response;
     }
