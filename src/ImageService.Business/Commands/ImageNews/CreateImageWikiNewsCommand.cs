@@ -49,15 +49,29 @@ namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews
 
     public async Task<OperationResultResponse<CreateImageWikiNewsResponse>> ExecuteAsync(CreateImageRequest request)
     {
-      if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveNews)
-        || !await _accessValidator.HasRightsAsync(Rights.AddEditRemoveWiki))
+      if (request.Purpose == ImagePurpose.News)
       {
-        _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-
-        return new OperationResultResponse<CreateImageWikiNewsResponse>
+        if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveNews))
         {
-          Errors = new() { "Not enough rights." }
-        };
+          _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+
+          return new OperationResultResponse<CreateImageWikiNewsResponse>
+          {
+            Errors = new() { "Not enough rights." }
+          };
+        }
+      }
+      else if (request.Purpose == ImagePurpose.Wiki)
+      {
+        if (!await _accessValidator.HasRightsAsync(Rights.AddEditRemoveWiki))
+        {
+          _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+
+          return new OperationResultResponse<CreateImageWikiNewsResponse>
+          {
+            Errors = new() { "Not enough rights." }
+          };
+        }
       }
 
       if (!_validator.ValidateCustom(request, out List<string> errors))
