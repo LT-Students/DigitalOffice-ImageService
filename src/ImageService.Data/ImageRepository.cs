@@ -25,6 +25,7 @@ namespace LT.DigitalOffice.ImageService.Data
         case ImageSource.News: return DBTablesNames.NEWS;
         case ImageSource.Education: return DBTablesNames.EDUCATION;
         case ImageSource.Wiki: return DBTablesNames.WIKI;
+        case ImageSource.Reaction: return DBTablesNames.REACTION;
         default: throw new ArgumentOutOfRangeException();
       }
     }
