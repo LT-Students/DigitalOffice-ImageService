@@ -42,34 +42,37 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
           return null;
         }
 
-        (bool isSuccess, string resizedContent, string extension) previewResizeResult =
-          request.ImageSource.Equals(ImageSource.User)
-            ? await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension)
-            : await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension, 4, 3);
+        (bool isSuccess, string editedContent, string extension) previewResult;
+        if (request.ImageSource.Equals(ImageSource.User))
+        {
+          previewResult = await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension);
+          previewResult = await _compressHelper.CompressAsync(previewResult.editedContent, previewResult.extension, 10);
+        }
+        else
+        {
+          previewResult = await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension, 4, 3);
+        }
 
-        if (!previewResizeResult.isSuccess)
+        if (!previewResult.isSuccess)
         {
           _logger.LogError("Error while resize image.");
           return null;
         }
 
-        (bool isSuccess, string compressedContent, string extension) previewCompressResult =
-          await _compressHelper.CompressAsync(previewResizeResult.resizedContent, previewResizeResult.extension, 10);
-
         DbImage dbImage = string.IsNullOrEmpty(imageResizeResult.resizedContent)
           ? _dbImageMapper.Map(createImage, request.CreatedBy)
           : _dbImageMapper.Map(createImage, request.CreatedBy, null, imageResizeResult.resizedContent, imageResizeResult.extension);
 
-        if (string.IsNullOrEmpty(previewCompressResult.compressedContent))
+        if (string.IsNullOrEmpty(previewResult.editedContent))
         {
           dbImage.ParentId = dbImage.Id;
           previewIds.Add(dbImage.Id);
         }
         else
         {
-          DbImage dbPrewiewImage = _dbImageMapper.Map(createImage, request.CreatedBy, dbImage.Id, previewCompressResult.compressedContent, previewCompressResult.extension);
-          dbImages.Add(dbPrewiewImage);
-          previewIds.Add(dbPrewiewImage.Id);
+          DbImage dbPreviewImage = _dbImageMapper.Map(createImage, request.CreatedBy, dbImage.Id, previewResult.editedContent, previewResult.extension);
+          dbImages.Add(dbPreviewImage);
+          previewIds.Add(dbPreviewImage.Id);
         }
 
         dbImages.Add(dbImage);
