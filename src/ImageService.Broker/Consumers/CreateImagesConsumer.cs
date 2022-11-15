@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DigitalOffice.Kernel.ImageSupport.Helpers.Interfaces;
 using LT.DigitalOffice.ImageService.Data.Interfaces;
 using LT.DigitalOffice.ImageService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.ImageService.Models.Db;
 using LT.DigitalOffice.ImageService.Models.Dto.Constants;
 using LT.DigitalOffice.Kernel.BrokerSupport.Broker;
-using LT.DigitalOffice.Kernel.ImageSupport.Helpers.Interfaces;
 using LT.DigitalOffice.Models.Broker.Enums;
 using LT.DigitalOffice.Models.Broker.Models.Image;
 using LT.DigitalOffice.Models.Broker.Requests.Image;
@@ -21,17 +21,18 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
     private readonly IImageRepository _imageRepository;
     private readonly IDbImageMapper _dbImageMapper;
     private readonly IImageResizeHelper _resizeHelper;
+    private readonly IImageCompressHelper _compressHelper;
     private readonly ILogger<CreateImagesConsumer> _logger;
 
     private async Task<object> CreateImagesAsync(ICreateImagesRequest request)
     {
       List<DbImage> dbImages = new();
-      List<Guid> previewIds = new(); 
+      List<Guid> previewIds = new();
 
       foreach (CreateImageData createImage in request.Images)
       {
         (bool isSuccess, string resizedContent, string extension) imageResizeResult =
-          request.ImageSource.Equals(ImageSource.User) 
+          request.ImageSource.Equals(ImageSource.User)
             ? await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension, (int)ImageSizes.Middle)
             : await _resizeHelper.ResizeAsync(createImage.Content, createImage.Extension, (int)ImageSizes.Big);
 
@@ -40,6 +41,9 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
           _logger.LogError("Error while resize image.");
           return null;
         }
+
+        (bool isSuccess, string compressedContent, string extension) imageCompressResult =
+          await _compressHelper.CompressAsync(imageResizeResult.resizedContent, imageResizeResult.extension, 10);
 
         (bool isSuccess, string resizedContent, string extension) previewResizeResult =
           request.ImageSource.Equals(ImageSource.User)
@@ -52,7 +56,7 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
           return null;
         }
 
-        DbImage dbImage = string.IsNullOrEmpty(imageResizeResult.resizedContent)
+        DbImage dbImage = string.IsNullOrEmpty(imageCompressResult.compressedContent)
           ? _dbImageMapper.Map(createImage, request.CreatedBy)
           : _dbImageMapper.Map(createImage, request.CreatedBy, null, imageResizeResult.resizedContent, imageResizeResult.extension);
 
@@ -80,11 +84,13 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
       IImageRepository imageRepository,
       IDbImageMapper dbImageUserMapper,
       IImageResizeHelper resizeHelper,
+      IImageCompressHelper compressHelper,
       ILogger<CreateImagesConsumer> logger)
     {
       _imageRepository = imageRepository;
       _dbImageMapper = dbImageUserMapper;
       _resizeHelper = resizeHelper;
+      _compressHelper = compressHelper;
       _logger = logger;
     }
 
