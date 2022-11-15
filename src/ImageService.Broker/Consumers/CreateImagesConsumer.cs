@@ -42,9 +42,6 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
           return null;
         }
 
-        (bool isSuccess, string compressedContent, string extension) imageCompressResult =
-          await _compressHelper.CompressAsync(imageResizeResult.resizedContent, imageResizeResult.extension, 10);
-
         (bool isSuccess, string resizedContent, string extension) previewResizeResult =
           request.ImageSource.Equals(ImageSource.User)
             ? await _resizeHelper.ResizeForPreviewAsync(createImage.Content, createImage.Extension)
@@ -56,18 +53,21 @@ namespace LT.DigitalOffice.ImageService.Broker.Consumers
           return null;
         }
 
-        DbImage dbImage = string.IsNullOrEmpty(imageCompressResult.compressedContent)
+        (bool isSuccess, string compressedContent, string extension) previewCompressResult =
+          await _compressHelper.CompressAsync(previewResizeResult.resizedContent, previewResizeResult.extension, 10);
+
+        DbImage dbImage = string.IsNullOrEmpty(imageResizeResult.resizedContent)
           ? _dbImageMapper.Map(createImage, request.CreatedBy)
           : _dbImageMapper.Map(createImage, request.CreatedBy, null, imageResizeResult.resizedContent, imageResizeResult.extension);
 
-        if (string.IsNullOrEmpty(previewResizeResult.resizedContent))
+        if (string.IsNullOrEmpty(previewCompressResult.compressedContent))
         {
           dbImage.ParentId = dbImage.Id;
           previewIds.Add(dbImage.Id);
         }
         else
         {
-          DbImage dbPrewiewImage = _dbImageMapper.Map(createImage, request.CreatedBy, dbImage.Id, previewResizeResult.resizedContent, previewResizeResult.extension);
+          DbImage dbPrewiewImage = _dbImageMapper.Map(createImage, request.CreatedBy, dbImage.Id, previewCompressResult.compressedContent, previewCompressResult.extension);
           dbImages.Add(dbPrewiewImage);
           previewIds.Add(dbPrewiewImage.Id);
         }
