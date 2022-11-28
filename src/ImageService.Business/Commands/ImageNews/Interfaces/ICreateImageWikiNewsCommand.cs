@@ -7,8 +7,8 @@ using LT.DigitalOffice.Kernel.Responses;
 namespace LT.DigitalOffice.ImageService.Business.Commands.ImageNews.Interfaces
 {
   [AutoInject]
-  public interface ICreateImageNewsCommand
+  public interface ICreateImageWikiNewsCommand
   {
-    Task<OperationResultResponse<CreateImageNewsResponse>> ExecuteAsync(CreateImageRequest request);
+    Task<OperationResultResponse<CreateImageWikiNewsResponse>> ExecuteAsync(CreateImageRequest request);
   }
 }

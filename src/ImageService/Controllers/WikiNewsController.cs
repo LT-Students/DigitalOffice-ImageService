@@ -10,12 +10,12 @@ namespace LT.DigitalOffice.ImageService.Controllers
 {
   [ApiController]
   [Route("[controller]")]
-  public class NewsController : ControllerBase
+  public class WikiNewsController : ControllerBase
   {
     
     [HttpPost("create")]
-    public async Task<OperationResultResponse<CreateImageNewsResponse>> CreateAsync(
-      [FromServices] ICreateImageNewsCommand command,
+    public async Task<OperationResultResponse<CreateImageWikiNewsResponse>> CreateAsync(
+      [FromServices] ICreateImageWikiNewsCommand command,
       [FromBody] CreateImageRequest request)
     {
       return await command.ExecuteAsync(request);
